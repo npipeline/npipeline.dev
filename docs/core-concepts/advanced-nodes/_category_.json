@@ -1,0 +1,8 @@
+{
+  "label": "Advanced Nodes",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "Advanced node types for complex data processing scenarios"
+  }
+}

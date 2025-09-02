@@ -1,0 +1,40 @@
+{
+  "label": "Resilience",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "Build fault-tolerant data pipelines that can recover from failures using NPipeline's resilience framework."
+  },
+  "items": [
+    {
+      "type": "doc",
+      "label": "Resilience Overview",
+      "id": "index"
+    },
+    {
+      "type": "doc",
+      "label": "Resilient Execution Strategy",
+      "id": "resilient-execution-strategy"
+    },
+    {
+      "type": "doc",
+      "label": "Materialization and Buffering",
+      "id": "materialization-and-buffering"
+    },
+    {
+      "type": "doc",
+      "label": "Dependency Chains",
+      "id": "dependency-chains"
+    },
+    {
+      "type": "doc",
+      "label": "Configuration Guide",
+      "id": "configuration-guide"
+    },
+    {
+      "type": "doc",
+      "label": "Troubleshooting",
+      "id": "troubleshooting"
+    }
+  ]
+}
