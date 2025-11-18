@@ -405,4 +405,4 @@ Circuit breakers are fully thread-safe and designed for concurrent pipeline exec
 
 - [Circuit Breaker Configuration](../pipeline-execution/circuit-breaker-configuration.md) - Configuration reference
 - [Resilience Patterns](./index.md) - General resilience patterns
-- [Error Handling](../error-handling-architecture.md) - Error handling strategies
+- [Error Handling](../../architecture/error-handling-architecture.md) - Error handling strategies

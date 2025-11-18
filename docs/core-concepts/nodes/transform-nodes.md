@@ -45,7 +45,7 @@ Why? `Task<T>` always allocates on the heap, even when the result is immediately
 
 **Example impact:** A pipeline processing 1,000,000 items per second with 90% synchronous cache hits using `ValueTask<T>` instead of `Task<T>` eliminates ~900,000 allocations per second—a 90% reduction in GC pressure for that operation.
 
-For a detailed guide on implementing this pattern correctly, including code examples and constraints, see **[Synchronous Fast Paths and ValueTask Optimization](../advanced-topics/synchronous-fast-paths.md)**.
+For a detailed guide on implementing this pattern correctly, including code examples and constraints, see **[Synchronous Fast Paths and ValueTask Optimization](../../advanced-topics/synchronous-fast-paths.md)**.
 
 ---
 
@@ -211,5 +211,5 @@ public sealed class ConversionTransform : ITransformNode<string, int>
 ## :arrow_right: Next Steps
 
 * **[Sink Nodes](sink-nodes.md)**: Learn how to consume and finalize data at the end of your pipeline
-* **[Performance Hygiene](../advanced-topics/performance-hygiene.md)**: Dive deeper into optimization techniques
-* **[Synchronous Fast Paths](../advanced-topics/synchronous-fast-paths.md)**: Master the `ValueTask<T>` pattern in detail
+* **[Performance Hygiene](../../advanced-topics/performance-hygiene.md)**: Dive deeper into optimization techniques
+* **[Synchronous Fast Paths](../../advanced-topics/synchronous-fast-paths.md)**: Master the `ValueTask<T>` pattern in detail

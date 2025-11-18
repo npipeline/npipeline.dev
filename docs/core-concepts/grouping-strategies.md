@@ -224,6 +224,6 @@ The key: each node solves one problem, and you compose them.
 
 ## :arrow_right: Next Steps
 
-- **[Batching Nodes](../advanced-nodes/batching.md):** Deep dive into batching configuration and patterns
-- **[Aggregation Nodes](../advanced-nodes/aggregation.md):** Master event-time aggregation, windows, and watermarks
+- **[Batching Nodes](./advanced-nodes/batching.md):** Deep dive into batching configuration and patterns
+- **[Aggregation Nodes](./advanced-nodes/aggregation.md):** Master event-time aggregation, windows, and watermarks
 - **[Common Patterns](./common-patterns.md):** Real-world examples of grouping in production pipelines

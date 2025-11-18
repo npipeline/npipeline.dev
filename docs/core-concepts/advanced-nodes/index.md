@@ -25,4 +25,4 @@ This section delves into the specialized functionalities of these advanced nodes
 
 ## Understanding When to Use Batching vs. Aggregation
 
-The core concepts section includes a [comparison of batching and aggregation strategies](/core-concepts#understanding-grouping-strategies-batching-vs-aggregation) to help you choose the right approach based on your use case. Review that section if you need to decide between these two powerful grouping patterns.
+The core concepts section includes a [comparison of batching and aggregation strategies](../grouping-strategies.md) to help you choose the right approach based on your use case. Review that section if you need to decide between these two powerful grouping patterns.

@@ -398,5 +398,5 @@ For detailed information about resilience patterns, materialization requirements
 ## :arrow_right: Next Steps
 
 * **[Error Handling](error-handling.md)**: Dive deeper into how NPipeline handles errors, retries, and dead-letter queues.
-* **[State Management](state-management.md)**: Learn how state can be persisted and recovered across pipeline runs.
+* **[Execution Context and State](./index.md)**: Learn how state can be persisted and recovered across pipeline runs.
 

@@ -265,6 +265,6 @@ Use `ExecuteValueTaskAsync` to optimize synchronous transforms:
 
 ## See Also
 
-- [Transform Nodes](../nodes/transforms.md) - General transform node documentation
+- [Transform Nodes](../nodes/transform-nodes.md) - General transform node documentation
 - [Best Practices](../best-practices.md) - General best practices including performance optimization
 - [Execution Strategies](../../architecture/execution-flow.md) - How strategies interact with transforms
