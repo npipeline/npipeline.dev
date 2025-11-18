@@ -4,58 +4,5 @@
   "link": {
     "type": "generated-index",
     "description": "Understand how NPipeline executes data flows and manages pipeline lifecycle."
-  },
-  "items": [
-    {
-      "type": "doc",
-      "label": "IPipelineRunner",
-      "id": "ipipelinerunner"
-    },
-    {
-      "type": "doc",
-      "label": "Execution Strategies",
-      "id": "execution-strategies"
-    },
-    {
-      "type": "category",
-      "label": "Error Handling",
-      "items": [
-        {
-          "type": "doc",
-          "label": "Error Handling Overview",
-          "id": "error-handling"
-        },
-        {
-          "type": "doc",
-          "label": "Node-level Error Handling",
-          "id": "node-error-handling"
-        },
-        {
-          "type": "doc",
-          "label": "Pipeline-level Error Handling",
-          "id": "pipeline-error-handling"
-        },
-        {
-          "type": "doc",
-          "label": "Retry Configuration",
-          "id": "retry-configuration"
-        },
-        {
-          "type": "doc",
-          "label": "Circuit Breaker Configuration",
-          "id": "circuit-breaker-configuration"
-        },
-        {
-          "type": "doc",
-          "label": "Dead-Letter Queues",
-          "id": "dead-letter-queues"
-        }
-      ]
-    },
-    {
-      "type": "doc",
-      "label": "State Management",
-      "id": "state-management"
-    }
-  ]
+  }
 }
