@@ -5,8 +5,8 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'NPipeline',
+  tagline: 'High-performance, streaming data pipelines for .NET',
   favicon: 'img/favicon.ico',
 
   // Temp - to hide site from search engines while in development
@@ -29,7 +29,7 @@ const config: Config = {
   projectName: 'npipeline.dev', // Usually your repo name.
 
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenAnchors: 'throw',
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -74,6 +74,11 @@ const config: Config = {
 
   markdown: {
     mermaid: true,
+    emoji: true,
+    hooks: {
+      onBrokenMarkdownLinks: 'throw',
+      onBrokenMarkdownImages: 'throw',
+    },
   },
 
   themes: ['@docusaurus/theme-mermaid'],
