@@ -207,5 +207,5 @@ Console.WriteLine($"Throughput: {result.ItemsProcessed / stopwatch.Elapsed.Total
 ## :arrow_right: Next Steps
 
 - **[Extension Points](extension-points.md)** - Build custom nodes optimized for your use case
-- **[Advanced Topics - Performance Hygiene](../../advanced-topics/performance-hygiene.md)** - Deep dive into performance optimization
+- **[Advanced Topics - Performance Hygiene](../advanced-topics/performance-hygiene.md)** - Deep dive into performance optimization
 

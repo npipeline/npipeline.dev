@@ -18,7 +18,7 @@ NPipeline is designed with a few key concepts at its heart. Understanding these 
 | **[IPipelineDefinition](pipeline-definition.md)** | A blueprint of a pipeline. It defines the nodes and their connections. |
 | **[PipelineBuilder](pipelinebuilder.md)** | A fluent API for creating an `IPipelineDefinition`. |
 | **[PipelineContext](pipeline-context.md)** | An object that flows through the pipeline, carrying shared state, cancellation tokens, and other contextual information. |
-| **[Resilience](resilience/)** | Comprehensive framework for building fault-tolerant pipelines that can recover from failures. |
+| **[Resilience](resilience/index.md)** | Comprehensive framework for building fault-tolerant pipelines that can recover from failures. |
 
 ---
 

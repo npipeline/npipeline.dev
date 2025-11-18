@@ -171,5 +171,5 @@ These principles guide decisions when trade-offs arise:
 
 - Review **[Core Concepts](core-concepts.md)** to understand fundamentals
 - Explore **[Extension Points](extension-points.md)** to build custom components
-- Start with **[Getting Started - Quick Start](../../getting-started/quick-start.md)**
+- Start with **[Getting Started - Quick Start](../getting-started/quick-start.md)**
 
