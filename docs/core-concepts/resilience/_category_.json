@@ -2,7 +2,7 @@
   "label": "Resilience",
   "position": 4,
   "link": {
-    "type": "generated-index",
-    "description": "Build fault-tolerant data pipelines that can recover from failures using NPipeline's resilience framework."
+    "type": "doc",
+    "id": "core-concepts/resilience/index"
   }
 }

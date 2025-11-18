@@ -3,6 +3,7 @@
   "position": 2,
   "link": {
     "type": "generated-index",
-    "description": "Learn how to install NPipeline and create your first pipeline."
+    "description": "Learn how to install NPipeline and create your first pipeline.",
+    "slug": "/getting-started"
   }
 }

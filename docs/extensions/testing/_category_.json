@@ -2,7 +2,7 @@
   "label": "Testing",
   "position": 3,
   "link": {
-    "type": "generated-index",
-    "description": "Learn how to write effective unit and integration tests for your NPipelines using a rich set of testing utilities."
+    "type": "doc",
+    "id": "extensions/testing/index"
   }
 }

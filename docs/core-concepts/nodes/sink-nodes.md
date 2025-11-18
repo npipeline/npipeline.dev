@@ -207,4 +207,4 @@ public sealed class MetricsSink : ISinkNode<ProcessedEvent>
 ## :arrow_right: Next Steps
 
 * **[Advanced Node Types](../advanced-nodes/index.md)**: Explore sophisticated patterns like aggregation and batching
-* **[Pipeline Execution](../pipeline-execution.md)**: Learn how pipelines execute and handle errors
+* **[Pipeline Execution](../pipeline-execution/index.md)**: Learn how pipelines execute and handle errors

@@ -2,7 +2,7 @@
 title: What is NPipeline?
 description: Discover NPipeline, a high-performance, graph-based streaming data pipeline library for .NET.
 sidebar_position: 1
-slug: /
+slug: /introduction
 ---
 
 ## What is NPipeline?
