@@ -11,7 +11,7 @@ sidebar_position: 3
 
 Execution strategies define how a node processes its input stream and produces its output. They are crucial for controlling parallelism, managing backpressure, and implementing resilience patterns within your NPipeline. By default, nodes execute sequentially, but you can configure them to run in parallel or with built-in fault tolerance.
 
-Execution strategies primarily apply to [Transform Nodes](../nodes#transform-nodes) and custom nodes that implement `ITransformNode`.
+Execution strategies primarily apply to [Transform Nodes](../nodes/index.md#transform-nodes) and custom nodes that implement `ITransformNode`.
 
 ## `IExecutionStrategy`
 

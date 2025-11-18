@@ -84,6 +84,6 @@ When building production-grade pipelines with NPipeline, it's important to consi
 * **[Grouping Strategies](./grouping-strategies.md)**: Understand when to use batching vs. aggregation (critical architecture decision)
 * **[IPipeline](ipipeline.md)**: Learn about the executable instance of a pipeline
 * **[INode](inode.md)**: Understand the fundamental unit of work in a pipeline
-* **[IPipelineDefinition](ipipelinedefinition.md)**: Explore the blueprint of a pipeline that defines the nodes and their connections
+* **[IPipelineDefinition](pipeline-definition.md)**: Explore the blueprint of a pipeline that defines the nodes and their connections
 * **[PipelineBuilder](pipelinebuilder.md)**: Explore the fluent API for creating pipeline definitions
-* **[PipelineContext](pipelinecontext.md)**: Discover the object that carries shared state through the pipeline
+* **[PipelineContext](pipeline-context.md)**: Discover the object that carries shared state through the pipeline

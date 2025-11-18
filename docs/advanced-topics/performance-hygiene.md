@@ -151,7 +151,7 @@ This pattern is commonly applied to **transformer nodes** where cache hits or si
 
 ## 3. Choose the Right Concurrency Strategy
 
-- **I/O-Bound Work:** For nodes that spend most of their time waiting for network or disk I/O, use the [Parallelism Extension](../extensions/parallelism) with a relatively high `MaxDegreeOfParallelism`. This ensures that while some tasks are waiting, others are actively being processed.
+- **I/O-Bound Work:** For nodes that spend most of their time waiting for network or disk I/O, use the [Parallelism Extension](../extensions/parallelism.md) with a relatively high `MaxDegreeOfParallelism`. This ensures that while some tasks are waiting, others are actively being processed.
 
 - **CPU-Bound Work:** For nodes performing intensive calculations, set `MaxDegreeOfParallelism` to a value close to `Environment.ProcessorCount`. Note that this is already the default behavior when no value is specified, so you typically don't need to set it explicitly.
 

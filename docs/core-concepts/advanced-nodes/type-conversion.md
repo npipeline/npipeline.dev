@@ -195,5 +195,4 @@ Type Conversion Nodes with their fluent API provide a powerful and flexible way 
 ## :arrow_right: Next Steps
 
 * **[Advanced Error Handling Patterns](../pipeline-execution/error-handling.md#advanced-patterns)**: Learn more about handling errors, especially during conversions.
-* **[Pipeline Builder Extensions](../pipeline-builder/index.md)**: Discover other extension methods that can simplify pipeline construction.
 

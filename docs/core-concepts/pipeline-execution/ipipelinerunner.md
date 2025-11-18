@@ -200,6 +200,6 @@ In this example, the pipeline starts producing and processing data. When a key i
 
 ## :arrow_right: Next Steps
 
-* **[Pipeline Context](..//pipeline-context.md)**: Understand how `PipelineContext` provides runtime information and shared resources to nodes.
+* **[Pipeline Context](../pipeline-context.md)**: Understand how `PipelineContext` provides runtime information and shared resources to nodes.
 * **[Error Handling](error-handling.md)**: Dive deeper into strategies for managing errors within your pipelines.
 

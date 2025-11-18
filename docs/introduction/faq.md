@@ -295,7 +295,7 @@ var sink = context.Items[typeof(InMemorySinkNode<int>).FullName!] as InMemorySin
 var results = await sink!.Completion;
 ```
 
-See [Testing Pipelines](../extensions/testing.md) for details.
+See [Testing Pipelines](../extensions/testing/index.md) for details.
 
 ### Can I test individual nodes?
 

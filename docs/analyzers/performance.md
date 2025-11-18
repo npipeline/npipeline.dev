@@ -353,6 +353,5 @@ dotnet_diagnostic.NP9211.severity = error
 
 ## See Also
 
-- [Async Programming Best Practices](../core-concepts/async-programming/best-practices.md)
 - [Performance Hygiene](../advanced-topics/performance-hygiene.md)
 - [Synchronous Fast Paths](../advanced-topics/synchronous-fast-paths.md)

@@ -6,7 +6,7 @@ sidebar_position: 3
 
 # Circuit Breaker Advanced Configuration
 
-This guide covers advanced circuit breaker configuration patterns for production scenarios. For basic configuration, see [Circuit Breaker Configuration](../core-concepts/pipeline-execution/circuit-breaker-configuration.md).
+This guide covers advanced circuit breaker configuration patterns for production scenarios. For basic configuration, see [Circuit Breaker Configuration](../pipeline-execution/circuit-breaker-configuration.md).
 
 ## Overview
 
