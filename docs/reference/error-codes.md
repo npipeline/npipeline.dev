@@ -548,7 +548,7 @@ await pipeline.ExecuteAsync(source, context);
 
 **Cause:** Your SourceNode implementation contains patterns that can lead to memory issues and poor performance when processing large datasets. The analyzer detects these problematic patterns:
 
-1. **List<T> or Array allocation and population** in ExecuteAsync methods
+1. **`List<T>` or `Array` allocation and population** in ExecuteAsync methods
 2. **.ToAsyncEnumerable()** calls on materialized collections
 3. **Synchronous I/O operations** like File.ReadAllText, File.WriteAllBytes, etc.
 4. **.ToList() and .ToArray()** calls that materialize collections in memory

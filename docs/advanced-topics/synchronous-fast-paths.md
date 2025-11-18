@@ -8,7 +8,7 @@ sidebar_position: 2
 
 > :information_source: For general performance best practices, see [Performance Hygiene](performance-hygiene.md).
 
-This is the **definitive guide** for understanding and implementing the `ValueTask<T>` pattern in transformer nodes. For a quick introduction, see [Performance Hygiene: Use ValueTask<T> for Fast Path Scenarios](performance-hygiene.md#use-valuetaskt-for-fast-path-scenarios).
+This is the **definitive guide** for understanding and implementing the `ValueTask<T>` pattern in transformer nodes. For a quick introduction, see [Performance Hygiene: Use ValueTask\<T\> for Fast Path Scenarios](performance-hygiene.md#use-valuetaskt-for-fast-path-scenarios).
 
 ## The Performance Paradox
 

@@ -212,4 +212,4 @@ public sealed class ConversionTransform : ITransformNode<string, int>
 
 * **[Sink Nodes](sink-nodes.md)**: Learn how to consume and finalize data at the end of your pipeline
 * **[Performance Hygiene](../advanced-topics/performance-hygiene.md)**: Dive deeper into optimization techniques
-* **[Synchronous Fast Paths](../advanced-topics/synchronous-fast-paths.md)**: Master the ValueTask<T> pattern in detail
+* **[Synchronous Fast Paths](../advanced-topics/synchronous-fast-paths.md)**: Master the `ValueTask<T>` pattern in detail

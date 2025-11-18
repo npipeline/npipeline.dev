@@ -35,7 +35,7 @@ This approach provides several advantages:
 
 ## Node Types
 
-### SourceNode<T>
+### `SourceNode<T>`
 
 **Purpose:** Produce the initial data stream
 
@@ -46,7 +46,7 @@ This approach provides several advantages:
 
 **Usage:** File readers, database queries, API calls, message queue consumers
 
-### TransformNode<TIn, TOut>
+### `TransformNode<TIn, TOut>`
 
 **Purpose:** Process and transform data items
 
@@ -59,7 +59,7 @@ This approach provides several advantages:
 
 **Usage:** Data validation, enrichment, aggregation, type conversion, business logic
 
-### SinkNode<T>
+### `SinkNode<T>`
 
 **Purpose:** Consume data and perform final operations
 

@@ -75,7 +75,7 @@ All nodes implement `INode`. Use specific base classes instead:
 
 ## Base Node Classes
 
-### SourceNode<T>
+### `SourceNode<T>`
 
 **Purpose:** Produce data to pipeline.
 
@@ -122,7 +122,7 @@ public class CsvSource : SourceNode<Customer>
 }
 ```
 
-### TransformNode<TIn, TOut>
+### `TransformNode<TIn, TOut>`
 
 **Purpose:** Transform data item-by-item.
 
@@ -157,7 +157,7 @@ public class OrderValidator : TransformNode<Order, ValidatedOrder>
 }
 ```
 
-### SinkNode<T>
+### `SinkNode<T>`
 
 **Purpose:** Consume final data.
 
@@ -521,7 +521,7 @@ public class InMemorySourceNode<T> : SourceNode<T>
 var source = new InMemorySourceNode<int> { Data = new[] { 1, 2, 3 } };
 ```
 
-#### InMemorySinkNode<T>
+#### `InMemorySinkNode<T>`
 
 ```csharp
 public class InMemorySinkNode<T> : SinkNode<T>
