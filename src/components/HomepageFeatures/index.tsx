@@ -5,48 +5,83 @@ import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
   description: ReactNode;
+  icon: string;
 };
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'Zero-Allocation Fast Paths',
+    icon: '⚡',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Eliminate heap allocations in high-throughput scenarios using <code>ValueTask&lt;T&gt;</code>. 
+        Reduce garbage collection pressure by up to 90% in typical cache-hit patterns, processing millions 
+        of items per second with minimal GC overhead.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Graph-Based Architecture',
+    icon: '🔗',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Define complex data pipelines as intuitive directed acyclic graphs (DAGs). 
+        Clear visualization of data flow makes pipelines easier to understand, debug, and maintain.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'High-Performance Streaming',
+    icon: '🚀',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Built for demanding workloads with optimized asynchronous processing, 
+        minimal memory allocations, and high concurrency support. 
+        Achieve high throughput and low latency for real-time data processing.
+      </>
+    ),
+  },
+  {
+    title: 'Flexible & Extensible',
+    icon: '🔧',
+    description: (
+      <>
+        Modular architecture supports sources, transforms, and sinks. 
+        Easily integrate custom logic, connect to various data sources, and extend functionality 
+        to fit your unique requirements.
+      </>
+    ),
+  },
+  {
+    title: 'Built for Testability',
+    icon: '✅',
+    description: (
+      <>
+        Designed from the ground up with testing in mind. 
+        Create reliable, maintainable pipelines with comprehensive error handling and robust 
+        resilience patterns for fault-tolerant systems.
+      </>
+    ),
+  },
+  {
+    title: 'Modern .NET',
+    icon: '💻',
+    description: (
+      <>
+        Leverages the latest C# features and async/await patterns. 
+        Idiomatic code that integrates seamlessly with your .NET ecosystem using dependency injection 
+        and contemporary best practices.
       </>
     ),
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({title, description, icon}: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
+      <div className="text--center padding-bottom--md">
+        <div className={styles.featureIcon}>{icon}</div>
       </div>
       <div className="text--center padding-horiz--md">
         <Heading as="h3">{title}</Heading>
