@@ -644,8 +644,8 @@ For comprehensive setup guidance that integrates dead-letter queues with other r
 
 ## :link: Related Topics
 
-* **[Node-level Error Handling](node-error-handling.md)**: Learn about handling errors for individual items.
-* **[Pipeline-level Error Handling](pipeline-error-handling.md)**: Learn about handling errors that affect entire node streams.
+* **[Node-level Error Handling](error-handling-guide.md)**: Learn about handling errors for individual items.
+* **[Pipeline-level Error Handling](error-handling-guide.md)**: Learn about handling errors that affect entire node streams.
 * **[Retry Configuration](retry-configuration.md)**: Configure retry behavior for items and node restarts.
 * **[Error Handling Overview](error-handling.md)**: Return to the error handling overview.
 

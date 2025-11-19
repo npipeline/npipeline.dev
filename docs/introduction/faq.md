@@ -97,64 +97,209 @@ Data flows through `IDataPipe<T>` objects:
 2. Transforms consume it and produce a new `IDataPipe<T>`
 3. Sinks consume the final `IDataPipe<T>`
 
-## Performance & Optimization
+## Core Concepts
 
-### How do I improve pipeline performance?
+### What's the difference between batching and aggregation?
 
-1. **Profile first** - Identify actual bottlenecks
-2. **Use parallelism** - For CPU-bound operations
-3. **Batch operations** - For I/O operations
-4. **Stream efficiently** - Don't load all data at once
-5. **Minimize allocations** - Reduce garbage collection pressure
+**Batching** groups items for operational efficiency - to optimize interactions with external systems like databases or APIs. It looks at the wall clock and says "every N items or every X seconds, send what we have."
 
-### Should I use parallelism?
+**Aggregation** groups items for data correctness - to handle out-of-order or late-arriving events in event-time windows. It uses event timestamps, not arrival times, and can wait for latecomers within a configured grace period.
 
-Use parallelism when:
+**Use batching when:**
+- External systems work more efficiently with bulk operations
+- You need to reduce API call overhead
+- Order/timing of items doesn't affect correctness
 
-- Operations are CPU-intensive
-- Operations are independent
-- You have available CPU cores
+**Use aggregation when:**
+- Events can arrive out of order or late
+- You need time-windowed summaries or counts
+- Results must be correct despite late-arriving data
 
-Don't use parallelism when:
+For a detailed comparison and decision framework, see [Grouping Strategies: Batching vs Aggregation](../core-concepts/grouping-strategies.md).
 
-- Operations are I/O-bound and sequential
-- Order must be strictly preserved
-- Resource contention occurs
+### When should I use ValueTask vs Task in transforms?
 
-### How do I handle large files?
+Use `ValueTask<T>` when your transform can complete synchronously in common cases (cache hits, simple calculations). Use `Task<T>` when your transform is almost always asynchronous.
 
-Stream the data:
+**ValueTask benefits:**
+- Zero heap allocations for synchronous completions
+- Eliminates up to 90% of GC pressure in high-cache-hit scenarios
+- Seamlessly transitions to async when needed
 
+**Example pattern:**
 ```csharp
-public class LargeFileSource : SourceNode<Line>
+public override ValueTask<UserData> ExecuteAsync(string userId, PipelineContext context, CancellationToken cancellationToken)
 {
-    private readonly string _filePath;
-
-    public override IDataPipe<Line> ExecuteAsync(PipelineContext context, CancellationToken cancellationToken)
-    {
-        static IAsyncEnumerable<Line> ReadLinesAsync(string path, CancellationToken ct)
-        {
-            return Read();
-
-            async IAsyncEnumerable<Line> Read()
-            {
-                using var reader = new StreamReader(path);
-                string? line;
-                while ((line = await reader.ReadLineAsync(ct)) != null)
-                {
-                    yield return new Line(line);
-                }
-            }
-        }
-
-        return new StreamingDataPipe<Line>(ReadLinesAsync(_filePath, cancellationToken));
-    }
+    // Fast path: cache hit - no Task allocation
+    if (_cache.TryGetValue(userId, out var cached))
+        return new ValueTask<UserData>(cached);
+    
+    // Slow path: async database call
+    return new ValueTask<UserData>(FetchAndCacheAsync(userId, cancellationToken));
 }
 ```
 
-### What's the memory footprint?
+For complete implementation guidelines and performance impact analysis, see [Synchronous Fast Paths and ValueTask Optimization](../advanced-topics/synchronous-fast-paths.md).
 
-NPipeline has minimal memory overhead. Most memory usage is from your data. By streaming, you keep only a small window of data in memory at any time.
+### Do I need ResilientExecutionStrategy for retries?
+
+No, `ResilientExecutionStrategy` is specifically for **node-level restarts**, not basic item retries. There are two different retry mechanisms:
+
+**Item-level retries** (no ResilientExecutionStrategy needed):
+- Retry individual failed items
+- Configured via `PipelineRetryOptions.MaxItemRetries`
+- Handled in node error handlers with `NodeErrorDecision.Retry`
+
+**Node-level restarts** (requires ResilientExecutionStrategy):
+- Restart entire node streams on failure
+- Configured via `PipelineRetryOptions.MaxNodeRestartAttempts`
+- Requires three mandatory components:
+  1. Node wrapped with `ResilientExecutionStrategy`
+  2. `MaxNodeRestartAttempts > 0` in retry options
+  3. `MaxMaterializedItems` set to a positive number (not null)
+
+For detailed configuration requirements, see [Node Restart - Quick Start Checklist](../core-concepts/resilience/node-restart-quickstart.md).
+
+## Performance
+
+### How do I know if my pipeline is optimized?
+
+Use these approaches to verify pipeline optimization:
+
+1. **Enable build-time analyzers** to catch performance anti-patterns:
+   ```csharp
+   // In your .csproj
+   <PackageReference Include="NPipeline.Analyzers" Version="*" />
+   ```
+
+2. **Check for common issues**:
+   - Blocking operations in async methods (NP9102)
+   - Missing ValueTask optimizations (NP9209)
+   - Non-streaming patterns in source nodes (NP9211)
+   - Swallowed cancellation exceptions (NP9103)
+
+3. **Benchmark critical paths** with BenchmarkDotNet:
+   ```csharp
+   [MemoryDiagnoser]
+   public class MyTransformBenchmarks
+   {
+       [Benchmark]
+       public async Task Transform() => await _transform.ProcessAsync(_data);
+   }
+   ```
+
+4. **Monitor runtime metrics**:
+   - GC pressure and allocation rates
+   - Throughput vs. latency trade-offs
+   - Memory usage patterns
+
+For comprehensive performance best practices, see [Performance Hygiene](../advanced-topics/performance-hygiene.md) and [Performance Analyzers](../analyzers/performance.md).
+
+### What's the memory overhead of materialization?
+
+Materialization buffers items in memory to enable replay functionality during node restarts. The memory overhead depends on:
+
+1. **Item size**: Larger items consume more memory per buffered item
+2. **Buffer limit**: `MaxMaterializedItems` determines maximum items buffered
+3. **Buffer duration**: How many seconds of data you need to replay
+
+**Example calculations:**
+- Small objects (100 bytes): 10,000 items ≈ 1MB
+- Medium objects (1KB): 1,000 items ≈ 1MB
+- Large objects (10KB): 100 items ≈ 1MB
+
+**Configuration guidance:**
+```csharp
+var options = new PipelineRetryOptions(
+    MaxItemRetries: 3,
+    MaxNodeRestartAttempts: 2,
+    MaxMaterializedItems: 1000  // Adjust based on item size and memory budget
+);
+```
+
+For detailed memory calculations and configuration examples, see [Materialization and Buffering](../core-concepts/resilience/materialization-and-buffering.md).
+
+## Troubleshooting
+
+### My node restarts aren't working
+
+Node restarts require **three mandatory components**. If any are missing, restarts silently fail:
+
+1. **ResilientExecutionStrategy not applied**:
+   ```csharp
+   // REQUIRED
+   var nodeHandle = builder
+       .AddTransform<MyTransform, Input, Output>("myNode")
+       .WithExecutionStrategy(builder, 
+           new ResilientExecutionStrategy(new SequentialExecutionStrategy()));
+   ```
+
+2. **MaxNodeRestartAttempts not configured**:
+   ```csharp
+   // REQUIRED - must be > 0
+   var options = new PipelineRetryOptions(
+       MaxItemRetries: 3,
+       MaxNodeRestartAttempts: 2,  // ← Must be set
+       MaxMaterializedItems: 1000
+   );
+   ```
+
+3. **MaxMaterializedItems is null** (most common issue):
+   ```csharp
+   // REQUIRED - must be positive number, not null
+   var options = new PipelineRetryOptions(
+       MaxItemRetries: 3,
+       MaxNodeRestartAttempts: 2,
+       MaxMaterializedItems: 1000  // ← CRITICAL: null disables restarts
+   );
+   ```
+
+**Verification checklist:**
+- [ ] Node wrapped with ResilientExecutionStrategy
+- [ ] MaxNodeRestartAttempts > 0
+- [ ] MaxMaterializedItems is set to positive number
+- [ ] Error handler returns PipelineErrorDecision.RestartNode
+
+For the complete checklist and troubleshooting guide, see [Node Restart - Quick Start Checklist](../core-concepts/resilience/node-restart-quickstart.md).
+
+### My parallel pipeline is slower than sequential
+
+Common parallelism anti-patterns that can make parallel pipelines slower:
+
+1. **Resource contention**:
+   - Multiple threads competing for same database connection
+   - Shared resources without proper synchronization
+   - Too high degree of parallelism causing context switching overhead
+
+2. **I/O-bound work with excessive parallelism**:
+   ```csharp
+   // WRONG: Too much parallelism for I/O work
+   new ParallelOptions { MaxDegreeOfParallelism = 100 }
+   
+   // BETTER: Match to I/O capacity
+   new ParallelOptions { MaxDegreeOfParallelism = 4 }
+   ```
+
+3. **Unnecessary ordering preservation**:
+   ```csharp
+   // SLOWER: Preserves order (default)
+   new ParallelOptions { PreserveOrdering = true }
+   
+   // FASTER: When order doesn't matter
+   new ParallelOptions { PreserveOrdering = false }
+   ```
+
+4. **Improper queue configuration**:
+   - Unbounded queues causing memory pressure
+   - Too small queues causing blocking
+
+**Optimization steps:**
+1. Start with `MaxDegreeOfParallelism = Environment.ProcessorCount`
+2. Set `PreserveOrdering = false` if order isn't required
+3. Configure appropriate queue limits with `MaxQueueLength`
+4. Profile to identify actual bottlenecks
+
+For detailed parallelism configuration and best practices, see [Parallelism](../extensions/parallelism.md).
 
 ## Error Handling
 

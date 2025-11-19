@@ -25,4 +25,4 @@ Each advanced node type is designed to solve specific data processing challenges
 * **[Branch Nodes](branch.md)**: Understand how to duplicate data streams for parallel processing.
 * **[Tap Nodes](tap.md)**: Learn about non-intrusive monitoring and side-channel processing.
 * **[Type Conversion Nodes](type-conversion.md)**: Learn how to convert data types within your pipeline.
-* **[Synchronous Fast Paths](../advanced-topics/synchronous-fast-paths.md)**: Optimize synchronous transforms by avoiding Task allocation overhead.
+* **[Synchronous Fast Paths](../../advanced-topics/synchronous-fast-paths.md)**: Optimize synchronous transforms by avoiding Task allocation overhead.

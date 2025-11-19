@@ -12,7 +12,7 @@ Welcome to NPipeline's progressive learning guides! These paths are designed to 
 
 New to NPipeline? Get started with our quick introduction:
 
-- [Introduction to NPipeline](introduction.md) - What is NPipeline and why use it?
+- [Introduction to NPipeline](introduction/index.md) - What is NPipeline and why use it?
 - [Your First Pipeline](getting-started/your-first-pipeline.md) - Build a simple data pipeline in 5 minutes
 - [Basic Concepts](core-concepts/pipelinebuilder.md) - Understand the core building blocks
 

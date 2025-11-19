@@ -83,7 +83,7 @@ Pipeline execution involves several key aspects:
 
 * **[`IPipelineRunner`](ipipelinerunner.md)**: The primary interface for running pipelines.
 * **[Execution Strategies](execution-strategies.md)**: Different strategies for executing your pipeline (Sequential vs. Resilient).
-* **[Error Handling](error-handling.md)**: Comprehensive error handling mechanisms at both node and pipeline levels.
+* **[Error Handling](../resilience/error-handling-guide.md)**: Comprehensive error handling mechanisms at both node and pipeline levels.
 * **[Retry Configuration](retry-configuration.md)**: Configure how your pipeline should respond to transient failures.
 * **[Circuit Breaker Configuration](circuit-breaker-configuration.md)**: Prevent cascading failures with circuit breaker patterns.
 * **[Dead-Letter Queues](dead-letter-queues.md)**: Handle and store items that cannot be processed.
