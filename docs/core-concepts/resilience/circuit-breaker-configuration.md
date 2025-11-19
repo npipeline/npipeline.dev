@@ -360,5 +360,5 @@ If you're experiencing issues with circuit breaker behavior, such as unexpected 
 * **[Pipeline-level Error Handling](error-handling-guide.md)**: Learn about handling errors that affect entire node streams.
 * **[Retry Configuration](retry-configuration.md)**: Configure retry behavior for items and node restarts.
 * **[Dead-Letter Queues](dead-letter-queues.md)**: Implement dead-letter queues for problematic items.
-* **[Error Handling Overview](error-handling.md)**: Return to error handling overview.
+* **[Error Handling Overview](error-handling-guide.md)**: Return to error handling overview.
 
