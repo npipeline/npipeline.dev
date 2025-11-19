@@ -37,32 +37,73 @@ Let's create a pipeline that batches individual integers into lists of 3.
 
 ```csharp
 using NPipeline;
-using NPipeline.Interfaces;
 using NPipeline.Nodes;
 using NPipeline.Pipeline;
 
+/// <summary>
+/// Source node that produces a sequence of integers.
+/// Demonstrates basic source pattern with controlled output.
+/// </summary>
 public sealed class IntSource : SourceNode<int>
 {
-    public async IAsyncEnumerable<int> ExecuteAsync(CancellationToken cancellationToken = default)
+    public override IDataPipe<int> ExecuteAsync(PipelineContext context, CancellationToken cancellationToken)
     {
-        for (int i = 1; i <= 7; i++) // Produce 7 items
+        // Create streaming data pipe immediately (synchronous operation)
+        return new StreamingDataPipe<int>(GenerateNumbers());
+
+        static async IAsyncEnumerable<int> GenerateNumbers()
         {
-            if (cancellationToken.IsCancellationRequested) yield break;
-            Console.WriteLine($"Source: Producing {i}");
-            yield return i;
-            await Task.Delay(10, cancellationToken);
+            // Produce 7 items with small delays to simulate work
+            for (int i = 1; i <= 7; i++)
+            {
+                if (cancellationToken.IsCancellationRequested) yield break;
+                Console.WriteLine($"Source: Producing {i}");
+                yield return i;
+                await Task.Delay(10, cancellationToken);
+            }
         }
     }
 }
 
+/// <summary>
+/// Sink node that consumes batches of integers.
+/// Demonstrates batch processing pattern for grouped data.
+/// </summary>
 public sealed class BatchConsumerSink : SinkNode<IReadOnlyCollection<int>>
 {
-    public async Task ExecuteAsync(IAsyncEnumerable<IReadOnlyCollection<int>> input, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Processes each batch as it arrives from batching node.
+    /// Uses await foreach to efficiently iterate through batch stream.
+    /// </summary>
+    public async Task ExecuteAsync(
+        IDataPipe<IReadOnlyCollection<int>> input, 
+        PipelineContext context, 
+        CancellationToken cancellationToken)
     {
         await foreach (var batch in input.WithCancellation(cancellationToken))
         {
+            // Process entire batch at once
             Console.WriteLine($"Sink: Consumed batch of {batch.Count} items: [{string.Join(", ", batch)}]");
         }
+    }
+}
+
+/// <summary>
+/// Pipeline definition demonstrating basic batching functionality.
+/// Shows how to configure batching with size and timeout parameters.
+/// </summary>
+public sealed class BatchingPipelineDefinition : IPipelineDefinition
+{
+    public void Define(PipelineBuilder builder, PipelineContext context)
+    {
+        // Add nodes to pipeline with descriptive names
+        var sourceHandle = builder.AddSource<IntSource, int>("int_source");
+        var batchHandle = builder.AddTransform<BatchingNode<int>, int, IReadOnlyCollection<int>>("batch_node");
+        var sinkHandle = builder.AddSink<BatchConsumerSink, IReadOnlyCollection<int>>("batch_sink");
+
+        // Connect nodes to define data flow
+        builder.Connect(sourceHandle, batchHandle);
+        builder.Connect(batchHandle, sinkHandle);
     }
 }
 
@@ -76,19 +117,6 @@ public static class Program
         Console.WriteLine("Starting batching pipeline...");
         await runner.RunAsync<BatchingPipelineDefinition>(context);
         Console.WriteLine("Batching pipeline finished.");
-    }
-}
-
-public sealed class BatchingPipelineDefinition : IPipelineDefinition
-{
-    public void Define(PipelineBuilder builder, PipelineContext context)
-    {
-        var sourceHandle = builder.AddSource<IntSource, int>("source");
-        var batchHandle = builder.AddTransform<BatchingNode<int>, int, IAsyncEnumerable<int>>("batch");
-        var sinkHandle = builder.AddSink<BatchConsumerSink, IAsyncEnumerable<int>>("sink");
-
-        builder.Connect(sourceHandle, batchHandle);
-        builder.Connect(batchHandle, sinkHandle);
     }
 }
 ```
@@ -117,17 +145,84 @@ Notice that the last batch contains only 1 item because the source finished prod
 The [`BatchingPipelineBuilderExtensions`](src/NPipeline/Pipeline/BatchingPipelineBuilderExtensions.cs) provide a convenient fluent API for adding batching functionality to your pipeline. The `Batch()` extension method simplifies the creation and configuration of [`BatchingNode<T>`](src/NPipeline/Nodes/Batching/BatchingNode.cs).
 
 ```csharp
-// Example using IPipelineDefinition for batching
+using NPipeline;
+using NPipeline.Pipeline;
+
+/// <summary>
+/// Pipeline definition using batching extension method.
+/// Demonstrates fluent API for configuring batching behavior.
+/// </summary>
 public sealed class BatchExtensionPipelineDefinition : IPipelineDefinition
 {
     public void Define(PipelineBuilder builder, PipelineContext context)
     {
+        // Add source node
         var sourceHandle = builder.AddSource<MySource, int>("source");
-        var batchHandle = builder.AddBatch<int>(batchSize: 10, batchTimeout: TimeSpan.FromSeconds(5));
-        var sinkHandle = builder.AddSink<MyBatchProcessingSink, IAsyncEnumerable<int>>("sink");
+        
+        // Add batching with explicit configuration
+        // Batch size: 10 items maximum per batch
+        // Timeout: 5 seconds maximum wait before emitting partial batch
+        var batchHandle = builder.AddBatch<int>(
+            batchSize: 10, 
+            batchTimeout: TimeSpan.FromSeconds(5)
+        );
+        
+        // Add sink for batch processing
+        var sinkHandle = builder.AddSink<MyBatchProcessingSink, IReadOnlyCollection<int>>("sink");
 
+        // Connect nodes to define data flow
         builder.Connect(sourceHandle, batchHandle);
         builder.Connect(batchHandle, sinkHandle);
+    }
+}
+
+/// <summary>
+/// Source node for demonstration purposes.
+/// </summary>
+public sealed class MySource : SourceNode<int>
+{
+    public override IDataPipe<int> ExecuteAsync(PipelineContext context, CancellationToken cancellationToken)
+    {
+        return new StreamingDataPipe<int>(GenerateItems());
+
+        static async IAsyncEnumerable<int> GenerateItems()
+        {
+            var random = new Random();
+            for (int i = 0; i < 25; i++) // Produce 25 items
+            {
+                if (cancellationToken.IsCancellationRequested) yield break;
+                yield return random.Next(1, 100);
+                await Task.Delay(100, cancellationToken);
+            }
+        }
+    }
+}
+
+/// <summary>
+/// Sink node that processes batches with business logic.
+/// </summary>
+public sealed class MyBatchProcessingSink : SinkNode<IReadOnlyCollection<int>>
+{
+    public async Task ExecuteAsync(
+        IDataPipe<IReadOnlyCollection<int>> input, 
+        PipelineContext context, 
+        CancellationToken cancellationToken)
+    {
+        await foreach (var batch in input.WithCancellation(cancellationToken))
+        {
+            // Process batch with business logic
+            ProcessBatch(batch);
+        }
+    }
+
+    private void ProcessBatch(IReadOnlyCollection<int> batch)
+    {
+        var sum = batch.Sum();
+        var average = batch.Count > 0 ? (double)sum / batch.Count : 0;
+        var min = batch.Min();
+        var max = batch.Max();
+        
+        Console.WriteLine($"Batch of {batch.Count} items: Sum={sum}, Avg={average:F2}, Min={min}, Max={max}");
     }
 }
 ```

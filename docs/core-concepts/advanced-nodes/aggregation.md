@@ -66,28 +66,97 @@ The simplified `AggregateNode` is perfect for this—accumulate counts directly:
 ```csharp
 using NPipeline;
 using NPipeline.Nodes;
+using NPipeline.Pipeline;
 
-// Input data structure
+/// <summary>
+/// Product record for aggregation examples.
+/// Represents a product with category, name, and price information.
+/// </summary>
 public sealed record Product(string Category, string Name, decimal Price);
 
-// Simplified aggregation: count products by category
+/// <summary>
+/// Simple aggregation node that counts products by category.
+/// Demonstrates simplified AggregateNode pattern where accumulator and result types are the same.
+/// Uses tumbling window to group products into 1-minute time buckets.
+/// </summary>
 public sealed class CategoryCounterNode : AggregateNode<Product, string, int>
 {
     public CategoryCounterNode() : base(WindowAssigner.Tumbling(TimeSpan.FromMinutes(1)))
     {
     }
 
+    /// <summary>
+    /// Extracts category as grouping key for products.
+    /// Determines which bucket each product belongs to.
+    /// </summary>
     public override string GetKey(Product item) => item.Category;
 
+    /// <summary>
+    /// Creates initial accumulator for counting products.
+    /// Called once per unique key (category) when first encountered.
+    /// </summary>
     public override int CreateAccumulator() => 0;
 
+    /// <summary>
+    /// Increments count for each product in the category.
+    /// Called for each product that belongs to the same category.
+    /// </summary>
     public override int Accumulate(int count, Product item) => count + 1;
 }
 
-public static class Program
+/// <summary>
+/// Sensor reading record for aggregation examples.
+/// Represents a sensor measurement with ID and value.
+/// </summary>
+public sealed record SensorReading(string SensorId, double Value);
+
+/// <summary>
+/// Advanced aggregation node that computes average sensor values.
+/// Demonstrates AdvancedAggregateNode pattern where accumulator and result types differ.
+/// Accumulates sum and count separately, then computes average on finalization.
+/// </summary>
+public sealed class AverageBySensorNode : AdvancedAggregateNode<SensorReading, string, (double Sum, int Count), double>
+{
+    public AverageBySensorNode() : base(WindowAssigner.Tumbling(TimeSpan.FromMinutes(5)))
+    {
+    }
+
+    /// <summary>
+    /// Extracts sensor ID as grouping key for readings.
+    /// Groups readings by which sensor generated them.
+    /// </summary>
+    public override string GetKey(SensorReading item) => item.SensorId;
+
+    /// <summary>
+    /// Creates initial accumulator with zero sum and count.
+    /// Called once per unique sensor when first encountered.
+    /// </summary>
+    public override (double Sum, int Count) CreateAccumulator() => (0, 0);
+
+    /// <summary>
+    /// Adds new reading to accumulator by updating sum and incrementing count.
+    /// Maintains both running sum and count for average calculation.
+    /// </summary>
+    public override (double Sum, int Count) Accumulate((double Sum, int Count) acc, SensorReading item)
+        => (acc.Sum + item.Value, acc.Count + 1);
+
+    /// <summary>
+    /// Computes final average from accumulated sum and count.
+    /// Called when window closes to produce final result.
+    /// </summary>
+    public override double GetResult((double Sum, int Count) acc)
+        => acc.Count > 0 ? acc.Sum / acc.Count : 0;
+}
+
+/// <summary>
+/// Pipeline definition demonstrating simple aggregation.
+/// Shows how to use simplified AggregateNode for counting operations.
+/// </summary>
+public static class SimpleAggregationProgram
 {
     public static async Task Main(string[] args)
     {
+        // Create pipeline with in-memory source for demonstration
         var pipeline = new PipelineBuilder()
             .AddSource(new InMemorySourceNode<Product>(
                 new Product("Electronics", "Laptop", 999m),
@@ -99,8 +168,142 @@ public static class Program
             .AddSink(new ConsoleSink<int>())
             .Build();
 
+        // Execute pipeline and wait for completion
         await pipeline.RunAsync();
     }
+}
+
+/// <summary>
+/// Pipeline definition demonstrating advanced aggregation.
+/// Shows how to use AdvancedAggregateNode for complex calculations.
+/// </summary>
+public static class AdvancedAggregationProgram
+{
+    public static async Task Main(string[] args)
+    {
+        // Create pipeline with sensor readings as input
+        var pipeline = new PipelineBuilder()
+            .AddSource(new InMemorySourceNode<SensorReading>(
+                new SensorReading("temp_1", 20.5),
+                new SensorReading("temp_1", 21.0),
+                new SensorReading("temp_2", 18.5),
+                new SensorReading("temp_1", 20.8)
+            ))
+            .AddAggregate<AverageBySensorNode, SensorReading, string, (double, int), double>("sensor_average")
+            .AddSink(new ConsoleSink<double>())
+            .Build();
+
+        // Execute pipeline and wait for completion
+        await pipeline.RunAsync();
+    }
+}
+
+/// <summary>
+/// Order event record for temporal aggregation examples.
+/// Represents an order with embedded event time for temporal correctness.
+/// </summary>
+public sealed record OrderEvent(string OrderId, string EventType, decimal Amount, DateTime EventTime);
+
+/// <summary>
+/// Aggregation state for order processing.
+/// Maintains both count and total for computing average order value.
+/// </summary>
+public sealed record AggState(int Count, decimal Total);
+
+/// <summary>
+/// Order summary result for aggregation output.
+/// Contains aggregated information about orders in a time window.
+/// </summary>
+public sealed record OrderSummary(string OrderId, int Count);
+
+/// <summary>
+/// Advanced aggregation node for processing orders with event-time semantics.
+/// Demonstrates proper handling of out-of-order events with watermarks.
+/// Uses event time (when order occurred) rather than arrival time.
+/// </summary>
+public class OrderAggregationNode : AdvancedAggregateNode<OrderEvent, string, AggState, OrderSummary>
+{
+    public OrderAggregationNode() : base(
+        windowAssigner: new TumblingWindowAssigner(TimeSpan.FromMinutes(1)),
+        timestampExtractor: order => order.EventTime,  // Use event time, not arrival time
+        maxOutOfOrderness: TimeSpan.FromSeconds(30),   // Accept events up to 30 seconds late
+        watermarkInterval: TimeSpan.FromSeconds(5))   // Confirm correctness every 5 seconds
+    {
+    }
+
+    /// <summary>
+    /// Extracts order type as grouping key.
+    /// Groups orders by their event type (purchase, cancel, return, etc.).
+    /// </summary>
+    public override string GetKey(OrderEvent item) => item.EventType;
+
+    /// <summary>
+    /// Creates initial accumulator with zero count and total.
+    /// Called once per unique order type when first encountered.
+    /// </summary>
+    public override AggState CreateAccumulator() => new AggState(0, 0);
+
+    /// <summary>
+    /// Adds order to accumulator by updating count and total.
+    /// Maintains running statistics for each order type.
+    /// </summary>
+    public override AggState Accumulate(AggState acc, OrderEvent item)
+        => new AggState(acc.Count + 1, acc.Total + item.Amount);
+
+    /// <summary>
+    /// Transforms accumulator state into final summary result.
+    /// Called when window closes to produce output.
+    /// </summary>
+    public override OrderSummary GetResult(AggState acc)
+        => new OrderSummary(acc.Count > 0 ? (acc.Total / acc.Count).ToString("C") : "0", acc.Count);
+}
+
+/// <summary>
+/// Order shipment event for multi-stream aggregation examples.
+/// Represents shipment events from a separate system that may arrive out of order.
+/// </summary>
+public sealed record ShipmentEvent(string OrderId, DateTime EventTime);
+
+/// <summary>
+/// Advanced aggregation for combining orders and shipments from multiple streams.
+/// Demonstrates temporal correctness requirements in multi-stream ETL scenarios.
+/// Handles events that arrive from different systems at different times.
+/// </summary>
+public class OrderShipmentAggregationNode : AdvancedAggregateNode<OrderEvent, string, AggState, (string OrderId, int Count)>
+{
+    public OrderShipmentAggregationNode() : base(
+        windowAssigner: new TumblingWindowAssigner(TimeSpan.FromMinutes(1)),
+        timestampExtractor: evt => evt.EventTime,           // Use embedded event time
+        maxOutOfOrderness: TimeSpan.FromSeconds(60),        // Tolerate up to 1 minute lateness
+        watermarkInterval: TimeSpan.FromSeconds(5))         // Promise correctness every 5 seconds
+    {
+    }
+
+    /// <summary>
+    /// Extracts order ID as grouping key.
+    /// Groups events by which order they relate to.
+    /// </summary>
+    public override string GetKey(OrderEvent item) => item.OrderId;
+
+    /// <summary>
+    /// Creates initial accumulator state.
+    /// Initializes counters for tracking order events.
+    /// </summary>
+    public override AggState CreateAccumulator() => new AggState(0, 0);
+
+    /// <summary>
+    /// Adds order event to accumulator.
+    /// Tracks both count and total amount for each order.
+    /// </summary>
+    public override AggState Accumulate(AggState acc, OrderEvent item)
+        => new AggState(acc.Count + 1, acc.Total + item.Amount);
+
+    /// <summary>
+    /// Creates final summary result from accumulator.
+    /// Transforms internal state to output format.
+    /// </summary>
+    public override (string OrderId, int Count) GetResult(AggState acc)
+        => (acc.Count > 0 ? $"avg_{acc.Total / acc.Count:C}" : "empty", acc.Count);
 }
 ```
 

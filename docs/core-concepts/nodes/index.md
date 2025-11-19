@@ -6,6 +6,12 @@ sidebar_position: 4
 
 # Nodes: Source, Transform, and Sink
 
+## Prerequisites
+
+Before understanding nodes, you should be familiar with:
+- [Core Concepts Overview](../index.md) - Basic NPipeline concepts and terminology
+- [Pipeline Context](../pipeline-context.md) - How state is shared across nodes
+
 Nodes are the fundamental building blocks of any NPipeline. They encapsulate the logic for producing, transforming, or consuming data items as they flow through your pipeline. NPipeline defines three primary types of nodes, each with a distinct role:
 
 * **Source Nodes (`ISourceNode<TOut>`):** Initiate the data flow by producing items.
@@ -88,18 +94,26 @@ var item = await pipe.FirstAsync();         // Async - read item from pipe
 Here is an example of a simple source node that produces a sequence of numbers:
 
 ```csharp
+/// <summary>
+/// Simple source node that produces a sequence of numbers.
+/// Demonstrates the synchronous pipe creation + asynchronous iteration pattern
+/// that is fundamental to NPipeline's design.
+/// </summary>
 public sealed class NumberSource : SourceNode<int>
 {
     public override IDataPipe<int> ExecuteAsync(PipelineContext context, CancellationToken cancellationToken)
     {
-        return new StreamingDataPipe<int>(Stream());
+        // Create and return the data pipe immediately (synchronous operation)
+        // The actual data streaming happens asynchronously when downstream nodes enumerate
+        return new StreamingDataPipe<int>(StreamNumbers());
 
-        static async IAsyncEnumerable<int> Stream()
+        static async IAsyncEnumerable<int> StreamNumbers()
         {
             for (int i = 1; i <= 10; i++)
             {
                 yield return i;
-                await Task.Delay(100); // Simulate work
+                // Simulate work or external dependency delay
+                await Task.Delay(100, cancellationToken);
             }
         }
     }
@@ -136,14 +150,25 @@ public interface ITransformNode<in TIn, TOut> : ITransformNode
 This transform takes an integer, squares it, and returns the result as a string.
 
 ```csharp
+/// <summary>
+/// Transform that squares integers and converts to string representation.
+/// Demonstrates the basic transform pattern with synchronous execution.
+/// </summary>
 public sealed class SquareAndStringifyTransform : ITransformNode<int, string>
 {
     public IExecutionStrategy ExecutionStrategy { get; set; } = new SequentialExecutionStrategy();
     public INodeErrorHandler? ErrorHandler { get; set; }
 
+    /// <summary>
+    /// Processes each integer by squaring it and returning a formatted string.
+    /// Uses Task.FromResult for synchronous operations to avoid unnecessary async overhead.
+    /// </summary>
     public Task<string> ExecuteAsync(int item, PipelineContext context, CancellationToken cancellationToken)
     {
+        // Synchronous calculation - no async work needed
         int squared = item * item;
+        
+        // Wrap result in Task to satisfy interface, but avoid async state machine
         return Task.FromResult($"The square is {squared}");
     }
 }
@@ -170,10 +195,19 @@ public interface ISinkNode<in TIn> : INode
 This sink node simply prints the incoming strings to the console.
 
 ```csharp
+/// <summary>
+/// Sink node that outputs strings to the console.
+/// Demonstrates the consumption pattern for terminal nodes in a pipeline.
+/// </summary>
 public sealed class ConsoleSink : ISinkNode<string>
 {
+    /// <summary>
+    /// Consumes all items from the input pipe and writes them to console.
+    /// Uses await foreach to efficiently iterate through the async stream.
+    /// </summary>
     public async Task ExecuteAsync(IDataPipe<string> input, PipelineContext context, CancellationToken cancellationToken)
     {
+        // Process each item as it arrives from the upstream node
         await foreach (var item in input.WithCancellation(cancellationToken))
         {
             Console.WriteLine(item);
@@ -181,6 +215,31 @@ public sealed class ConsoleSink : ISinkNode<string>
     }
 }
 ```
+
+## Choosing the Right Node Type
+
+```mermaid
+graph TD
+    A[I need to process data] --> B{What is my role?}
+    B -->|Generate/produce data| C[Use SOURCE NODE]
+    B -->|Transform/process data| D{Do I need to combine multiple inputs?}
+    B -->|Consume/store data| E[Use SINK NODE]
+    
+    D -->|Yes, combine streams| F[Use ADVANCED NODES<br>Join, Aggregate, or Batch]
+    D -->|No, single input| G[Use TRANSFORM NODE]
+    
+    C --> H[Configure data production<br>ISourceNode&lt;TOut&gt;]
+    G --> I[Configure data transformation<br>ITransformNode&lt;TIn, TOut&gt;]
+    E --> J[Configure data consumption<br>ISinkNode&lt;TIn&gt;]
+    F --> K[Choose specific advanced node type]
+```
+
+This decision tree helps you select the appropriate node type based on your specific data processing needs:
+
+* **Source Nodes** are your starting point when you need to generate or fetch data from external systems
+* **Transform Nodes** handle the processing of data from a single input stream to produce output
+* **Sink Nodes** are endpoints that consume data, typically for storage or external system integration
+* **Advanced Nodes** provide specialized patterns for combining or grouping multiple data streams
 
 ## Node Connectivity
 
@@ -193,14 +252,20 @@ using NPipeline.Execution;
 using NPipeline.Nodes;
 using NPipeline.Pipeline;
 
+/// <summary>
+/// Complete pipeline definition that connects source, transform, and sink nodes.
+/// Demonstrates the fluent API pattern for building executable pipelines.
+/// </summary>
 public sealed class NumberPipelineDefinition : IPipelineDefinition
 {
     public void Define(PipelineBuilder builder, PipelineContext context)
     {
-        var sourceHandle = builder.AddSource<NumberSource, int>();
-        var transformHandle = builder.AddTransform<SquareTransform, int, int>();
-        var sinkHandle = builder.AddSink<ConsoleSink<int>, int>();
+        // Add nodes to the pipeline and get handles for connection
+        var sourceHandle = builder.AddSource<NumberSource, int>("number_source");
+        var transformHandle = builder.AddTransform<SquareTransform, int, int>("square_transform");
+        var sinkHandle = builder.AddSink<ConsoleSink<int>, int>("console_sink");
 
+        // Define data flow by connecting the nodes
         builder.Connect(sourceHandle, transformHandle);
         builder.Connect(transformHandle, sinkHandle);
     }
@@ -210,7 +275,10 @@ public static class Program
 {
     public static async Task Main(string[] args)
     {
+        // Create a pipeline runner to execute the defined pipeline
         var runner = new PipelineRunner();
+        
+        // Run the pipeline using the definition
         await runner.RunAsync<NumberPipelineDefinition>();
     }
 }
@@ -229,7 +297,16 @@ Beyond the three core node types, NPipeline offers sophisticated advanced node t
   - **[Branch Nodes](../advanced-nodes/branch.md)**: Duplicate data streams for parallel processing
   - **[Type Conversion Nodes](../advanced-nodes/type-conversion.md)**: Convert between data types
 
-## :arrow_right: Next Steps
+## See Also
 
-* Learn how to connect these nodes together using the **[PipelineBuilder](../pipelinebuilder.md)**.
-* See how to create a runnable **[Pipeline](../ipipeline.md)** instance.
+- [Advanced Node Types](../advanced-nodes/index.md) - Explore aggregation, batching, joins, lookups, and more
+- [PipelineBuilder](../pipelinebuilder.md) - Learn how to connect nodes together
+- [Pipeline Execution](../pipeline-execution/index.md) - Understand how nodes are executed
+- [Error Handling](../resilience/error-handling-guide.md) - Handle errors within nodes
+- [Architecture: Core Concepts](../../architecture/core-concepts.md) - Deep dive into node architecture
+
+## Next Steps
+
+- [PipelineBuilder](../pipelinebuilder.md) - Learn how to connect these nodes together
+- [Advanced Node Types](../advanced-nodes/index.md) - Explore more sophisticated node patterns
+- [Execution Strategies](../pipeline-execution/execution-strategies.md) - Control how nodes process data

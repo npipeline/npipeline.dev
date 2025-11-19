@@ -6,6 +6,13 @@ sidebar_position: 3
 
 # Execution Strategies
 
+## Prerequisites
+
+Before understanding execution strategies, you should be familiar with:
+- [Core Concepts Overview](../index.md) - Basic NPipeline concepts and terminology
+- [Nodes Overview](../nodes/index.md) - Understanding how nodes process data
+- [PipelineBuilder](../pipelinebuilder.md) - How to apply execution strategies to nodes
+
 > :information_source: **Documentation Scope**
 > This guide covers **all execution strategies** - sequential, parallel, and resilient. If you need to add **resilience capabilities** (error handling, retries, node restart) to a strategy, see [Resilient Execution Strategy](../resilience/execution-with-resilience.md).
 
@@ -48,6 +55,36 @@ var transform = builder
     .AddTransform<MyTransform, int, string>()
     .WithBlockingParallelism(builder, maxDegreeOfParallelism: 4);  // Blocks/applies backpressure
 ```
+
+## Choosing the Right Execution Strategy
+
+```mermaid
+graph TD
+    A[I need to configure node execution] --> B{What are my requirements?}
+    B -->|Simple, ordered processing| C[Use SEQUENTIAL EXECUTION]
+    B -->|Improve throughput| D{Is order important?}
+    B -->|Handle failures gracefully| E[Add RESILIENT EXECUTION]
+    
+    D -->|Yes, maintain order| F[Parallel with PreserveOrdering=true]
+    D -->|No, order doesn't matter| G[Parallel with PreserveOrdering=false]
+    
+    C --> H[SequentialExecutionStrategy<br>Simple, predictable]
+    F --> I[ParallelExecutionStrategy<br>MaxDegreeOfParallelism=N<br>PreserveOrdering=true]
+    G --> J[ParallelExecutionStrategy<br>MaxDegreeOfParallelism=N<br>PreserveOrdering=false]
+    
+    E --> K{Wrap with resilience}
+    K --> H --> L[ResilientExecutionStrategy<br>+ SequentialExecutionStrategy]
+    K --> I --> M[ResilientExecutionStrategy<br>+ ParallelExecutionStrategy]
+    K --> J --> M
+```
+
+This decision tree helps you select the appropriate execution strategy based on your specific requirements:
+
+* **Sequential Execution** for simple, ordered processing when parallelism isn't needed
+* **Parallel Execution** when you need to improve throughput:
+  * With `PreserveOrdering=true` when output order must match input order
+  * With `PreserveOrdering=false` for maximum throughput when order doesn't matter
+* **Resilient Execution** can be wrapped around any strategy to add error handling, retries, and circuit breaker capabilities
 
 ## Built-in Execution Strategies
 
@@ -395,15 +432,21 @@ for comprehensive guide on wrapping strategies with resilient execution.
 
 For detailed information about resilience patterns, materialization requirements, and dependency chains, see the [Resilience section](../resilience/index.md) which covers fault-tolerant execution strategies, buffering for replay functionality, critical prerequisite relationships, and configuration guidance for building robust pipelines.
 
-## :information_source: See Also
+## See Also
 
 * **[Resilience Overview](../resilience/index.md)**: Comprehensive guide to building fault-tolerant pipelines
-* **[Resilient Execution Strategy](../resilience/execution-with-resilience.md)**: In-depth coverage of the ResilientExecutionStrategy
+* **[Resilient Execution Strategy](../resilience/execution-with-resilience.md)**: In-depth coverage of ResilientExecutionStrategy
 * **[Materialization and Buffering](../resilience/materialization-and-buffering.md)**: Understanding buffer requirements for resilience
 * **[Dependency Chains](../resilience/dependency-chains.md)**: Critical prerequisite relationships for resilience features
+* **[Parallelism Extension](../../extensions/parallelism.md)**: Advanced parallel execution strategies
+* **[Error Handling Guide](../resilience/error-handling-guide.md)**: Comprehensive error handling patterns
+* **[Architecture: Execution Flow](../../architecture/execution-flow.md)**: Deep dive into how execution strategies work internally
+* **[Performance Characteristics](../../architecture/performance-characteristics.md)**: Understanding performance implications of different strategies
 
-## :arrow_right: Next Steps
+## Next Steps
 
-* **[Error Handling](error-handling.md)**: Dive deeper into how NPipeline handles errors, retries, and dead-letter queues.
-* **[Execution Context and State](./index.md)**: Learn how state can be persisted and recovered across pipeline runs.
+* **[Resilient Execution Strategy](../resilience/execution-with-resilience.md)**: Learn how to add error handling, retries, and circuit breaker capabilities to any strategy
+* **[Error Handling Guide](../resilience/error-handling-guide.md)**: Dive deeper into how NPipeline handles errors, retries, and dead-letter queues
+* **[Parallelism Extension](../../extensions/parallelism.md)**: Explore advanced parallel execution patterns
+* **[Architecture: Execution Flow](../../architecture/execution-flow.md)**: Understand how pipelines execute data at a deeper level
 

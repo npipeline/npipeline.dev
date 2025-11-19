@@ -6,6 +6,14 @@ sidebar_position: 1
 
 # Error Handling in NPipeline
 
+## Prerequisites
+
+Before understanding error handling, you should be familiar with:
+- [Core Concepts Overview](../index.md) - Basic NPipeline concepts and terminology
+- [Nodes Overview](../nodes/index.md) - Understanding the node types where errors occur
+- [PipelineBuilder](../pipelinebuilder.md) - How to configure error handling in pipeline construction
+- [Execution Strategies](../pipeline-execution/execution-strategies.md) - How error handling integrates with execution
+
 ## Overview
 
 Robust error handling is critical for building reliable data pipelines. NPipeline provides several mechanisms to manage errors that occur during data processing, allowing you to gracefully recover, retry operations, or isolate problematic data.
@@ -23,6 +31,48 @@ NPipeline distinguishes between two levels of error handling:
 
 1. **Node-level Error Handling**: Deals with errors that occur while processing an individual item within a specific node. You define what happens to that item (e.g., skip, retry, redirect to dead-letter).
 2. **Pipeline-level Error Handling**: Deals with more severe errors that might affect an entire node's stream or the pipeline's execution flow (e.g., restarting a failing node, failing the entire pipeline).
+
+## Choosing Your Error Handling Approach
+
+```mermaid
+graph TD
+    A[I need to handle errors] --> B{What type of errors?}
+    B -->|Individual item failures| C[Use NODE-LEVEL ERROR HANDLING]
+    B -->|Entire stream/node failures| D[Use PIPELINE-LEVEL ERROR HANDLING]
+    B -->|Both types of errors| E[Implement BOTH LEVELS]
+    
+    C --> F{What should happen to failed items?}
+    F -->|Retry and continue| G[NodeErrorDecision.Retry<br>Configure MaxItemRetries]
+    F -->|Skip and continue| H[NodeErrorDecision.Skip<br>Log and continue]
+    F -->|Redirect for review| I[NodeErrorDecision.DeadLetter<br>Configure dead-letter sink]
+    F -->|Stop processing| J[NodeErrorDecision.Fail<br>Terminate pipeline]
+    
+    D --> K{What should happen to failed nodes?}
+    K -->|Restart and retry| L[PipelineErrorDecision.RestartNode<br>Configure MaxNodeRestartAttempts]
+    K -->|Continue without node| M[PipelineErrorDecision.ContinueWithoutNode<br>Bypass failed component]
+    K -->|Stop entire pipeline| N[PipelineErrorDecision.FailPipeline<br>Terminate all processing]
+    
+    E --> O[Combine node and pipeline error handling]
+    O --> P[Implement INodeErrorHandler<br>for item-level errors]
+    O --> Q[Implement IPipelineErrorHandler<br>for stream-level errors]
+    P --> R[Configure ResilientExecutionStrategy]
+    Q --> R
+```
+
+This decision tree helps you determine the appropriate error handling approach based on your specific needs:
+
+* **Node-level Error Handling** for individual item failures:
+  * **Retry** transient errors (network issues, temporary resource constraints)
+  * **Skip** non-critical errors or malformed data
+  * **Dead Letter** problematic items for later analysis
+  * **Fail** when errors indicate critical system issues
+
+* **Pipeline-level Error Handling** for entire stream/node failures:
+  * **Restart Node** when failures are transient and recoverable
+  * **Continue Without Node** when the node is non-critical to overall operation
+  * **Fail Pipeline** when errors indicate system-wide problems
+
+* **Combined Approach** when you need to handle both individual item and stream-level errors
 
 ## Error Handling Levels
 
@@ -89,6 +139,10 @@ using NPipeline.ErrorHandling;
 using NPipeline.Nodes;
 using NPipeline.Pipeline;
 
+/// <summary>
+/// Custom node error handler for transform nodes processing string data.
+/// Demonstrates error classification and appropriate response strategies.
+/// </summary>
 public sealed class MyNodeErrorHandler : INodeErrorHandler<ITransformNode<string, string>, string>
 {
     private readonly ILogger _logger;
@@ -98,6 +152,10 @@ public sealed class MyNodeErrorHandler : INodeErrorHandler<ITransformNode<string
         _logger = logger;
     }
 
+    /// <summary>
+    /// Handles errors that occur during string transformation.
+    /// Implements different strategies based on error type for optimal recovery.
+    /// </summary>
     public Task<NodeErrorDecision> HandleAsync(
         ITransformNode<string, string> node,
         string failedItem,
@@ -105,27 +163,22 @@ public sealed class MyNodeErrorHandler : INodeErrorHandler<ITransformNode<string
         PipelineContext context,
         CancellationToken cancellationToken)
     {
+        // Log error with full context for troubleshooting
         _logger.LogError(error, "Error in node '{NodeName}' processing '{FailedItem}': {ErrorMessage}",
             node.Name, failedItem, error.Message);
 
-        // Example logic:
-        // - If it's a specific transient error, maybe retry.
-        // - If it's a data validation error, skip or redirect.
-        if (error is FormatException)
+        // Choose error handling strategy based on exception type
+        return error switch
         {
-            _logger.LogWarning("Data format error, redirecting to dead-letter.");
-            return Task.FromResult(NodeErrorDecision.DeadLetter);
-        }
-        else if (failedItem.Contains("retry"))
-        {
-            _logger.LogInformation("Item marked for retry.");
-            return Task.FromResult(NodeErrorDecision.Retry);
-        }
-        else
-        {
-            _logger.LogWarning("Skipping item due to unexpected error.");
-            return Task.FromResult(NodeErrorDecision.Skip);
-        }
+            // Data format errors are permanent - send to dead letter queue
+            FormatException => Task.FromResult(NodeErrorDecision.DeadLetter),
+            
+            // Items marked for retry get another chance
+            _ when failedItem.Contains("retry") => Task.FromResult(NodeErrorDecision.Retry),
+            
+            // All other errors are skipped to continue processing
+            _ => Task.FromResult(NodeErrorDecision.Skip)
+        };
     }
 }
 ```
@@ -183,6 +236,10 @@ public class NetworkErrorHandler : INodeErrorHandler<IApiTransformNode, string>
         _logger = logger;
     }
 
+    /// <summary>
+    /// Handles network errors with exponential backoff retry strategy.
+    /// Transient errors are retried, persistent failures are redirected.
+    /// </summary>
     public Task<NodeErrorDecision> HandleAsync(
         IApiTransformNode node,
         string failedItem,
@@ -190,23 +247,27 @@ public class NetworkErrorHandler : INodeErrorHandler<IApiTransformNode, string>
         PipelineContext context,
         CancellationToken cancellationToken)
     {
+        // Handle network-related errors specifically
         if (error is HttpRequestException httpEx)
         {
             _retryCount++;
-            _logger.LogWarning("Network error (attempt {RetryCount}): {ErrorMessage}", _retryCount, httpEx.Message);
+            _logger.LogWarning("Network error (attempt {RetryCount}): {ErrorMessage}", 
+                _retryCount, httpEx.Message);
 
-            // Retry up to 3 times for network errors
+            // Retry up to 3 times for transient network errors
             if (_retryCount <= 3)
             {
                 return Task.FromResult(NodeErrorDecision.Retry);
             }
             else
             {
-                _retryCount = 0; // Reset for next item
+                // After max retries, reset counter and redirect to dead letter
+                _retryCount = 0;
                 return Task.FromResult(NodeErrorDecision.DeadLetter);
             }
         }
 
+        // Non-network errors are skipped to continue processing
         return Task.FromResult(NodeErrorDecision.Skip);
     }
 }
@@ -224,6 +285,10 @@ public class ValidationErrorHandler : INodeErrorHandler<IValidatorNode, string>
         _logger = logger;
     }
 
+    /// <summary>
+    /// Handles validation errors by redirecting to dead letter queue.
+    /// Data quality issues are logged separately from system errors.
+    /// </summary>
     public Task<NodeErrorDecision> HandleAsync(
         IValidatorNode node,
         string failedItem,
@@ -231,15 +296,17 @@ public class ValidationErrorHandler : INodeErrorHandler<IValidatorNode, string>
         PipelineContext context,
         CancellationToken cancellationToken)
     {
+        // Handle validation errors specifically
         if (error is ValidationException validationEx)
         {
-            _logger.LogWarning("Validation failed for item: {Item}. Error: {Error}", failedItem, validationEx.Message);
+            _logger.LogWarning("Validation failed for item: {Item}. Error: {Error}", 
+                failedItem, validationEx.Message);
 
-            // For validation errors, redirect to dead-letter queue for manual review
+            // Validation failures indicate data quality issues - redirect for manual review
             return Task.FromResult(NodeErrorDecision.DeadLetter);
         }
 
-        // For other types of errors, skip the item
+        // Other types of errors are skipped to continue processing
         return Task.FromResult(NodeErrorDecision.Skip);
     }
 }
@@ -281,6 +348,10 @@ using NPipeline;
 using NPipeline.ErrorHandling;
 using NPipeline.Pipeline;
 
+/// <summary>
+/// Pipeline-level error handler for managing node failures.
+/// Demonstrates circuit breaker pattern and restart logic.
+/// </summary>
 public sealed class MyPipelineErrorHandler : IPipelineErrorHandler
 {
     private readonly ILogger _logger;
@@ -291,22 +362,26 @@ public sealed class MyPipelineErrorHandler : IPipelineErrorHandler
         _logger = logger;
     }
 
+    /// <summary>
+    /// Handles node-level failures that affect entire stream processing.
+    /// Implements circuit breaker pattern to prevent infinite restart loops.
+    /// </summary>
     public Task<PipelineErrorDecision> HandleNodeFailureAsync(
         string nodeId,
         Exception error,
         PipelineContext context,
         CancellationToken cancellationToken)
     {
+        // Track restart attempts for each node
         _nodeRestartAttempts.TryGetValue(nodeId, out var attempts);
         attempts++;
         _nodeRestartAttempts[nodeId] = attempts;
 
+        // Log failure with context for monitoring
         _logger.LogError(error, "Pipeline-level error in node '{NodeId}': {ErrorMessage}",
             nodeId, error.Message);
 
-        // Example logic:
-        // - Allow a few restarts for transient node failures.
-        // - If persistent, fail the pipeline.
+        // Implement circuit breaker pattern - limit restart attempts
         if (attempts < 3)
         {
             _logger.LogInformation("Attempting to restart node '{NodeId}'. Attempt: {Attempt}",
@@ -366,6 +441,154 @@ services.AddSingleton<IPipelineErrorHandler, MyPipelineErrorHandler>();
 **Scenario 1: Resource Exhaustion Handling**
 
 ```csharp
+using NPipeline;
+using NPipeline.ErrorHandling;
+using NPipeline.Pipeline;
+
+/// <summary>
+/// Pipeline definition with basic error handling configuration.
+/// Demonstrates how to configure retry options at pipeline level.
+/// </summary>
+public sealed class ErrorHandlingPipelineDefinition : IPipelineDefinition
+{
+    public void Define(PipelineBuilder builder, PipelineContext context)
+    {
+        // Add nodes to pipeline
+        var sourceHandle = builder.AddSource<DataSource, string>("data_source");
+        var transformHandle = builder.AddTransform<DataTransform, string, string>("data_transform");
+        var sinkHandle = builder.AddSink<DataSink, string>("data_sink");
+
+        // Connect nodes to define data flow
+        builder.Connect(sourceHandle, transformHandle);
+        builder.Connect(transformHandle, sinkHandle);
+
+        // Configure retry options for resilience
+        // These settings control how many times items/nodes can be retried
+        builder.WithRetryOptions(new PipelineRetryOptions(
+            MaxItemRetries: 3,           // Retry individual items up to 3 times
+            MaxNodeRestartAttempts: 2,     // Allow node to restart up to 2 times
+            MaxSequentialNodeAttempts: 5     // Limit sequential attempts to prevent infinite loops
+        ));
+    }
+}
+```
+
+**Scenario 2: External Service Dependency Handling**
+
+```csharp
+using NPipeline;
+using NPipeline.ErrorHandling;
+using NPipeline.Pipeline;
+
+/// <summary>
+/// Node error handler for network-related operations.
+/// Demonstrates transient error handling with retry logic.
+/// </summary>
+public class NetworkErrorHandler : INodeErrorHandler<IApiTransformNode, string>
+{
+    private readonly ILogger _logger;
+    private int _retryCount = 0;
+
+    public NetworkErrorHandler(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    /// <summary>
+    /// Handles network errors with exponential backoff retry strategy.
+    /// Transient errors are retried, persistent failures are redirected.
+    /// </summary>
+    public Task<NodeErrorDecision> HandleAsync(
+        IApiTransformNode node,
+        string failedItem,
+        Exception error,
+        PipelineContext context,
+        CancellationToken cancellationToken)
+    {
+        // Handle network-related errors specifically
+        if (error is HttpRequestException httpEx)
+        {
+            _retryCount++;
+            _logger.LogWarning("Network error (attempt {RetryCount}): {ErrorMessage}", 
+                _retryCount, httpEx.Message);
+
+            // Retry up to 3 times for transient network errors
+            if (_retryCount <= 3)
+            {
+                return Task.FromResult(NodeErrorDecision.Retry);
+            }
+            else
+            {
+                // After max retries, reset counter and redirect to dead letter
+                _retryCount = 0;
+                return Task.FromResult(NodeErrorDecision.DeadLetter);
+            }
+        }
+
+        // Non-network errors are skipped to continue processing
+        return Task.FromResult(NodeErrorDecision.Skip);
+    }
+}
+```
+
+**Scenario 3: Data Validation Errors**
+
+```csharp
+using NPipeline;
+using NPipeline.ErrorHandling;
+using NPipeline.Pipeline;
+
+/// <summary>
+/// Node error handler for data validation scenarios.
+/// Demonstrates how to handle data quality issues separately from system errors.
+/// </summary>
+public class ValidationErrorHandler : INodeErrorHandler<IValidatorNode, string>
+{
+    private readonly ILogger _logger;
+
+    public ValidationErrorHandler(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    /// <summary>
+    /// Handles validation errors by redirecting to dead letter queue.
+    /// Data quality issues are logged separately from system errors.
+    /// </summary>
+    public Task<NodeErrorDecision> HandleAsync(
+        IValidatorNode node,
+        string failedItem,
+        Exception error,
+        PipelineContext context,
+        CancellationToken cancellationToken)
+    {
+        // Handle validation errors specifically
+        if (error is ValidationException validationEx)
+        {
+            _logger.LogWarning("Validation failed for item: {Item}. Error: {Error}", 
+                failedItem, validationEx.Message);
+
+            // Validation failures indicate data quality issues - redirect for manual review
+            return Task.FromResult(NodeErrorDecision.DeadLetter);
+        }
+
+        // Other types of errors are skipped to continue processing
+        return Task.FromResult(NodeErrorDecision.Skip);
+    }
+}
+```
+
+**Scenario 4: Resource Exhaustion Handling**
+
+```csharp
+using NPipeline;
+using NPipeline.ErrorHandling;
+using NPipeline.Pipeline;
+
+/// <summary>
+/// Pipeline error handler for resource exhaustion scenarios.
+/// Demonstrates critical error handling for system resource issues.
+/// </summary>
 public class ResourceExhaustionHandler : IPipelineErrorHandler
 {
     private readonly ILogger _logger;
@@ -376,86 +599,144 @@ public class ResourceExhaustionHandler : IPipelineErrorHandler
         _logger = logger;
     }
 
+    /// <summary>
+    /// Handles resource exhaustion by failing fast to prevent system damage.
+    /// Critical resource errors should immediately terminate processing.
+    /// </summary>
     public Task<PipelineErrorDecision> HandleNodeFailureAsync(
         string nodeId,
         Exception error,
         PipelineContext context,
         CancellationToken cancellationToken)
     {
+        // Track failure count for each node
         _nodeFailureCounts.TryGetValue(nodeId, out var count);
         _nodeFailureCounts[nodeId] = count + 1;
 
+        // Handle critical resource errors immediately
         if (error is OutOfMemoryException or InsufficientMemoryException)
         {
             _logger.LogCritical("Resource exhaustion in node '{NodeId}': {Error}", nodeId, error.Message);
             return Task.FromResult(PipelineErrorDecision.FailPipeline);
         }
 
-        // For other errors, allow up to 3 restarts per node
+        // For other errors, allow limited restarts
         if (_nodeFailureCounts[nodeId] <= 3)
         {
-            _logger.LogWarning("Restarting node '{NodeId}' (attempt {Attempt})", nodeId, _nodeFailureCounts[nodeId]);
+            _logger.LogWarning("Restarting node '{NodeId}' (attempt {Attempt})", 
+                nodeId, _nodeFailureCounts[nodeId]);
             return Task.FromResult(PipelineErrorDecision.RestartNode);
         }
 
+        // Too many failures - continue without the problematic node
         _logger.LogError("Node '{NodeId}' failed too many times, continuing without it", nodeId);
         return Task.FromResult(PipelineErrorDecision.ContinueWithoutNode);
     }
 }
 ```
 
-**Scenario 2: External Service Dependency Handling**
+**Scenario 5: Production-ready Node Error Handler with Metrics Integration**
 
 ```csharp
-public class ExternalServiceErrorHandler : IPipelineErrorHandler
+using NPipeline;
+using NPipeline.ErrorHandling;
+using NPipeline.Pipeline;
+
+/// <summary>
+/// Production-ready node error handler with metrics integration.
+/// Demonstrates comprehensive error handling with observability.
+/// </summary>
+public class ProductionNodeErrorHandler : INodeErrorHandler<ITransformNode<string, string>, string>
 {
     private readonly ILogger _logger;
-    private readonly Dictionary<string, DateTime> _lastFailureTime = new();
+    private readonly IMetrics _metrics;
+
+    public ProductionNodeErrorHandler(ILogger logger, IMetrics metrics)
+    {
+        _logger = logger;
+        _metrics = metrics;
+    }
+
+    /// <summary>
+    /// Handles errors with comprehensive logging and metrics collection.
+    /// Enables monitoring and alerting for production environments.
+    /// </summary>
+    public Task<NodeErrorDecision> HandleAsync(
+        ITransformNode<string, string> node,
+        string failedItem,
+        Exception error,
+        PipelineContext context,
+        CancellationToken cancellationToken)
+    {
+        // Record error metrics for monitoring
+        _metrics.Increment("node_errors", new[] { 
+            new KeyValuePair<string, object>("node_type", node.GetType().Name),
+            new KeyValuePair<string, object>("error_type", error.GetType().Name)
+        });
+
+        // Log error with full context
+        _logger.LogError(error, "Error processing item in node {NodeName}", node.Name);
+
+        // Implement error handling strategy based on exception type
+        return error switch
+        {
+            // Data validation errors - redirect to dead letter
+            ValidationException => Task.FromResult(NodeErrorDecision.DeadLetter),
+            
+            // Transient errors - retry
+            TimeoutException => Task.FromResult(NodeErrorDecision.Retry),
+            HttpRequestException => Task.FromResult(NodeErrorDecision.Retry),
+            
+            // All other errors - skip
+            _ => Task.FromResult(NodeErrorDecision.Skip)
+        };
+    }
+}
+
+/// <summary>
+/// Production-ready pipeline error handler with circuit breaker pattern.
+/// Demonstrates sophisticated error handling for production environments.
+/// </summary>
+public class ProductionPipelineErrorHandler : IPipelineErrorHandler
+{
+    private readonly ILogger _logger;
     private readonly Dictionary<string, int> _failureCounts = new();
 
-    public ExternalServiceErrorHandler(ILogger logger)
+    public ProductionPipelineErrorHandler(ILogger logger)
     {
         _logger = logger;
     }
 
+    /// <summary>
+    /// Handles node failures with circuit breaker pattern.
+    /// Prevents cascading failures by limiting restart attempts.
+    /// </summary>
     public Task<PipelineErrorDecision> HandleNodeFailureAsync(
         string nodeId,
         Exception error,
         PipelineContext context,
         CancellationToken cancellationToken)
     {
+        // Track failure count for circuit breaker logic
         _failureCounts.TryGetValue(nodeId, out var count);
         _failureCounts[nodeId] = count + 1;
 
-        var now = DateTime.UtcNow;
-        _lastFailureTime.TryGetValue(nodeId, out var lastFailure);
+        // Log failure for monitoring
+        _logger.LogError(error, "Node {NodeId} failed (attempt {Attempt})", 
+            nodeId, _failureCounts[nodeId]);
 
-        // If the same node failed recently, it might be a persistent issue
-        if (lastFailure != null && (now - lastFailure).TotalMinutes < 5)
+        // Implement circuit breaker based on error type and count
+        return error switch
         {
-            _logger.LogWarning("Node '{NodeId}' failed again recently ({Minutes} minutes ago). Total failures: {Count}",
-                nodeId, (now - lastFailure).TotalMinutes, _failureCounts[nodeId]);
-
-            // After multiple recent failures, continue without the node
-            if (_failureCounts[nodeId] >= 3)
-            {
-                _logger.LogError("Node '{NodeId}' has failed multiple times recently, continuing without it", nodeId);
-                return Task.FromResult(PipelineErrorDecision.ContinueWithoutNode);
-            }
-        }
-
-        _lastFailureTime[nodeId] = now;
-
-        // For external service errors, try restarting the node
-        if (error is HttpRequestException or TimeoutException)
-        {
-            _logger.LogWarning("External service error in node '{NodeId}': {Error}. Restarting node.", nodeId, error.Message);
-            return Task.FromResult(PipelineErrorDecision.RestartNode);
-        }
-
-        // For other types of errors, fail the pipeline
-        _logger.LogError("Unexpected error in node '{NodeId}': {Error}. Failing pipeline.", nodeId, error.Message);
-        return Task.FromResult(PipelineErrorDecision.FailPipeline);
+            // Critical resource errors - fail immediately
+            OutOfMemoryException => Task.FromResult(PipelineErrorDecision.FailPipeline),
+            
+            // Transient errors - allow limited restarts
+            _ when _failureCounts[nodeId] < 3 => Task.FromResult(PipelineErrorDecision.RestartNode),
+            
+            // Persistent failures - continue without node
+            _ => Task.FromResult(PipelineErrorDecision.ContinueWithoutNode)
+        };
     }
 }
 ```
@@ -601,6 +882,10 @@ public class ProductionNodeErrorHandler : INodeErrorHandler<ITransformNode<strin
         _metrics = metrics;
     }
 
+    /// <summary>
+    /// Handles errors with comprehensive logging and metrics collection.
+    /// Enables monitoring and alerting for production environments.
+    /// </summary>
     public Task<NodeErrorDecision> HandleAsync(
         ITransformNode<string, string> node,
         string failedItem,
@@ -608,14 +893,26 @@ public class ProductionNodeErrorHandler : INodeErrorHandler<ITransformNode<strin
         PipelineContext context,
         CancellationToken cancellationToken)
     {
-        _metrics.Increment("node_errors", new[] { new KeyValuePair<string, object>("node_type", node.GetType().Name) });
+        // Record error metrics for monitoring
+        _metrics.Increment("node_errors", new[] { 
+            new KeyValuePair<string, object>("node_type", node.GetType().Name),
+            new KeyValuePair<string, object>("error_type", error.GetType().Name)
+        });
+
+        // Log error with full context
         _logger.LogError(error, "Error processing item in node {NodeName}", node.Name);
 
+        // Implement error handling strategy based on exception type
         return error switch
         {
+            // Data validation errors - redirect to dead letter
             ValidationException => Task.FromResult(NodeErrorDecision.DeadLetter),
+            
+            // Transient errors - retry
             TimeoutException => Task.FromResult(NodeErrorDecision.Retry),
             HttpRequestException => Task.FromResult(NodeErrorDecision.Retry),
+            
+            // All other errors - skip
             _ => Task.FromResult(NodeErrorDecision.Skip)
         };
     }
@@ -631,21 +928,34 @@ public class ProductionPipelineErrorHandler : IPipelineErrorHandler
         _logger = logger;
     }
 
+    /// <summary>
+    /// Handles node failures with circuit breaker pattern.
+    /// Prevents cascading failures by limiting restart attempts.
+    /// </summary>
     public Task<PipelineErrorDecision> HandleNodeFailureAsync(
         string nodeId,
         Exception error,
         PipelineContext context,
         CancellationToken cancellationToken)
     {
+        // Track failure count for circuit breaker logic
         _failureCounts.TryGetValue(nodeId, out var count);
         _failureCounts[nodeId] = count + 1;
 
-        _logger.LogError(error, "Node {NodeId} failed (attempt {Attempt})", nodeId, _failureCounts[nodeId]);
+        // Log failure for monitoring
+        _logger.LogError(error, "Node {NodeId} failed (attempt {Attempt})", 
+            nodeId, _failureCounts[nodeId]);
 
+        // Implement circuit breaker based on error type and count
         return error switch
         {
+            // Critical resource errors - fail immediately
             OutOfMemoryException => Task.FromResult(PipelineErrorDecision.FailPipeline),
+            
+            // Transient errors - allow limited restarts
             _ when _failureCounts[nodeId] < 3 => Task.FromResult(PipelineErrorDecision.RestartNode),
+            
+            // Persistent failures - continue without node
             _ => Task.FromResult(PipelineErrorDecision.ContinueWithoutNode)
         };
     }
@@ -754,10 +1064,20 @@ For resilience features like `PipelineErrorDecision.RestartNode` to work properl
 
 ## See Also
 
-- [Retry Configuration](retry-configuration.md)
-- [Circuit Breaker Configuration](circuit-breaker-configuration.md)
-- [Node Restart Quickstart](node-restart-quickstart.md)
-- [Dependency Chains](dependency-chains.md)
-- [Configuration Guide](configuration-guide.md)
-- [Troubleshooting](troubleshooting.md)
-- [Error Codes Reference](../../reference/error-codes.md)
+- [Retry Configuration](retry-configuration.md) - Detailed retry policy configuration
+- [Circuit Breaker Configuration](circuit-breaker-configuration.md) - Circuit breaker patterns and settings
+- [Node Restart Quickstart](node-restart-quickstart.md) - Quick guide to node restart functionality
+- [Execution with Resilience](execution-with-resilience.md) - Adding resilience to execution strategies
+- [Dependency Chains](dependency-chains.md) - Critical prerequisite relationships for resilience features
+- [Configuration Guide](configuration-guide.md) - Comprehensive configuration options
+- [Troubleshooting](troubleshooting.md) - Common error handling issues and solutions
+- [Error Codes Reference](../../reference/error-codes.md) - Complete error code reference
+- [Execution Strategies](../pipeline-execution/execution-strategies.md) - How error handling integrates with execution
+- [PipelineBuilder](../pipelinebuilder.md) - Configuring error handling during pipeline construction
+
+## Next Steps
+
+- [Execution with Resilience](execution-with-resilience.md) - Learn how to wrap execution strategies with error handling
+- [Retry Configuration](retry-configuration.md) - Configure detailed retry policies
+- [Circuit Breaker Configuration](circuit-breaker-configuration.md) - Implement circuit breaker patterns
+- [Testing Resilient Pipelines](../../advanced-topics/testing-pipelines.md) - Test your error handling strategies

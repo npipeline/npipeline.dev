@@ -1,12 +1,19 @@
 ---
 title: Optimization Principles - How NPipeline Achieves High Performance
-description: Deep dive into the architectural and design decisions that enable NPipeline's exceptional performance characteristics.
+description: Deep dive into architectural and design decisions that enable NPipeline's exceptional performance characteristics.
 sidebar_position: 13
 ---
 
 ## Optimization Principles: How NPipeline Achieves High Performance
 
-NPipeline's performance advantages don't come by accident. They're the result of deliberate architectural decisions made at the framework level. This document explains the **why** behind NPipeline's design and how these choices combine to deliver measurable performance benefits.
+## Prerequisites
+
+Before understanding optimization principles, you should be familiar with:
+- [Core Concepts Overview](../core-concepts/index.md) - Basic NPipeline concepts and terminology
+- [Architecture Overview](./index.md) - Understanding NPipeline's internal architecture
+- [Execution Strategies](../core-concepts/pipeline-execution/execution-strategies.md) - How nodes execute data
+
+NPipeline's performance advantages don't come by accident. They're result of deliberate architectural decisions made at framework level. This document explains **why** behind NPipeline's design and how these choices combine to deliver measurable performance benefits.
 
 ---
 
@@ -18,7 +25,7 @@ Data processing frameworks face inherent tradeoffs:
 * **Developer Experience** (intuitive APIs, reduced boilerplate) vs. **Performance** (minimal overhead, zero-cost abstractions)
 * **Safety** (preventing errors) vs. **Speed** (avoiding runtime checks)
 
-Most frameworks compromise by making reasonable defaults but allowing flexibility. NPipeline takes a different approach: optimize for the most common, highest-impact scenarios while maintaining flexibility for others.
+Most frameworks compromise by making reasonable defaults but allowing flexibility. NPipeline takes a different approach: optimize for most common, highest-impact scenarios while maintaining flexibility for others.
 
 ---
 
@@ -42,7 +49,7 @@ foreach (var item in items)
 **NPipeline Approach:**
 
 ```csharp
-// Compiled: determine execution plan once, execute the same plan for all items
+// Compiled: determine execution plan once, execute same plan for all items
 var executionPlan = CompileExecutionPlan(pipeline);
 foreach (var item in items)
 {
@@ -54,7 +61,7 @@ foreach (var item in items)
 
 * Eliminating per-item branching reduces CPU cache misses
 * Predictable instruction patterns improve branch prediction
-* The CPU pipeline can optimize the hot path more effectively
+* The CPU pipeline can optimize hot path more effectively
 * In high-throughput scenarios: thousands of decisions per second become zero decisions
 
 **Impact:** Measurable CPU efficiency improvement, especially on modern CPUs with deep pipelines.
@@ -63,7 +70,7 @@ foreach (var item in items)
 
 ### 2. Zero Reflection During Steady State
 
-**The Principle:** Pay the reflection cost upfront, then never again.
+**The Principle:** Pay reflection cost upfront, then never again.
 
 **Reflection Overhead:**
 
@@ -101,7 +108,7 @@ foreach (var item in items)
 * Reflection GC pressure is eliminated during steady state
 * The JIT compiler can inline delegate calls
 
-**Impact:** Particularly noticeable in scenarios with millions of items, where per-item reflection overhead becomes the dominant cost.
+**Impact:** Particularly noticeable in scenarios with millions of items, where per-item reflection overhead becomes dominant cost.
 
 ---
 
@@ -232,7 +239,7 @@ public ValueTask<OutputType> Transform(InputType item)
 * `ValueTask<T>` is a struct (stack-allocated)
 * For synchronous results: zero heap allocations
 * For asynchronous results: seamlessly transitions to `Task<T>`
-* No performance penalty for the async fallback path
+* No performance penalty for async fallback path
 
 **Measured Impact:**
 
@@ -350,7 +357,7 @@ The combination of these principles produces observable performance characterist
 
 ### When Optimization Matters Most
 
-These optimizations provide the most benefit in:
+These optimizations provide most benefit in:
 
 * **High-throughput scenarios:** Millions of items per second
 * **Multi-tenant systems:** GC pauses directly impact other tenants
@@ -369,8 +376,18 @@ These optimizations have minimal impact if:
 
 ---
 
-## :arrow_right: Next Steps
+## See Also
+
+- [Performance Hygiene](../advanced-topics/performance-hygiene.md) - Best practices for writing performant NPipeline code
+- [Synchronous Fast Paths](../advanced-topics/synchronous-fast-paths.md) - Master ValueTask patterns in your transform nodes
+- [Component Architecture](./component-architecture.md) - Understand how these principles are implemented in codebase
+- [Execution Flow](./execution-flow.md) - How optimization principles affect data flow
+- [Performance Characteristics](./performance-characteristics.md) - Measurable performance implications
+- [Architecture: Core Concepts](./core-concepts.md) - Fundamental architectural building blocks
+
+## Next Steps
 
 * **[Performance Hygiene](../advanced-topics/performance-hygiene.md):** Best practices for writing performant NPipeline code
 * **[Synchronous Fast Paths](../advanced-topics/synchronous-fast-paths.md):** Master ValueTask patterns in your transform nodes
-* **[Component Architecture](./component-architecture.md):** Understand how these principles are implemented in the codebase
+* **[Component Architecture](./component-architecture.md):** Understand how these principles are implemented in codebase
+* **[Performance Characteristics](./performance-characteristics.md):** Understanding performance implications of different approaches

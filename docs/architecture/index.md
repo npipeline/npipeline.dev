@@ -6,7 +6,13 @@ sidebar_position: 12
 
 # Architecture Overview
 
-This section explains **how NPipeline works internally** - the design decisions, 
+## Prerequisites
+
+Before understanding NPipeline architecture, you should be familiar with:
+- [Core Concepts Overview](../core-concepts/index.md) - Basic NPipeline concepts and terminology
+- [Nodes Overview](../core-concepts/nodes/index.md) - Understanding the fundamental building blocks
+
+This section explains **how NPipeline works internally** - design decisions, 
 performance optimizations, and engineering principles that make NPipeline fast 
 and reliable.
 
@@ -14,13 +20,13 @@ and reliable.
 
 ## Understanding NPipeline Architecture
 
-NPipeline's architecture is designed around several core principles: graph-based data flow, lazy evaluation, streaming-first design, and composability. This section breaks down each major architectural component to help you understand how the system works internally.
+NPipeline's architecture is designed around several core principles: graph-based data flow, lazy evaluation, streaming-first design, and composability. This section breaks down each major architectural component to help you understand how system works internally.
 
 ## Main Architecture Sections
 
 ### [Core Concepts](core-concepts.md)
 
-Learn the fundamental architectural building blocks:
+Learn to fundamental architectural building blocks:
 
 * Graph-Based Architecture (DAGs)
 * Node Types (Source, Transform, Sink)
@@ -39,7 +45,7 @@ Understand how NPipeline achieves exceptional performance:
 
 ### [Component Architecture](component-architecture.md)
 
-Explore the major system components and their roles:
+Explore of major system components and their roles:
 - Pipeline Definition (`IPipelineDefinition`)
 - Pipeline Builder
 - Pipeline Context
@@ -51,11 +57,11 @@ Explore the major system components and their roles:
 Understand how pipelines execute data:
 - Sequential Execution (default)
 - Parallel Execution patterns
-- Data flow through the pipeline graph
+- Data flow through pipeline graph
 
 ### [Data Flow Details](data-flow.md)
 
-Deep dive into how data moves through the system:
+Deep dive into how data moves through system:
 - How Data Pipes Work
 - Lazy Evaluation principles
 - Memory efficiency patterns
@@ -78,7 +84,7 @@ Understand error propagation and handling:
 ### [Cancellation Model](cancellation-model.md)
 
 Learn about graceful shutdown and cancellation:
-- Token Propagation through the pipeline
+- Token Propagation through pipeline
 - Node cancellation responsibilities
 - Graceful termination patterns
 
@@ -98,7 +104,7 @@ Discover how to extend NPipeline:
 
 ### [Design Principles](design-principles.md)
 
-Learn the core design philosophy:
+Learn to core design philosophy:
 - Separation of Concerns
 - Lazy Evaluation
 - Streaming First
@@ -166,11 +172,22 @@ graph TD
     style SR fill:#f1f8e9
 ```
 
-*Figure: NPipeline architecture showing the relationship between core components, data flow through the graph-based pipeline, and supporting components*
+*Figure: NPipeline architecture showing relationship between core components, data flow through graph-based pipeline, and supporting components*
 
-## :arrow_right: Next Steps
+## See Also
 
-* Start with **[Core Concepts](core-concepts.md)** to understand the fundamental building blocks
+- [Core Concepts Overview](../core-concepts/index.md) - For implementation guides and practical usage
+- [Optimization Principles](optimization-principles.md) - Deep dive into performance optimizations
+- [Component Architecture](component-architecture.md) - Detailed component interactions
+- [Execution Flow](execution-flow.md) - How data flows through the pipeline
+- [Design Principles](design-principles.md) - Core philosophy behind NPipeline's design
+- [Performance Characteristics](performance-characteristics.md) - Understanding performance implications
+- [Extension Points](extension-points.md) - How to extend NPipeline functionality
+
+## Next Steps
+
+* Start with **[Core Concepts](core-concepts.md)** to understand fundamental building blocks
 * Explore **[Component Architecture](component-architecture.md)** to see how components interact
-* Dive into **[Common Patterns](../core-concepts/common-patterns.md)** for real-world examples
+* Dive into **[Optimization Principles](optimization-principles.md)** to understand why NPipeline is fast
+* Review **[Common Patterns](../core-concepts/common-patterns.md)** for real-world examples
 * Review **[Best Practices](../core-concepts/best-practices.md)** for design guidelines

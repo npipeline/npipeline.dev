@@ -6,77 +6,90 @@ sidebar_position: 2
 
 # Synchronous Fast Paths and ValueTask Optimization
 
+## Prerequisites
+
+Before implementing ValueTask optimization, you should be familiar with:
+- [Core Concepts Overview](../core-concepts/index.md) - Basic NPipeline concepts and terminology
+- [Nodes Overview](../core-concepts/nodes/index.md) - Understanding how nodes process data
+- [Transform Nodes](../core-concepts/nodes/transform-nodes.md) - Node implementation details
+- [Optimization Principles](../architecture/optimization-principles.md) - Understanding why ValueTask improves performance
+
 > :information_source: For general performance best practices, see [Performance Hygiene](performance-hygiene.md).
 
-This is the **definitive guide** for understanding and implementing the `ValueTask<T>` pattern in transformer nodes. For a quick introduction, see [Performance Hygiene: Use ValueTask\<T\> for Fast Path Scenarios](performance-hygiene.md#use-valuetaskt-for-fast-path-scenarios).
+This is **definitive guide** for understanding and implementing `ValueTask<T>` pattern in transformer nodes. For a quick introduction, see [Performance Hygiene: Use ValueTask\<T\> for Fast Path Scenarios](performance-hygiene.md#use-valuetaskt-for-fast-path-scenarios).
 
 ## The Performance Paradox
 
-A common performance pitfall in high-throughput ETL pipelines is the contradiction between advice and implementation:
+A common performance pitfall in high-throughput ETL pipelines is contradiction between advice and implementation:
 
 > **The advice says:** "Minimize memory allocations to reduce GC pressure"
 > **The code does:** Return `Task<T>` for all transformer nodes
 
 This creates a subtle but critical performance problem: even when your transform work is **completely synchronous** (a cache hit, a simple calculation), you're still creating a heap-allocated `Task<T>` object to wrap the result.
 
-In a pipeline processing **millions of items per second**, where many transforms are synchronous or have high synchronous fast-path rates, you can easily be creating **millions of tiny heap allocations per second**. This creates constant pressure on the garbage collector, causing pauses that directly undermine your throughput goals.
+In a pipeline processing **millions of items per second**, where many transforms are synchronous or have high synchronous fast-path rates, you can easily be creating **millions of tiny heap allocations per second**. This creates constant pressure on garbage collector, causing pauses that directly undermine your throughput goals.
 
 ## The Solution: ValueTask
 
 `ValueTask<T>` is a struct-based alternative to `Task<T>` that:
 
-- **Allocates on the stack** (not the heap) when the result is available synchronously
-- **Zero allocations** for the common case in cache-hit or synchronous scenarios
+- **Allocates on stack** (not heap) when result is available synchronously
+- **Zero allocations** for common case in cache-hit or synchronous scenarios
 - **Seamlessly transitions** to true async work when needed
 
-The tradeoff: You need to implement a two-path pattern—checking for the synchronous case first.
+The tradeoff: You need to implement a two-path pattern—checking for synchronous case first.
 
 ## The Pattern: Synchronous Fast Path + Asynchronous Slow Path
 
-Here's the pattern that balances performance with practicality:
+Here's pattern that balances performance with practicality:
 
 ```csharp
-public sealed class OptimizedTransform : ITransformNode<InputType, OutputType>
+using NPipeline;
+using NPipeline.Nodes;
+using NPipeline.Pipeline;
+
+/// <summary>
+/// High-performance transform with cache optimization using ValueTask.
+/// Demonstrates zero-allocation pattern for high-throughput scenarios.
+/// In pipelines with 90% cache hits processing 10k items/sec,
+/// this eliminates ~9000 allocations/sec compared to Task&lt;T&gt;.
+/// </summary>
+public sealed class CachedTransform : TransformNode<string, UserData>
 {
-    private readonly ConcurrentDictionary<KeyType, OutputType> _cache = new();
+    private readonly ConcurrentDictionary<string, UserData> _cache = new();
 
     /// <summary>
-    /// ValueTask enables zero-allocation returns when work is synchronous.
+    /// Processes user data with cache-first strategy.
+    /// Fast path: cache hit - no Task allocation
+    /// Slow path: cache miss - async database call
     /// </summary>
-    public ValueTask<OutputType> ExecuteAsync(
-        InputType item,
-        PipelineContext context,
+    public override ValueTask<UserData> ExecuteAsync(
+        string userId, 
+        PipelineContext context, 
         CancellationToken cancellationToken)
     {
-        // Fast path: Synchronous work (e.g., cache lookup, simple calculation)
-        if (TryGetSynchronousResult(item, out var result))
-        {
-            // Return via ValueTask - no heap allocation!
-            return new ValueTask<OutputType>(result);
-        }
+        // Fast path: cache hit - no Task allocation
+        if (_cache.TryGetValue(userId, out var cached))
+            return new ValueTask<UserData>(cached);
 
-        // Slow path: Asynchronous work falls back to true async
-        return new ValueTask<OutputType>(TransformAsync(item, context, cancellationToken));
+        // Slow path: async database call
+        return new ValueTask<UserData>(FetchAndCacheAsync(userId, cancellationToken));
     }
 
-    private bool TryGetSynchronousResult(InputType item, out OutputType result)
+    /// <summary>
+    /// Fetches user data from database and caches the result.
+    /// This method is only called on cache misses.
+    /// </summary>
+    private async Task<UserData> FetchAndCacheAsync(string userId, CancellationToken ct)
     {
-        // Example: Check cache
-        return _cache.TryGetValue(ExtractKey(item), out result!);
+        var data = await _database.GetUserAsync(userId, ct);
+        _cache.TryAdd(userId, data);
+        return data;
     }
-
-    private async Task<OutputType> TransformAsync(
-        InputType item,
-        PipelineContext context,
-        CancellationToken cancellationToken)
-    {
-        var result = await ExpensiveOperationAsync(item, cancellationToken);
-        return result;
-    }
-
-    private KeyType ExtractKey(InputType item) => /* ... */;
-    private async Task<OutputType> ExpensiveOperationAsync(InputType item, CancellationToken ct) => /* ... */;
 }
+
+// Supporting types for the example
+public record UserData(string Id, string Name, string Email);
 ```
 
 ## Real-World Example: Cached Data Enrichment
@@ -84,7 +97,15 @@ public sealed class OptimizedTransform : ITransformNode<InputType, OutputType>
 Consider a typical ETL scenario where you enrich data by looking up additional information:
 
 ```csharp
-public sealed class UserEnrichmentTransform : ITransformNode<UserId, EnrichedUser>
+using NPipeline;
+using NPipeline.Nodes;
+using NPipeline.Pipeline;
+
+/// <summary>
+/// Transform for enriching user data with caching optimization.
+/// Demonstrates ValueTask pattern for real-world cache-hit scenarios.
+/// </summary>
+public sealed class UserEnrichmentTransform : TransformNode<UserId, EnrichedUser>
 {
     private readonly ConcurrentDictionary<string, UserProfile> _profileCache = new();
     private readonly IUserDatabase _userDatabase;
@@ -95,15 +116,15 @@ public sealed class UserEnrichmentTransform : ITransformNode<UserId, EnrichedUse
     }
 
     /// <summary>
-    /// For a pipeline processing 1 million user IDs per second with 90% cache hits,
-    /// this eliminates 900,000 Task allocations per second.
+    /// Enriches user data with profile information.
+    /// Uses cache-first strategy to minimize database calls.
     /// </summary>
-    public ValueTask<EnrichedUser> ExecuteAsync(
+    public override ValueTask<EnrichedUser> ExecuteAsync(
         UserId userId,
         PipelineContext context,
         CancellationToken cancellationToken)
     {
-        // Check cache first (usually succeeds)
+        // Check cache first (usually succeeds - fast path)
         if (_profileCache.TryGetValue(userId.Value, out var cachedProfile))
         {
             // Fast path: Return immediately, zero heap allocation
@@ -112,12 +133,16 @@ public sealed class UserEnrichmentTransform : ITransformNode<UserId, EnrichedUse
             );
         }
 
-        // Cache miss: Fall back to database lookup
+        // Cache miss: Fall back to database lookup (slow path)
         return new ValueTask<EnrichedUser>(
             FetchAndEnrichAsync(userId, context, cancellationToken)
         );
     }
 
+    /// <summary>
+    /// Fetches user profile from database and caches the result.
+    /// Only executed on cache misses, then cached for future requests.
+    /// </summary>
     private async Task<EnrichedUser> FetchAndEnrichAsync(
         UserId userId,
         PipelineContext context,
@@ -129,9 +154,16 @@ public sealed class UserEnrichmentTransform : ITransformNode<UserId, EnrichedUse
     }
 }
 
+// Supporting types for the example
 public record UserId(string Value);
 public record UserProfile(string Name, string Email, DateTime CreatedAt);
 public record EnrichedUser(UserId Id, UserProfile Profile);
+
+// Interface for database access
+public interface IUserDatabase
+{
+    Task<UserProfile> GetProfileAsync(string userId, CancellationToken cancellationToken);
+}
 ```
 
 ## Performance Impact
@@ -152,7 +184,7 @@ In a realistic high-volume ETL pipeline:
 
 ✅ **Use `ValueTask` when:**
 
-- The transform can complete synchronously in the common case
+- The transform can complete synchronously in common case
 - You have a cache, in-memory lookup, or fast path
 - The synchronous case is likely to happen frequently
 - You're optimizing for throughput in high-volume scenarios
@@ -160,17 +192,17 @@ In a realistic high-volume ETL pipeline:
 ❌ **Use `Task` when:**
 
 - The transform is almost always asynchronous (database queries, network calls every time)
-- You want simpler code and the performance benefit is marginal
-- You're building a library and want to keep the interface simple
+- You want simpler code and performance benefit is marginal
+- You're building a library and want to keep interface simple
 - The pipeline volume is low enough that allocations don't matter
 
 ### Implementation Checklist
 
-- [ ] **Identify the fast path:** Where can the transform return synchronously?
-- [ ] **Measure the fast-path hit rate:** Is it worth optimizing? (Usually yes if > 50%)
-- [ ] **Implement `TryGetSynchronousResult()`:** Extract the synchronous case
+- [ ] **Identify fast path:** Where can transform return synchronously?
+- [ ] **Measure fast-path hit rate:** Is it worth optimizing? (Usually yes if > 50%)
+- [ ] **Implement `TryGetSynchronousResult()`:** Extract synchronous case
 - [ ] **Benchmark it:** Use BenchmarkDotNet to measure allocation reduction
-- [ ] **Document it:** Explain why `ValueTask<T>` is used and what the fast path is
+- [ ] **Document it:** Explain why `ValueTask<T>` is used and what fast path is
 - [ ] **Test both paths:** Ensure your code works when fast path returns and when it doesn't
 
 ## Code Examples
@@ -180,18 +212,27 @@ In a realistic high-volume ETL pipeline:
 If your transform is **always** synchronous, even simpler:
 
 ```csharp
-public sealed class SimpleCalculationTransform : ITransformNode<int, int>
+using NPipeline;
+using NPipeline.Nodes;
+using NPipeline.Pipeline;
+
+/// <summary>
+/// Transform for simple synchronous calculations.
+/// Demonstrates ValueTask for always-synchronous operations.
+/// Using ValueTask eliminates Task allocation even for simple calculations.
+/// </summary>
+public sealed class SimpleCalculationTransform : TransformNode<int, int>
 {
     /// <summary>
-    /// Pure synchronous work: square each number.
-    /// Using ValueTask eliminates Task allocation overhead.
+    /// Performs square operation on input integer.
+    /// Pure synchronous work - no async operations needed.
     /// </summary>
-    public ValueTask<int> ExecuteAsync(
+    public override ValueTask<int> ExecuteAsync(
         int item,
         PipelineContext context,
         CancellationToken cancellationToken)
     {
-        // No async work at all
+        // No async work at all - direct calculation
         return new ValueTask<int>(item * item);
     }
 }
@@ -200,12 +241,33 @@ public sealed class SimpleCalculationTransform : ITransformNode<int, int>
 ### Example 2: Format Transformation with Optional Fallback
 
 ```csharp
-public sealed class DataFormatTransform : ITransformNode<RawData, FormattedData>
+using NPipeline;
+using NPipeline.Nodes;
+using NPipeline.Pipeline;
+
+/// <summary>
+/// Transform for data formatting with optional fallback.
+/// Demonstrates hybrid pattern with local cache and network service.
+/// </summary>
+public sealed class DataFormatTransform : TransformNode<RawData, FormattedData>
 {
     private readonly IFormatterCache _formatterCache;
     private readonly INetworkFormatterService _networkFormatter;
 
-    public ValueTask<FormattedData> ExecuteAsync(
+    public DataFormatTransform(
+        IFormatterCache formatterCache,
+        INetworkFormatterService networkFormatter)
+    {
+        _formatterCache = formatterCache;
+        _networkFormatter = networkFormatter;
+    }
+
+    /// <summary>
+    /// Formats raw data using cache-first strategy.
+    /// Fast path: local cache hit
+    /// Slow path: network service call
+    /// </summary>
+    public override ValueTask<FormattedData> ExecuteAsync(
         RawData item,
         PipelineContext context,
         CancellationToken cancellationToken)
@@ -222,6 +284,21 @@ public sealed class DataFormatTransform : ITransformNode<RawData, FormattedData>
         );
     }
 }
+
+// Supporting types for the example
+public record RawData(string Id, string Content);
+public record FormattedData(string Id, string FormattedContent, DateTime ProcessedAt);
+
+// Interfaces for dependencies
+public interface IFormatterCache
+{
+    bool TryFormat(RawData data, out FormattedData formatted);
+}
+
+public interface INetworkFormatterService
+{
+    Task<FormattedData> FormatAsync(RawData data, CancellationToken cancellationToken);
+}
 ```
 
 ## Critical Constraints: When NOT to Use ValueTask
@@ -230,7 +307,7 @@ While ValueTask is powerful, it comes with strict constraints. Understanding the
 
 ### Never Await More Than Once
 
-**The Rule:** You can only `await` a `ValueTask<T>` exactly once. Multiple awaits on the same `ValueTask<T>` are undefined behavior and will cause exceptions or incorrect results.
+**The Rule:** You can only `await` a `ValueTask<T>` exactly once. Multiple awaits on same `ValueTask<T>` are undefined behavior and will cause exceptions or incorrect results.
 
 ```csharp
 // INCORRECT - DO NOT DO THIS
@@ -239,14 +316,14 @@ var result1 = await valueTask;  // First await - OK
 var result2 = await valueTask;  // Second await - UNDEFINED BEHAVIOR (exception or wrong result)
 ```
 
-**Why?** The struct-based nature of `ValueTask<T>` means its state is mutable. After the first await completes, the internal state is consumed. A second await has nowhere to go.
+**Why?** The struct-based nature of `ValueTask<T>` means its state is mutable. After first await completes, internal state is consumed. A second await has nowhere to go.
 
 **Correct usage:**
 
 ```csharp
 // CORRECT
 var result1 = await GetValueAsync("key");
-var result2 = await GetValueAsync("key"); // Call the method again
+var result2 = await GetValueAsync("key"); // Call method again
 ```
 
 ### Avoid When Always Asynchronous
@@ -267,11 +344,11 @@ public Task<int> ComputeExpensiveAsync()
 }
 ```
 
-In this case, the synchronous fast path never exists, so you're just adding complexity.
+In this case, synchronous fast path never exists, so you're just adding complexity.
 
 ### Consider Public APIs Carefully
 
-If this is a public API that external callers will use, consider using `Task<T>` instead. Your callers need to understand the constraints of `ValueTask<T>` (single await, no ConfigureAwait) to use it correctly. If those constraints aren't explicitly documented and understood, you may create subtle bugs in calling code.
+If this is a public API that external callers will use, consider using `Task<T>` instead. Your callers need to understand constraints of `ValueTask<T>` (single await, no ConfigureAwait) to use it correctly. If those constraints aren't explicitly documented and understood, you may create subtle bugs in calling code.
 
 ```csharp
 // If this is internal or well-documented, ValueTask is fine
@@ -280,8 +357,8 @@ internal ValueTask<int> GetItemAsync(string key)
     // ...
 }
 
-// If this is public, consider whether ValueTask constraints are worth the performance gain
-// or whether Task is the safer choice for API stability
+// If this is public, consider whether ValueTask constraints are worth performance gain
+// or whether Task is safer choice for API stability
 public Task<int> GetItemAsync(string key)
 {
     // Simpler contract, no surprise constraints
@@ -307,45 +384,15 @@ public Task<string> GetValueAsync()
 
 - [Performance Hygiene](performance-hygiene.md) - Comprehensive performance best practices
 - [Transform Nodes](../core-concepts/nodes/transform-nodes.md) - Node implementation details and ValueTask optimization patterns
+- [Optimization Principles](../architecture/optimization-principles.md) - Understanding why ValueTask improves performance
 - [Sample: High-Performance Transforms](../../samples/Sample_02_HighPerformanceTransform/) - Complete working example
+- [Execution Strategies](../core-concepts/pipeline-execution/execution-strategies.md) - How ValueTask integrates with execution strategies
+- [Error Handling Guide](../core-concepts/resilience/error-handling-guide.md) - Error handling with ValueTask patterns
 
-## Benchmarking Template
+## Next Steps
 
-Use BenchmarkDotNet to measure the impact:
-
-```csharp
-[MemoryDiagnoser]
-public class TransformNodeBenchmarks
-{
-    private ITransformNode<InputType, OutputType> _taskVersion;
-    private ITransformNode<InputType, OutputType> _valuetaskVersion;
-    private InputType[] _testData;
-
-    [GlobalSetup]
-    public void Setup()
-    {
-        _testData = GenerateTestData(10000);
-        // Initialize both implementations
-    }
-
-    [Benchmark]
-    public async Task TaskVersion()
-    {
-        foreach (var item in _testData)
-        {
-            await _taskVersion.ExecuteAsync(item, null!, default);
-        }
-    }
-
-    [Benchmark]
-    public async Task ValueTaskVersion()
-    {
-        foreach (var item in _testData)
-        {
-            await _valuetaskVersion.ExecuteAsync(item, null!, default);
-        }
-    }
-}
-```
-
-The `[MemoryDiagnoser]` attribute will show you the allocation difference between `Task<T>` and `ValueTask<T>` approaches.
+- [Performance Hygiene](performance-hygiene.md) - Comprehensive performance best practices
+- [Transform Nodes](../core-concepts/nodes/transform-nodes.md) - Node implementation details and ValueTask optimization patterns
+- [Optimization Principles](../architecture/optimization-principles.md) - Understanding why ValueTask improves performance
+- [Sample: High-Performance Transforms](../../samples/Sample_02_HighPerformanceTransform/) - Complete working example
+- [Execution Strategies](../core-concepts/pipeline-execution/execution-strategies.md) - How ValueTask integrates with execution strategies

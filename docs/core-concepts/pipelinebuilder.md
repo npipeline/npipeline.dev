@@ -7,6 +7,12 @@ slug: /core-concepts/pipelinebuilder
 
 # PipelineBuilder
 
+## Prerequisites
+
+Before using PipelineBuilder, you should be familiar with:
+- [Nodes Overview](./nodes/index.md) - Understanding the node types you'll be connecting
+- [Core Concepts Overview](./index.md) - Basic NPipeline concepts and terminology
+
 The `PipelineBuilder` is a fluent API that provides a simple and expressive way to define the structure of your data pipeline. It is the primary tool for adding nodes, connecting them, and compiling the final, runnable `IPipeline` instance.
 
 ## The Core Workflow
@@ -35,58 +41,93 @@ using NPipeline.DataFlow;
 using NPipeline.Nodes;
 using NPipeline.Pipeline;
 
+/// <summary>
+/// Source node that produces simple string messages.
+/// Demonstrates basic source pattern for starting a pipeline.
+/// </summary>
+public sealed class HelloWorldSource : SourceNode<string>
+{
+    public override IDataPipe<string> ExecuteAsync(PipelineContext context, CancellationToken cancellationToken)
+    {
+        // Create streaming data pipe immediately (synchronous operation)
+        return new StreamingDataPipe<string>(GenerateMessages());
+
+        static async IAsyncEnumerable<string> GenerateMessages()
+        {
+            // Generate a sequence of greeting messages
+            string[] messages = { "Hello", "World", "from", "NPipeline" };
+            
+            foreach (var message in messages)
+            {
+                yield return message;
+                // Small delay to simulate work or external dependency
+                await Task.Delay(100, cancellationToken);
+            }
+        }
+    }
+}
+
+/// <summary>
+/// Transform that converts strings to uppercase.
+/// Demonstrates basic synchronous transform pattern.
+/// </summary>
+public sealed class UppercaseTransform : ITransformNode<string, string>
+{
+    public Task<string> ExecuteAsync(string item, PipelineContext context, CancellationToken cancellationToken)
+    {
+        // Synchronous string manipulation - no async work needed
+        var uppercase = item.ToUpperInvariant();
+        return Task.FromResult(uppercase);
+    }
+}
+
+/// <summary>
+/// Sink node that outputs messages to console.
+/// Demonstrates terminal node pattern for pipeline output.
+/// </summary>
+public sealed class ConsoleSink : ISinkNode<string>
+{
+    public async Task ExecuteAsync(IDataPipe<string> input, PipelineContext context, CancellationToken cancellationToken)
+    {
+        // Process each message as it arrives from upstream
+        await foreach (var message in input.WithCancellation(cancellationToken))
+        {
+            Console.WriteLine(message);
+        }
+    }
+}
+
+/// <summary>
+/// Pipeline definition that connects source, transform, and sink nodes.
+/// Demonstrates the fluent API pattern for building executable pipelines.
+/// </summary>
+public sealed class HelloWorldPipelineDefinition : IPipelineDefinition
+{
+    public void Define(PipelineBuilder builder, PipelineContext context)
+    {
+        // Add nodes to pipeline and get handles for connection
+        var sourceHandle = builder.AddSource<HelloWorldSource, string>("message_source");
+        var transformHandle = builder.AddTransform<UppercaseTransform, string, string>("uppercase_transform");
+        var sinkHandle = builder.AddSink<ConsoleSink, string>("console_sink");
+
+        // Define data flow by connecting nodes in sequence
+        builder.Connect(sourceHandle, transformHandle);
+        builder.Connect(transformHandle, sinkHandle);
+    }
+}
+
 public static class Program
 {
     public static async Task Main(string[] args)
     {
-        var builder = new PipelineBuilder();
-
-        // Add nodes and store their handles
-        var sourceHandle = builder.AddSource<HelloWorldSource, string>();
-        var transformHandle = builder.AddTransform<UppercaseTransform, string, string>();
-        var sinkHandle = builder.AddSink<ConsoleSink, string>();
-
-        // Connect the source to the transform
-        builder.Connect(sourceHandle, transformHandle);
-
-        // Connect the transform to the sink
-        builder.Connect(transformHandle, sinkHandle);
-
-        var pipeline = builder.Build();
+        // Create pipeline runner to execute the defined pipeline
         var runner = new PipelineRunner();
-        await runner.RunAsync(pipeline);
+        
+        // Run the pipeline using the definition
+        await runner.RunAsync<HelloWorldPipelineDefinition>();
     }
 }
 ```
-
-## Step 2: Connecting Nodes
-
-After adding your nodes, you define the data flow by calling the `Connect` method. This method takes the handles of the source and target nodes as arguments.
-
-```csharp
-// Connect the source to the transform
-builder.Connect(sourceHandle, transformHandle);
-
-// Connect the transform to the sink
-builder.Connect(transformHandle, sinkHandle);
-```
-
-The builder ensures that the output type of the source node matches the input type of the target node, providing compile-time safety.
-
-## Step 3: Building the Pipeline
-
-Once all nodes are added and connected, you call the `Build()` method. This method performs several crucial actions:
-
-* It validates the graph to ensure it is a valid, runnable pipeline (e.g., no cycles, no disconnected nodes).
-* It compiles the node definitions and connections into an optimized, executable `Pipeline` instance.
-
-```csharp
-Pipeline pipeline = builder.Build();
-```
-
-## Putting It All Together
-
-Here is a complete example that demonstrates the fluent nature of the PipelineBuilder:
 
 ```csharp
 using NPipeline;
@@ -94,31 +135,64 @@ using NPipeline.DataFlow;
 using NPipeline.Nodes;
 using NPipeline.Pipeline;
 
+/// <summary>
+/// Pipeline definition demonstrating the complete fluent API workflow.
+/// Shows the three-step process: Add nodes, Connect them, Build pipeline.
+/// </summary>
+public sealed class CompletePipelineDefinition : IPipelineDefinition
+{
+    public void Define(PipelineBuilder builder, PipelineContext context)
+    {
+        // Step 1: Add nodes and store their handles
+        var sourceHandle = builder.AddSource<HelloWorldSource, string>("source");
+        var transformHandle = builder.AddTransform<UppercaseTransform, string, string>("transform");
+        var sinkHandle = builder.AddSink<ConsoleSink, string>("sink");
+
+        // Step 2: Connect nodes to define data flow
+        builder.Connect(sourceHandle, transformHandle);
+        builder.Connect(transformHandle, sinkHandle);
+
+        // Step 3: Build pipeline (implicit when RunAsync is called)
+        // The builder validates the graph and creates executable pipeline
+    }
+}
+
 public static class Program
 {
     public static async Task Main(string[] args)
     {
-        // Step 1: Create builder
+        // Create builder and define pipeline
         var builder = new PipelineBuilder();
-
-        // Step 2: Add Nodes (and get handles)
-        var sourceHandle = builder.AddSource<HelloWorldSource, string>();
-        var transformHandle = builder.AddTransform<UppercaseTransform, string, string>();
-        var sinkHandle = builder.AddSink<ConsoleSink, string>();
-
-        // Step 3: Connect Nodes
-        builder.Connect(sourceHandle, transformHandle);
-        builder.Connect(transformHandle, sinkHandle);
-
-        // Step 4: Build and run
+        
+        // Create pipeline definition
+        var definition = new CompletePipelineDefinition();
+        
+        // Define the pipeline structure
+        var context = PipelineContext.Default;
+        definition.Define(builder, context);
+        
+        // Build the pipeline (validates graph and creates executable instance)
         var pipeline = builder.Build();
+        
+        // Execute the pipeline
         var runner = new PipelineRunner();
         await runner.RunAsync(() => pipeline);
     }
 }
 ```
 
-## :arrow_right: Next Steps
+## See Also
 
-* Learn about the final component, the **[PipelineContext](pipeline-context.md)**, which carries state across your pipeline.
-* Review the different types of **[INode](nodes/index.md)** you can add to the builder.
+- [Nodes Overview](./nodes/index.md) - Understanding the node types you'll be connecting
+- [Pipeline Execution](./pipeline-execution/index.md) - Learn how built pipelines are executed
+- [Execution Strategies](./pipeline-execution/execution-strategies.md) - Control how nodes process data
+- [Error Handling Guide](./resilience/error-handling-guide.md) - Add resilience to your pipelines
+- [Pipeline Context](./pipeline-context.md) - Understanding shared state across nodes
+- [Dependency Injection](../extensions/dependency-injection.md) - Using DI with PipelineBuilder
+
+## Next Steps
+
+- [Pipeline Context](./pipeline-context.md) - Learn about the final component that carries state across your pipeline
+- [Execution Strategies](./pipeline-execution/execution-strategies.md) - Control how nodes process data
+- [Error Handling Guide](./resilience/error-handling-guide.md) - Add resilience to your pipelines
+- [Dependency Injection](../extensions/dependency-injection.md) - Using DI with PipelineBuilder
