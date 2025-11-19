@@ -93,4 +93,4 @@ Pipeline execution involves several key aspects:
 * **[Pipeline Context](../pipeline-context.md)** - Learn how to pass state and configuration to your pipeline
 * **[Architecture: Execution Flow](../../architecture/execution-flow.md)** - Deep dive into sequential and parallel execution
 * **[Architecture: Cancellation Model](../../architecture/cancellation-model.md)** - Understand cancellation propagation
-* **[Error Handling](error-handling.md)** - Learn about error handling strategies
+* **[Error Handling](../resilience/error-handling-guide.md)** - Learn about error handling strategies

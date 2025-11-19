@@ -35,67 +35,63 @@ Perfect for developers new to data pipelines. Learn the fundamentals:
 - [Debugging Pipelines](introduction/troubleshooting.md) - Common issues and solutions
 
 ### Module 4: Putting It Together (45 minutes)
-- [Building a Complete ETL Pipeline](tutorials/etl-pipeline.md) - End-to-end example
-- [Exercise: Simple Data Processing](tutorials/simple-data-processing.md) - Hands-on practice
+Congratulations! You now have the fundamentals. Continue to the Intermediate Path to learn advanced patterns.
 
 ## Intermediate Path (4-6 hours)
 
 For developers comfortable with basics who want to build robust pipelines:
 
 ### Module 1: Advanced Nodes (60 minutes)
+
 - [Advanced Node Types](core-concepts/advanced-nodes/index.md) - Beyond basic transforms
 - [Batching Nodes](core-concepts/advanced-nodes/batching.md) - Processing data in batches
 - [Aggregation Nodes](core-concepts/advanced-nodes/aggregation.md) - Data aggregation patterns
 - [Join Nodes](core-concepts/advanced-nodes/join.md) - Combining multiple data streams
 
 ### Module 2: Resilience Patterns (90 minutes)
+
 - [Execution with Resilience](core-concepts/resilience/execution-with-resilience.md) - Building fault-tolerant pipelines
 - [Materialization and Buffering](core-concepts/resilience/materialization-and-buffering.md) - Understanding replay functionality
 - [Circuit Breaker Configuration](core-concepts/resilience/circuit-breaker-configuration.md) - Preventing cascading failures
 - [Dependency Chains](core-concepts/resilience/dependency-chains.md) - Critical prerequisite relationships
 
 ### Module 3: Performance Optimization (60 minutes)
+
 - [Execution Strategies](core-concepts/pipeline-execution/execution-strategies.md) - Choosing the right execution strategy
 - [Performance Hygiene](advanced-topics/performance-hygiene.md) - Best practices for efficient pipelines
 - [Synchronous Fast Paths](advanced-topics/synchronous-fast-paths.md) - Optimizing for high throughput
 
 ### Module 4: Real-World Patterns (60 minutes)
+
 - [Configuration Guide](core-concepts/resilience/configuration-guide.md) - Step-by-step configuration
 - [Troubleshooting](core-concepts/resilience/troubleshooting.md) - Diagnosing common issues
-- [Exercise: Building Resilient ETL](tutorials/resilient-etl.md) - Practical application
 
 ## Expert Path (8-12 hours)
 
 For experienced developers who want to master NPipeline:
 
 ### Module 1: Advanced Architecture (120 minutes)
-- [Custom Execution Strategies](#TODO-FILE-NOT-EXISTENT) - Creating your own execution strategies
-- [Memory Management](#TODO-FILE-NOT-EXISTENT) - Advanced memory optimization techniques
-- [Dynamic Pipelines](#TODO-FILE-NOT-EXISTENT) - Building configurable, runtime-modifiable pipelines
+
+- [Performance Optimization](advanced-topics/performance-hygiene.md) - Advanced optimization techniques
+- [Dynamic Pipelines](core-concepts/advanced-nodes/index.md) - Working with complex node configurations
+- [Custom Extensions](extensions/index.md) - Building custom extensions
 
 ### Module 2: Production Readiness (120 minutes)
-- [Observability and Monitoring](advanced-topics/observability.md) - Metrics, logging, and tracing
-- [Deployment Patterns](advanced-topics/deployment.md) - Production deployment strategies
-- [Scaling Strategies](advanced-topics/scaling.md) - Handling high-volume scenarios
-- [Security Considerations](advanced-topics/security.md) - Securing your pipelines
+
+- [Connector Patterns](connectors/index.md) - Integrating with external systems
+- [Error Handling Architecture](architecture/error-handling-architecture.md) - Deep dive into error handling
+- [Security Considerations](introduction/index.md) - Securing your pipelines
 
 ### Module 3: Advanced Integration (120 minutes)
-- [Connector Patterns](connectors/index.md) - Integrating with external systems
-- [Custom Node Development](advanced-topics/custom-node-development.md) - Extending NPipeline
-- [Lineage and Tracking](core-concepts/lineage/index.md) - Data provenance and tracking
+
+- [Dependency Injection](architecture/dependency-injection.md) - Advanced DI patterns
+- [Extension Points](architecture/extension-points.md) - Creating custom extensions
+- [Performance Characteristics](architecture/performance-characteristics.md) - Understanding performance
 
 ### Module 4: Mastery Project (120 minutes)
-- [Building a Production-Grade Data Platform](tutorials/data-platform.md) - Comprehensive project
-- [Performance Benchmarking](advanced-topics/benchmarking.md) - Measuring and optimizing performance
-- [Certification Assessment](#certification-quiz) - Test your knowledge
 
-## Certification Quiz (Optional)
-
-Test your NPipeline knowledge with our certification quiz:
-
-- [Beginner Certification Quiz](quizzes/beginner-certification.md) - Test your basic understanding
-- [Intermediate Certification Quiz](quizzes/intermediate-certification.md) - Test your intermediate skills
-- [Expert Certification Quiz](quizzes/expert-certification.md) - Test your expert knowledge
+- [Performance Benchmarking](advanced-topics/performance-hygiene.md) - Measuring and optimizing performance
+- [Testing Strategies](advanced-topics/testing-pipelines.md) - Advanced testing techniques
 
 ---
 
@@ -109,6 +105,5 @@ Test your NPipeline knowledge with our certification quiz:
 
 ## Need Help?
 
-- [FAQ](faq.md) - Common questions and answers
-- [Community Forum](https://github.com/NPipeline/NPipeline/discussions) - Get help from the community
+- [FAQ](introduction/faq.md) - Common questions and answers
 - [Issue Tracker](https://github.com/NPipeline/NPipeline/issues) - Report bugs or request features
