@@ -4,5 +4,26 @@
   "link": {
     "type": "doc",
     "id": "core-concepts/pipeline-execution/index"
-  }
+  },
+  "customProps": {
+    "sidebar_position": 6
+  },
+  "items": [
+    {
+      "type": "doc",
+      "id": "core-concepts/pipeline-execution/execution-strategies",
+      "customProps": {
+        "sidebar_position": 1
+      },
+      "label": "Execution Strategies"
+    },
+    {
+      "type": "doc",
+      "id": "core-concepts/pipeline-execution/ipipelinerunner",
+      "customProps": {
+        "sidebar_position": 2
+      },
+      "label": "IPipelineRunner"
+    }
+  ]
 }

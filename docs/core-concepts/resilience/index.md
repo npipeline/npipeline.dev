@@ -52,10 +52,10 @@ NPipeline's resilience framework is built around several interconnected componen
 
 | Component | Role | Critical Dependency |
 |-----------|------|---------------------|
-| **[ResilientExecutionStrategy](resilient-execution-strategy.md)** | Wrapper that enables recovery capabilities for nodes | Prerequisite for all resilience features |
+| **[ResilientExecutionStrategy](execution-with-resilience.md)** | Wrapper that enables recovery capabilities for nodes | Prerequisite for all resilience features |
 | **[Materialization & Buffering](materialization-and-buffering.md)** | Buffers input items to enable replay during restarts | Required for `PipelineErrorDecision.RestartNode` |
-| **[Error Handling](../pipeline-execution/error-handling.md)** | Determines how to respond to different types of failures | Provides decision logic for recovery actions |
-| **[Retry Options](../pipeline-execution/retry-configuration.md)** | Configures retry limits and materialization caps | Controls resilience behavior boundaries |
+| **[Error Handling](error-handling-guide.md)** | Determines how to respond to different types of failures | Provides decision logic for recovery actions |
+| **[Retry Options](retry-configuration.md)** | Configures retry limits and materialization caps | Controls resilience behavior boundaries |
 
 ## ⚠️ Critical Prerequisites for Node Restart (RestartNode)
 
@@ -70,7 +70,7 @@ You **must** configure all three of the following. Missing any one will cause si
 - [ ] **Requirement 1: ResilientExecutionStrategy**
   - The node must be wrapped with `ResilientExecutionStrategy`
   - Without this: Restart decisions are ignored; node cannot recover
-  - Reference: [Resilient Execution Strategy](resilient-execution-strategy.md)
+  - Reference: [Resilient Execution Strategy](execution-with-resilience.md)
 
 - [ ] **Requirement 2: MaxMaterializedItems Configuration**
   - Set `MaxMaterializedItems > 0` in `PipelineRetryOptions` (for streaming inputs)
@@ -82,7 +82,7 @@ You **must** configure all three of the following. Missing any one will cause si
 - [ ] **Requirement 3: Error Handler Decision**
   - Your error handler must return `PipelineErrorDecision.RestartNode` (not `FailPipeline` or `ContinueWithoutNode`)
   - Without this: Node restarts are never attempted
-  - Reference: [Error Handling](../pipeline-execution/error-handling.md)
+  - Reference: [Error Handling](error-handling-guide.md)
 
 ### What Happens If You Miss These
 
@@ -250,7 +250,7 @@ For systems with limited memory:
 
 ## :arrow_right: Next Steps
 
-- **[Resilient Execution Strategy](resilient-execution-strategy.md)**: Learn about the core wrapper that enables resilience
+- **[Resilient Execution Strategy](execution-with-resilience.md)**: Learn about the core wrapper that enables resilience
 - **[Materialization and Buffering](materialization-and-buffering.md)**: Understand how buffering enables replay functionality
 - **[Dependency Chains](dependency-chains.md)**: Explore the critical prerequisite relationships in detail
 - **[Configuration Guide](configuration-guide.md)**: Get practical implementation guidance with code examples

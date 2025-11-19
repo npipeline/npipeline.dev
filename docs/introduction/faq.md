@@ -245,7 +245,7 @@ var policy = Policy
 await policy.ExecuteAsync(async () => await CallServiceAsync());
 ```
 
-See [Configuring Retries](../core-concepts/pipeline-execution/error-handling.md#configuring-retries) for detailed examples and best practices.
+See [Configuring Retries](../core-concepts/resilience/error-handling-guide.md#configuring-retries) for detailed examples and best practices.
 
 ## Error Codes Reference
 

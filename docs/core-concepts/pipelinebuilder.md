@@ -121,4 +121,4 @@ public static class Program
 ## :arrow_right: Next Steps
 
 * Learn about the final component, the **[PipelineContext](pipeline-context.md)**, which carries state across your pipeline.
-* Review the different types of **[INode](inode.md)** you can add to the builder.
+* Review the different types of **[INode](nodes/index.md)** you can add to the builder.

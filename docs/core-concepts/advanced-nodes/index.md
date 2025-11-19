@@ -11,6 +11,10 @@ Beyond the basic source, transform, and sink nodes, NPipeline offers a suite of 
 
 This section delves into the specialized functionalities of these advanced nodes, providing detailed explanations and practical examples to help you leverage their full potential in building robust and efficient data pipelines.
 
+## Implementation Patterns
+
+Each advanced node type is designed to solve specific data processing challenges. The following guides provide implementation details, configuration options, and best practices:
+
 ## Topics in this Section
 
 * **[Aggregation Nodes](aggregation.md)**: Learn how to perform various aggregation operations on data streams.
@@ -21,8 +25,4 @@ This section delves into the specialized functionalities of these advanced nodes
 * **[Branch Nodes](branch.md)**: Understand how to duplicate data streams for parallel processing.
 * **[Tap Nodes](tap.md)**: Learn about non-intrusive monitoring and side-channel processing.
 * **[Type Conversion Nodes](type-conversion.md)**: Learn how to convert data types within your pipeline.
-* **[ValueTask Transforms](valuetask-transforms.md)**: Optimize synchronous transforms by avoiding Task allocation overhead.
-
-## Understanding When to Use Batching vs. Aggregation
-
-The core concepts section includes a [comparison of batching and aggregation strategies](../grouping-strategies.md) to help you choose the right approach based on your use case. Review that section if you need to decide between these two powerful grouping patterns.
+* **[Synchronous Fast Paths](../advanced-topics/synchronous-fast-paths.md)**: Optimize synchronous transforms by avoiding Task allocation overhead.

@@ -37,7 +37,7 @@ var nodeHandle = builder
     );
 ```
 
-**Learn more:** [Resilient Execution Strategy](./resilient-execution-strategy.md)
+**Learn more:** [Resilient Execution Strategy](./execution-with-resilience.md)
 
 ---
 
@@ -214,7 +214,7 @@ If any are missing, restarts won't work.
 ## :arrow_right: Next Steps
 
 - **[Build-Time Resilience Analyzer](../../analyzers/resilience.md):** Catch incomplete configurations at compile time
-- **[Resilient Execution Strategy](./resilient-execution-strategy.md):** Deep dive into how ResilientExecutionStrategy works
+- **[Resilient Execution Strategy](./execution-with-resilience.md):** Deep dive into how ResilientExecutionStrategy works
 - **[Materialization and Buffering](./materialization-and-buffering.md):** Understand the replay buffer and memory implications
-- **[Error Handling](../pipeline-execution/error-handling.md):** Learn how to write error handlers that return RestartNode
+- **[Error Handling](./error-handling-guide.md):** Learn how to write error handlers that return RestartNode
 - **[Troubleshooting](./troubleshooting.md):** Diagnose restart issues in your pipeline

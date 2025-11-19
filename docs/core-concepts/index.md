@@ -9,20 +9,7 @@ slug: /core-concepts
 
 NPipeline is designed with a few key concepts at its heart. Understanding these will help you build powerful and efficient data pipelines. This section provides a high-level overview of the main components.
 
-## The Building Blocks
-
-| Concept | Description |
-| :--- | :--- |
-| **[IPipeline](ipipeline.md)** | The executable instance of a pipeline. It's responsible for running nodes in the correct order. |
-| **[INode](inode.md)** | The fundamental unit of work in a pipeline. Nodes can be sources, transforms, or sinks. |
-| **[IPipelineDefinition](pipeline-definition.md)** | A blueprint of a pipeline. It defines the nodes and their connections. |
-| **[PipelineBuilder](pipelinebuilder.md)** | A fluent API for creating an `IPipelineDefinition`. |
-| **[PipelineContext](pipeline-context.md)** | An object that flows through the pipeline, carrying shared state, cancellation tokens, and other contextual information. |
-| **[Resilience](resilience/index.md)** | Comprehensive framework for building fault-tolerant pipelines that can recover from failures. |
-
----
-
-## ⚡ Critical Architecture Decision: Grouping Strategies
+## 🚀 Critical Architecture Decision: Grouping Strategies
 
 **Before implementing any grouping logic, read this section carefully.** Choosing the wrong approach can lead to subtle data corruption bugs or unnecessary complexity.
 
@@ -40,6 +27,19 @@ This document explains:
 
 * **Batching:** External system needs multiple items at once (DB bulk inserts)
 * **Aggregation:** Events arrive late/out-of-order and time windows matter (analytics)
+
+---
+
+## The Building Blocks
+
+| Concept | Description |
+| :--- | :--- |
+| **[IPipeline](ipipeline.md)** | The executable instance of a pipeline. It's responsible for running nodes in the correct order. |
+| **[INode](nodes/index.md)** | The fundamental unit of work in a pipeline. Nodes can be sources, transforms, or sinks. |
+| **[IPipelineDefinition](pipeline-definition.md)** | A blueprint of a pipeline. It defines the nodes and their connections. |
+| **[PipelineBuilder](pipelinebuilder.md)** | A fluent API for creating an `IPipelineDefinition`. |
+| **[PipelineContext](pipeline-context.md)** | An object that flows through the pipeline, carrying shared state, cancellation tokens, and other contextual information. |
+| **[Resilience](resilience/index.md)** | Comprehensive framework for building fault-tolerant pipelines that can recover from failures. |
 
 ---
 
@@ -83,7 +83,7 @@ When building production-grade pipelines with NPipeline, it's important to consi
 
 * **[Grouping Strategies](./grouping-strategies.md)**: Understand when to use batching vs. aggregation (critical architecture decision)
 * **[IPipeline](ipipeline.md)**: Learn about the executable instance of a pipeline
-* **[INode](inode.md)**: Understand the fundamental unit of work in a pipeline
+* **[INode](nodes/index.md)**: Understand the fundamental unit of work in a pipeline
 * **[IPipelineDefinition](pipeline-definition.md)**: Explore the blueprint of a pipeline that defines the nodes and their connections
 * **[PipelineBuilder](pipelinebuilder.md)**: Explore the fluent API for creating pipeline definitions
 * **[PipelineContext](pipeline-context.md)**: Discover the object that carries shared state through the pipeline

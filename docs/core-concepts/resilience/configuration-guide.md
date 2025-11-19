@@ -6,7 +6,7 @@ sidebar_position: 5
 
 # Configuration Guide
 
-This guide provides a structured workflow for configuring resilience in NPipeline. For comprehensive code examples with real-world scenarios, see [Common Configuration Patterns](resilient-execution-strategy.md#common-configuration-patterns).
+This guide provides a structured workflow for configuring resilience in NPipeline. For comprehensive code examples with real-world scenarios, see [Common Configuration Patterns](execution-with-resilience.md#common-configuration-patterns).
 
 ## Configuration Workflow
 
@@ -116,7 +116,7 @@ await runner.RunAsync(pipeline, context);
 
 ## Real-World Examples
 
-See [Common Configuration Patterns](resilient-execution-strategy.md#common-configuration-patterns):
+See [Common Configuration Patterns](execution-with-resilience.md#common-configuration-patterns):
 
 - E-commerce Order Processing
 - High-Volume Data Analytics  
@@ -124,11 +124,11 @@ See [Common Configuration Patterns](resilient-execution-strategy.md#common-confi
 
 ## Common Mistakes
 
-For avoiding configuration errors, see [Common Configuration Mistakes to Avoid](resilient-execution-strategy.md#common-configuration-mistakes-to-avoid).
+For avoiding configuration errors, see [Common Configuration Mistakes to Avoid](execution-with-resilience.md#common-configuration-mistakes-to-avoid).
 
 ## :arrow_right: Next Steps
 
-- [Resilient Execution Strategy](resilient-execution-strategy.md) - Learn how ResilientExecutionStrategy works
+- [Resilient Execution Strategy](execution-with-resilience.md) - Learn how ResilientExecutionStrategy works
 - [Materialization and Buffering](materialization-and-buffering.md) - Understand memory management
 - [Troubleshooting](troubleshooting.md) - Diagnose configuration issues
 

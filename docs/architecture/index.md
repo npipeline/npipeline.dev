@@ -4,9 +4,13 @@ description: How NPipeline works internally.
 sidebar_position: 12
 ---
 
-## Architecture Overview
+# Architecture Overview
 
-NPipeline is built around a **graph-based, streaming data processing model**. This guide explains how components work together to enable efficient, composable data pipelines.
+This section explains **how NPipeline works internally** - the design decisions, 
+performance optimizations, and engineering principles that make NPipeline fast 
+and reliable.
+
+> **For implementation guides**, see [Core Concepts](../core-concepts/index.md).
 
 ## Understanding NPipeline Architecture
 

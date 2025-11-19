@@ -60,7 +60,7 @@ Transform 1 processes item 2
 
 **Optimizations:**
 
-The sequential strategy automatically detects and uses `ExecuteValueTaskAsync` when available on transform nodes. This avoids Task allocation overhead for synchronous operations, improving throughput for pipelines dominated by fast, synchronous transforms. See [ValueTask Transforms](../core-concepts/advanced-nodes/valuetask-transforms.md) for details.
+The sequential strategy automatically detects and uses `ExecuteValueTaskAsync` when available on transform nodes. This avoids Task allocation overhead for synchronous operations, improving throughput for pipelines dominated by fast, synchronous transforms. See [Synchronous Fast Paths](../advanced-topics/synchronous-fast-paths.md) for details.
 
 **When to Use:**
 

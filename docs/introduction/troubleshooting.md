@@ -591,7 +591,7 @@ services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Deb
 
 3. **Check [FAQ](faq.md)** - Common questions answered
 
-4. **Review [Error Handling](../core-concepts/pipeline-execution/error-handling.md)** - Error-specific guidance
+4. **Review [Error Handling](../core-concepts/resilience/error-handling-guide.md)** - Error-specific guidance
 
 5. **Look up error codes** - See [Error Codes Reference](../reference/error-codes.md) for NP error codes (e.g., `[NP0101]`)
 
@@ -600,7 +600,7 @@ services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Deb
 ## :arrow_right: Next Steps
 
 * **[FAQ](faq.md)**: Common questions and answers
-* **[Error Handling](../core-concepts/pipeline-execution/error-handling.md)**: Comprehensive error handling guide
+* **[Error Handling](../core-concepts/resilience/error-handling-guide.md)**: Comprehensive error handling guide
 * **[Getting Help](#getting-help)**: How to get support for unresolved issues
 
 

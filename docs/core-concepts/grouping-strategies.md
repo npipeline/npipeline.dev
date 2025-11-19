@@ -1,7 +1,7 @@
 ---
 title: Grouping Strategies - Batching vs Aggregation
 description: Understand the critical distinction between batching and aggregation, and choose the right approach for your data processing needs.
-sidebar_position: 3
+sidebar_position: 2
 ---
 
 ## Grouping Strategies: Batching vs Aggregation

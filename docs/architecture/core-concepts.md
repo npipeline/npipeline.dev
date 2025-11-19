@@ -33,42 +33,22 @@ This approach provides several advantages:
 - **Type Safety**: Compile-time validation of connections
 - **Composability**: Nodes can be tested and reused independently
 
-## Node Types
+## Node Architecture
 
-### `SourceNode<T>`
+From an architectural perspective, nodes are the fundamental processing units that form the vertices of the pipeline graph. NPipeline defines three primary node types:
 
-**Purpose:** Produce the initial data stream
+- **Source Nodes**: Initiate data flow by producing data streams
+- **Transform Nodes**: Process and transform data as it flows through the pipeline
+- **Sink Nodes**: Consume data at the terminal point of the pipeline
 
-**Characteristics:**
-- Produces data of type `T`
-- No inputs (generates data from external sources)
-- Returns `IDataPipe<T>` for downstream consumption
+These nodes implement a unified interface hierarchy that enables type-safe connections and consistent execution patterns. The architectural design emphasizes:
 
-**Usage:** File readers, database queries, API calls, message queue consumers
+- **Separation of Concerns**: Each node type has a distinct responsibility
+- **Type Safety**: Compile-time validation of node connections
+- **Composability**: Nodes can be combined in various configurations
+- **Testability**: Each node can be tested in isolation
 
-### `TransformNode<TIn, TOut>`
-
-**Purpose:** Process and transform data items
-
-**Characteristics:**
-- Consumes `IDataPipe<TIn>`
-- Produces `IDataPipe<TOut>`
-- Can transform, filter, or enrich data
-- May change data type
-- Processes one item at a time
-
-**Usage:** Data validation, enrichment, aggregation, type conversion, business logic
-
-### `SinkNode<T>`
-
-**Purpose:** Consume data and perform final operations
-
-**Characteristics:**
-- Consumes `IDataPipe<T>` (the entire stream)
-- Produces no output (terminal node)
-- Responsible for side effects (save, send, display)
-
-**Usage:** Database writes, file output, API submissions, logging
+For detailed information about node implementations, interfaces, and examples, see the **[Nodes documentation](../core-concepts/nodes/index.md)**.
 
 ## Streaming Data Model
 
@@ -129,3 +109,4 @@ await foreach (var item in transformPipe.WithCancellation(cancellationToken))
 
 * **[Component Architecture](component-architecture.md)** - Learn about the major system components
 * **[Execution Flow](execution-flow.md)** - Understand how data flows through pipelines
+* **[Nodes](../core-concepts/nodes/index.md)** - Explore detailed node implementations and examples

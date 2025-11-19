@@ -149,4 +149,4 @@ await runner.RunAsync<MyPipelineDefinition>(context);
 * **[Pipeline Definition](pipeline-definition.md)**: Learn how to define the structure of your pipeline using IPipelineDefinition and PipelineBuilder.
 * **[Pipeline Context](pipeline-context.md)**: Understand how to pass state and configuration to your pipeline nodes.
 * **[Pipeline Execution](pipeline-execution/index.md)**: Explore more advanced execution scenarios.
-* **[INode](inode.md)**: Understand the different types of nodes that make up a pipeline.
+* **[INode](nodes/index.md)**: Understand the different types of nodes that make up a pipeline.

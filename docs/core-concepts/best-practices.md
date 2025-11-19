@@ -313,7 +313,7 @@ var pipeline = new PipelineBuilder()
     .AddSink<ResultSink, Order>();
 ```
 
-See [ValueTask Transforms](advanced-nodes/valuetask-transforms.md) for detailed guidance on when and how to use this optimization.
+See [Synchronous Fast Paths](../advanced-topics/synchronous-fast-paths.md) for detailed guidance on when and how to use this optimization.
 
 ## Principle 7: Monitor and Log Appropriately
 
@@ -472,5 +472,5 @@ Identify bottlenecks before optimizing.
 
 - **[Common Patterns](common-patterns.md)**: See these practices in action with practical examples
 - **[Testing Pipelines](../extensions/testing/index.md)**: Learn how to test your pipelines effectively
-- **[Error Handling](pipeline-execution/error-handling.md)**: Implement robust error handling in your pipelines
+- **[Error Handling](resilience/error-handling-guide.md)**: Implement robust error handling in your pipelines
 

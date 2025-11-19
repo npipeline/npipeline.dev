@@ -6,7 +6,7 @@ sidebar_position: 3
 
 # Circuit Breaker Advanced Configuration
 
-This guide covers advanced circuit breaker configuration patterns for production scenarios. For basic configuration, see [Circuit Breaker Configuration](../pipeline-execution/circuit-breaker-configuration.md).
+This guide covers advanced circuit breaker configuration patterns for production scenarios. For basic configuration, see [Circuit Breaker Configuration](circuit-breaker-configuration.md).
 
 ## Overview
 
@@ -403,6 +403,6 @@ Circuit breakers are fully thread-safe and designed for concurrent pipeline exec
 
 ## See Also
 
-- [Circuit Breaker Configuration](../pipeline-execution/circuit-breaker-configuration.md) - Configuration reference
+- [Circuit Breaker Configuration](circuit-breaker-configuration.md) - Configuration reference
 - [Resilience Patterns](./index.md) - General resilience patterns
 - [Error Handling](../../architecture/error-handling-architecture.md) - Error handling strategies

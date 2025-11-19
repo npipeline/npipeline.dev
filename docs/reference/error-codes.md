@@ -531,7 +531,7 @@ await pipeline.ExecuteAsync(source, context);
 
 - [Build-Time Resilience Analyzer Guide](../analyzers/resilience.md)
 - [Node Restart Quick Start Guide](../core-concepts/resilience/node-restart-quickstart.md)
-- [Resilient Execution Strategy](../core-concepts/resilience/resilient-execution-strategy.md)
+- [Resilient Execution Strategy](../core-concepts/resilience/execution-with-resilience.md)
 - [Materialization and Buffering](../core-concepts/resilience/materialization-and-buffering.md)
 
 ---
