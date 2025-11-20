@@ -223,7 +223,7 @@ logger.LogInformation("Total errors: {count}", stats.ErrorCount);
 | **Retry** | Transient failures | Delayed processing, retry storms |
 | **Materialize First** | Need all data or nothing | Memory overhead |
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Cancellation Model](cancellation-model.md)** - Learn how cancellation interacts with error handling
 - **[Performance Characteristics](performance-characteristics.md)** - Understand error handling performance impact

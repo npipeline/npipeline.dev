@@ -319,7 +319,7 @@ public class OverflowAwareErrorHandler : IPipelineErrorHandler
 }
 ```
 
-## :white_check_mark: Best Practices
+## Best Practices
 
 ### 1. Start with Conservative Limits
 
@@ -424,7 +424,7 @@ public class MonitoredPipelineDefinition : IPipelineDefinition
 }
 ```
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Dependency Chains](dependency-chains.md)**: Understand the critical prerequisite relationships
 - **[Configuration Guide](configuration-guide.md)**: Get practical implementation guidance

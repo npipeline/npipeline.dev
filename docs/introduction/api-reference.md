@@ -707,7 +707,7 @@ public override async Task<Item> ExecuteAsync(
 | Read CSV | `CsvSourceNode<T>` | Connectors.Csv | Initial Release |
 | Write CSV | `CsvSinkNode<T>` | Connectors.Csv | Initial Release |
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Common Patterns](../core-concepts/common-patterns.md)** - Practical examples
 - **[Architecture](../architecture/index.md)** - Deep dive into how NPipeline works

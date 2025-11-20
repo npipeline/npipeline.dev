@@ -139,7 +139,7 @@ In this example, the `BranchNode` duplicates the input stream, sending copies to
 * **Performance Impact:** Duplicating streams and processing them in parallel can increase resource consumption (CPU, memory) if not managed carefully.
 * **Error Handling:** Errors in one branch of a `BranchNode` will typically not affect other branches, allowing for isolated fault tolerance.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Tap Nodes](tap.md)**: Learn about non-intrusive monitoring and side-channel processing.
 * **[Type Conversion Nodes](type-conversion.md)**: Discover how to transform data between different types.

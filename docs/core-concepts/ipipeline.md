@@ -144,7 +144,7 @@ context.Properties["retryCount"] = 3;
 await runner.RunAsync<MyPipelineDefinition>(context);
 ```
 
-## :link: Related Topics
+## Related Topics
 
 * **[Pipeline Definition](pipeline-definition.md)**: Learn how to define the structure of your pipeline using IPipelineDefinition and PipelineBuilder.
 * **[Pipeline Context](pipeline-context.md)**: Understand how to pass state and configuration to your pipeline nodes.

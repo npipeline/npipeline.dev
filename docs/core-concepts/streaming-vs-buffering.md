@@ -241,7 +241,7 @@ The choice between streaming and buffering depends on your specific use case and
 
 NPipeline is designed to support both paradigms, allowing you to combine streaming and buffering nodes to optimize your data flows for various scenarios.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Error Handling](resilience/error-handling-guide.md)**: Learn how to manage errors effectively in both streaming and buffering pipelines.
 * **[Advanced Node Types (e.g., Aggregation)](advanced-nodes/aggregation.md)**: Explore nodes that inherently involve buffering for their operations.

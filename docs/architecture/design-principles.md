@@ -167,7 +167,7 @@ These principles guide decisions when trade-offs arise:
 | Strictness vs Flexibility | Separation of Concerns | Strict node contracts | Enables testing and optimization |
 | Features vs Performance | Lazy Evaluation | Don't materialize | Supports large datasets |
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - Review **[Core Concepts](core-concepts.md)** to understand fundamentals
 - Explore **[Extension Points](extension-points.md)** to build custom components

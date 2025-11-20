@@ -207,7 +207,7 @@ Both approaches ultimately use the `PipelineRunner` with an `IPipelineDefinition
 * **Dependency Injection**: When your nodes have dependencies that need to be injected, `IPipelineDefinition` is the preferred approach as it integrates cleanly with DI containers.
 * **Reusability**: If you have common pipeline structures that you want to reuse, you can create base definition classes.
 
-## :link: Related Topics
+## Related Topics
 
 * **[Pipeline Execution](pipeline-execution/index.md)**: Learn how to run your defined pipelines.
 * **[Pipeline Context](pipeline-context.md)**: Understand how to pass state and configuration to your pipeline nodes.

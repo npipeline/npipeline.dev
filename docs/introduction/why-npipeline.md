@@ -60,7 +60,7 @@ One of NPipeline's most powerful features for high-performance scenarios is its 
 
 **Learn how to implement this:** [Synchronous Fast Paths and ValueTask Optimization](../advanced-topics/synchronous-fast-paths.md)
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Installation](../getting-started/installation.md)**: Get NPipeline set up in your development environment
 * **[Quick Start](../getting-started/quick-start.md)**: Begin building your first pipeline

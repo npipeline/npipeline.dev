@@ -644,7 +644,7 @@ public class GoodErrorHandler : IPipelineErrorHandler
 }
 ```
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Configuration Guide](configuration-guide.md)**: Get step-by-step configuration guidance
 - **[Materialization and Buffering](materialization-and-buffering.md)**: Learn how buffering enables replay functionality

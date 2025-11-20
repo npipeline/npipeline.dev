@@ -204,7 +204,7 @@ Console.WriteLine($"Processed {result.ItemsProcessed} items in {stopwatch.Elapse
 Console.WriteLine($"Throughput: {result.ItemsProcessed / stopwatch.Elapsed.TotalSeconds:F0} items/sec");
 ```
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Extension Points](extension-points.md)** - Build custom nodes optimized for your use case
 - **[Advanced Topics - Performance Hygiene](../advanced-topics/performance-hygiene.md)** - Deep dive into performance optimization

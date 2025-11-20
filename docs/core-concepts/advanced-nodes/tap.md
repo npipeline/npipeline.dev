@@ -109,7 +109,7 @@ public sealed class TapPipelineDefinition : IPipelineDefinition
 
 Tap nodes are powerful tools for adding non-intrusive monitoring and side-channel processing to your NPipelines without disrupting the main data flow.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Branch Nodes](branch.md)**: Learn about fan-out patterns for duplicating streams to multiple processing paths.
 * **[Advanced Error Handling Patterns](../resilience/error-handling-guide.md#advanced-patterns)**: Learn more about handling errors in complex pipeline structures.

@@ -457,7 +457,7 @@ public class ContextAwareRetryHandler : INodeErrorHandler<ITransformNode<string,
 }
 ```
 
-## :white_check_mark: Best Practices
+## Best Practices
 
 1. **Differentiate between transient and permanent errors**: Only retry transient errors that might resolve themselves.
 
@@ -569,14 +569,14 @@ public class ProductionRetryHandler : INodeErrorHandler<ITransformNode<string, s
 > :warning: Materialization Requirements
 When configuring retries with `MaxMaterializedItems`, it's important to understand how buffering enables replay functionality. Materialization is critical because it creates a snapshot of input items that can be replayed if a node fails and needs to restart, preventing data loss and ensuring processing continuity. See [Materialization and Buffering](../resilience/materialization-and-buffering.md) in the resilience section for detailed guidance.
 
-## :information_source: See Also
+## See Also
 
 * **[Resilience Overview](../resilience/index.md)**: Comprehensive guide to building fault-tolerant pipelines
 * **[Materialization and Buffering](../resilience/materialization-and-buffering.md)**: Understanding buffer requirements for resilience
 * **[Configuration Guide](../resilience/configuration-guide.md)**: Practical implementation guidance with code examples
 * **[Troubleshooting](../resilience/troubleshooting.md)**: Diagnose and resolve common resilience issues
 
-## :link: Related Topics
+## Related Topics
 
 * **[Node-level Error Handling](error-handling-guide.md)**: Learn about handling errors for individual items.
 * **[Pipeline-level Error Handling](error-handling-guide.md)**: Learn about handling errors that affect entire node streams.

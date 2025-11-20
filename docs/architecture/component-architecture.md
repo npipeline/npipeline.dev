@@ -262,7 +262,7 @@ graph TD
     style G fill:#f1f8e9
 ```
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Execution Flow](execution-flow.md)** - Understand sequential and parallel execution
 - **[Dependency Injection Integration](dependency-injection.md)** - Learn about DI integration

@@ -198,7 +198,7 @@ public static class Program
 
 In this example, the pipeline starts producing and processing data. When a key is pressed, cancellation is requested via the `CancellationTokenSource`. The `RunAsync` method will then propagate this cancellation request through the `PipelineContext` to all nodes, allowing them to react accordingly.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Pipeline Context](../pipeline-context.md)**: Understand how `PipelineContext` provides runtime information and shared resources to nodes.
 * **[Error Handling](../resilience/error-handling-guide.md)**: Dive deeper into strategies for managing errors within your pipelines.

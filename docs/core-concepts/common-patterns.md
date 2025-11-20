@@ -318,7 +318,7 @@ public sealed class MultiSourcePipeline : IPipelineDefinition
 - Implement deduplication logic in the transform if needed
 - Use PipelineContext to track which source items came from
 
-## :white_check_mark: Best Practices
+## Best Practices
 
 1. **Keep transforms focused** - Each transform should do one thing well
 2. **Handle errors explicitly** - Use error handlers or separate error streams
@@ -328,7 +328,7 @@ public sealed class MultiSourcePipeline : IPipelineDefinition
 6. **Consider memory usage** - Stream data; don't load everything into memory
 7. **Document assumptions** - Make clear what input data shapes each node expects
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Dependency Injection](../extensions/dependency-injection.md)**: Manage complex dependencies pipeline components
 - **[Parallelism](../extensions/parallelism.md)**: Speed up item processing

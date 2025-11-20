@@ -238,7 +238,7 @@ public class PipelineWithErrorHandlingTests
 - **Detailed Error Messages:** When an assertion fails, AwesomeAssertions provides detailed output highlighting exactly what was different between the actual and expected values, which can significantly speed up debugging.
 - **Fluent Chaining:** You can chain multiple assertions together for complex validation scenarios.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[FluentAssertions](./fluent-assertions.md)**: If you prefer FluentAssertions, NPipeline also provides a similar integration for that library.
 - **[Testing Extensions](./index.md)**: Return to the main testing documentation for more testing patterns and utilities.

@@ -248,7 +248,7 @@ For systems with limited memory:
 - Monitor for buffer overflow exceptions
 - Consider alternative recovery strategies
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Resilient Execution Strategy](execution-with-resilience.md)**: Learn about the core wrapper that enables resilience
 - **[Materialization and Buffering](materialization-and-buffering.md)**: Understand how buffering enables replay functionality

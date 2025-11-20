@@ -428,7 +428,7 @@ to add error handling, retries, and circuit breaker capabilities.
 **See:** [Execution with Resilience](../resilience/execution-with-resilience.md) 
 for comprehensive guide on wrapping strategies with resilient execution.
 
-## :bulb: Comprehensive Documentation
+## Comprehensive Documentation
 
 For detailed information about resilience patterns, materialization requirements, and dependency chains, see the [Resilience section](../resilience/index.md) which covers fault-tolerant execution strategies, buffering for replay functionality, critical prerequisite relationships, and configuration guidance for building robust pipelines.
 

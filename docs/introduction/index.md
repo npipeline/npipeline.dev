@@ -36,7 +36,7 @@ These nodes are connected to form a directed acyclic graph (DAG), ensuring a cle
 * **Enhanced Reliability:** Robust error handling and testing mechanisms ensure data integrity.
 * **Optimal Performance:** Achieve high throughput and low latency for demanding data workloads.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Why NPipeline?](./why-npipeline.md)**: Understand the benefits, design philosophy, and zero-allocation fast paths
 * **[Installation](../getting-started/installation.md)**: Get NPipeline set up in your development environment

@@ -325,7 +325,7 @@ Bob,example.com
 
 For more advanced configuration, refer to the [CsvHelper documentation](https://joshclose.github.io/CsvHelper/getting-started/).
 
-## :link: Related Topics
+## Related Topics
 
 - **[NPipeline Extensions Index](../.)**: Return to the extensions overview.
 

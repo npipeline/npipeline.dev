@@ -533,7 +533,7 @@ Here, you are deciding:
 
 This architecture is essential for multi-stream ETL where data latency and ordering are real concerns, not theoretical ones.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Batching Nodes](batching.md)**: Discover how to group items into batches for processing.
 * **[Join Nodes](join.md)**: Learn about merging data from multiple streams.

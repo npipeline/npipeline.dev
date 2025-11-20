@@ -597,7 +597,7 @@ services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Deb
 
 6. **Check source code** - Inspect node implementations in `/src/NPipeline`
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[FAQ](faq.md)**: Common questions and answers
 * **[Error Handling](../core-concepts/resilience/error-handling-guide.md)**: Comprehensive error handling guide

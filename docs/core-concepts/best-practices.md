@@ -468,7 +468,7 @@ Identify bottlenecks before optimizing.
 | Documentation | Easier adoption and maintenance |
 | Profiling | Data-driven optimization |
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Common Patterns](common-patterns.md)**: See these practices in action with practical examples
 - **[Testing Pipelines](../extensions/testing/index.md)**: Learn how to test your pipelines effectively

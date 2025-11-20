@@ -102,14 +102,14 @@ public class MyParallelPipeline : IPipelineDefinition
 }
 ```
 
-## :white_check_mark: Best Practices
+## Best Practices
 
 * **Install only what you need**: Each extension is a separate package to keep your dependencies minimal
 * **Use the right tool for the job**: Leverage testing extensions for unit tests, parallelism for performance, DI for enterprise applications
 * **Combine extensions**: Extensions are designed to work together seamlessly
 * **Check compatibility**: Ensure extension versions are compatible with your NPipeline core version
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Dependency Injection](dependency-injection.md)**: Learn about constructor injection and service lifetime management
 * **[Parallelism](parallelism.md)**: Explore parallel processing capabilities and configuration options

@@ -190,7 +190,7 @@ This approach:
 | **Parallel** | High | Medium-High | Medium | CPU-bound, high throughput |
 | **Hybrid** | Medium-High | Medium | Medium | Mixed workloads |
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Data Flow Details](data-flow.md)** - Understand how data pipes and lazy evaluation work
 - **[Performance Characteristics](performance-characteristics.md)** - Learn about throughput and scalability

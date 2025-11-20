@@ -202,7 +202,7 @@ for (int i = 0; i < 1_000_000; i++)
 }
 ```
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Performance Characteristics](performance-characteristics.md)** - Understand cancellation performance impact
 - **[Extension Points](extension-points.md)** - Implement custom cancellation strategies

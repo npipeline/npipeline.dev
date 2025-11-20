@@ -211,7 +211,7 @@ If any are missing, restarts won't work.
 
 ---
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Build-Time Resilience Analyzer](../../analyzers/resilience.md):** Catch incomplete configurations at compile time
 - **[Resilient Execution Strategy](./execution-with-resilience.md):** Deep dive into how ResilientExecutionStrategy works

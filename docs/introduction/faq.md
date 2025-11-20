@@ -593,7 +593,7 @@ public override async Task ExecuteAsync(IDataPipe<T> input, PipelineContext cont
 }
 ```
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Getting Started](../getting-started/installation.md)** - Installation and quick start
 - **[Common Patterns](../core-concepts/common-patterns.md)** - See practical examples

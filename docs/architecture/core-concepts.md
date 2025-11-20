@@ -105,7 +105,7 @@ await foreach (var item in transformPipe.WithCancellation(cancellationToken))
 ✅ **Type Safe** - Compile-time validation of node connections
 ✅ **Testable** - Each node can be tested in isolation
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Component Architecture](component-architecture.md)** - Learn about the major system components
 * **[Execution Flow](execution-flow.md)** - Understand how data flows through pipelines

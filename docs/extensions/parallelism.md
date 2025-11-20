@@ -213,7 +213,7 @@ When `MaxQueueLength` is specified, you can control the behavior when the queue 
 
 - **Debugging:** Debugging parallel code can be more complex. Ensure you have good logging and monitoring in place.
 
-## :white_check_mark: Best Practices
+## Best Practices
 
 - **Identify Parallelizable Work:** Apply parallelism to parts of your pipeline where operations are independent and computationally intensive.
 
@@ -223,7 +223,7 @@ When `MaxQueueLength` is specified, you can control the behavior when the queue 
 
 By strategically applying parallelism, you can significantly boost the processing capabilities of your NPipelines for demanding workloads.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Dependency Injection](dependency-injection.md)**: Learn how to integrate NPipeline with dependency injection frameworks.
 - **[Testing Pipelines](testing/index.md)**: Understand how to effectively test your parallel pipelines.

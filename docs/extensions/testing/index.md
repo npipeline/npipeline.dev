@@ -251,7 +251,7 @@ context.SetSourceData(new[] { 1, 2, 3 }, nodeId: "MyNodeId");
 var sink = context.GetSink<InMemorySink<string>>();
 ```
 
-## :white_check_mark: Best Practices
+## Best Practices
 
 1. **Use descriptive test names** that clearly indicate what scenario is being tested
 2. **Arrange-Act-Assert pattern** for clear test structure

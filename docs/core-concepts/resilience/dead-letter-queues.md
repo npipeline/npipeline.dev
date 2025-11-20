@@ -532,7 +532,7 @@ public class DeadLetterReprocessor
 }
 ```
 
-## :white_check_mark: Best Practices
+## Best Practices
 
 1. **Include sufficient context**: Store not just the failed item but also error details, timestamps, and any relevant metadata.
 
@@ -631,18 +631,18 @@ public class ProductionDeadLetterErrorHandler : INodeErrorHandler<ITransformNode
 }
 ```
 
-## :information_source: Configuration Guidance
+## Configuration Guidance
 
 For comprehensive setup guidance that integrates dead-letter queues with other resilience features, see the [Configuration Guide](../resilience/configuration-guide.md) in the resilience section.
 
-## :information_source: See Also
+## See Also
 
 * **[Resilience Overview](../resilience/index.md)**: Comprehensive guide to building fault-tolerant pipelines
 * **[Configuration Guide](../resilience/configuration-guide.md)**: Practical implementation guidance with code examples
 * **[Dependency Chains](../resilience/dependency-chains.md)**: Understanding critical prerequisite relationships for resilience features
 * **[Troubleshooting](../resilience/troubleshooting.md)**: Diagnose and resolve common resilience issues
 
-## :link: Related Topics
+## Related Topics
 
 * **[Node-level Error Handling](error-handling-guide.md)**: Learn about handling errors for individual items.
 * **[Pipeline-level Error Handling](error-handling-guide.md)**: Learn about handling errors that affect entire node streams.

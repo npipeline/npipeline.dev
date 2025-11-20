@@ -172,7 +172,7 @@ var context = new PipelineContextBuilder()
 await runner.RunAsync<MyPipelineDefinition>(context);
 ```
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Quick Start](quick-start.md)**: Build your first NPipeline with a simple "Hello World" example
 * **[Core Concepts](../core-concepts/index.md)**: Understand the fundamental building blocks of NPipeline

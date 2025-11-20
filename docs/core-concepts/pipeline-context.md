@@ -432,7 +432,7 @@ public static class Program
 
 In this example, `MyConfig` is stored in `PipelineContext` using a key ("MyConfig"). Each `IContextAwareNode` can then retrieve this shared configuration. The `GetOrAdd` method ensures that the object is created only once per pipeline run if it doesn't already exist for that key.
 
-## :white_check_mark: Best Practices
+## Best Practices
 
 *   **Keep it Lightweight**: Avoid adding large or frequently changing data structures to the context. For complex state management, consider dedicated state management nodes or services.
 *   **Transient State:** Use `PipelineContext` for state that is specific to a single pipeline run. Avoid using it for global application state.
@@ -441,7 +441,7 @@ In this example, `MyConfig` is stored in `PipelineContext` using a key ("MyConfi
 *   **Optional Access**: Design nodes to gracefully handle cases where an expected item might not be present in the context (e.g., provide default values or log warnings).
 *   **Cancellation:** Always respect the `CancellationToken` provided by the `PipelineContext` (or directly via method parameters) to ensure your nodes can respond to cancellation requests.
 
-## :link: Related Topics
+## Related Topics
 
 *   **[Streaming vs. Buffering](streaming-vs-buffering.md)**: Understand how NPipeline handles data flow and memory management.
 *   **[Error Handling](resilience/error-handling-guide.md)**: Learn about NPipeline's error handling mechanisms.

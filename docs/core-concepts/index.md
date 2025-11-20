@@ -79,7 +79,7 @@ When building production-grade pipelines with NPipeline, it's important to consi
 * **Use appropriate buffer sizes**: Configure buffer sizes based on your specific use case to balance latency and throughput.
 * **Profile your pipeline**: Use profiling tools to identify bottlenecks and optimize critical path components.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Grouping Strategies](./grouping-strategies.md)**: Understand when to use batching vs. aggregation (critical architecture decision)
 * **[IPipeline](ipipeline.md)**: Learn about the executable instance of a pipeline

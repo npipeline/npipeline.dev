@@ -166,7 +166,7 @@ public class PipelineWithErrorHandlingTests
 
 This integration allows you to leverage the full power of FluentAssertions to write robust and maintainable tests for your NPipelines.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[AwesomeAssertions](./awesome-assertions.md)**: If you prefer AwesomeAssertions, NPipeline also provides a similar integration for that library.
 - **[Testing Extensions](./index.md)**: Return to the main testing documentation for more testing patterns and utilities.

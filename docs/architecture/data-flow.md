@@ -158,7 +158,7 @@ foreach (var item in allItems)
 }
 ```
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Dependency Injection Integration](dependency-injection.md)** - Learn how DI works with NPipeline
 - **[Performance Characteristics](performance-characteristics.md)** - Understand memory and throughput implications

@@ -192,7 +192,7 @@ The node internally uses [`TypeConverterFactory`](src/NPipeline/Nodes/TypeConver
 
 Type Conversion Nodes with their fluent API provide a powerful and flexible way to transform data between different types in your NPipelines.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Advanced Error Handling Patterns](../resilience/error-handling-guide.md#advanced-patterns)**: Learn more about handling errors, especially during conversions.
 

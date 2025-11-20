@@ -88,7 +88,7 @@ Pipeline execution involves several key aspects:
 * **[Circuit Breaker Configuration](../resilience/circuit-breaker-configuration.md)**: Prevent cascading failures with circuit breaker patterns.
 * **[Dead-Letter Queues](../resilience/dead-letter-queues.md)**: Handle and store items that cannot be processed.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Pipeline Context](../pipeline-context.md)** - Learn how to pass state and configuration to your pipeline
 * **[Architecture: Execution Flow](../../architecture/execution-flow.md)** - Deep dive into sequential and parallel execution

@@ -171,7 +171,7 @@ var config = new InMemoryLookupNode<TIn, TKey, TValue, TOut>.Configuration(
 
 Lookup nodes are powerful for creating rich, contextual data streams within your NPipelines.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Branch Nodes](branch.md)**: Learn about duplicating data streams to multiple downstream paths.
 * **[Type Conversion Nodes](type-conversion.md)**: Discover how to transform data between different types.

@@ -212,7 +212,7 @@ NPipeline creates:
 
 The data items produced by the source flow through the first pipe, are transformed, and then flow through the second pipe to the sink.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Nodes](nodes/index.md)**: Learn about the different types of nodes (Source, Transform, Sink) that interact with data pipes.
 * **[Pipeline Definition](pipeline-definition.md)**: Understand how to connect nodes and define the overall structure of your data flow.

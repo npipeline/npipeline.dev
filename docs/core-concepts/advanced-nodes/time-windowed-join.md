@@ -171,7 +171,7 @@ In this setup, the `AdCorrelationNode` will:
 5. When a match is found, call `CreateOutput` and emit the `CorrelatedAdEvent`.
 6. As watermarks advance past the end of a window, it will clean up any state for that window.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Advanced Node Types Index](index.md)**: Return to the advanced nodes overview.
 * **[Pipeline Execution](../pipeline-execution/index.md)**: Learn about how pipelines are executed and managed.

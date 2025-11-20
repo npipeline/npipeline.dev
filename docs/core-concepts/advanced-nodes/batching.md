@@ -243,7 +243,7 @@ Batching represents a deliberate choice to group items together. Understand thes
 
 Use batching when operational necessity (database efficiency, transactional boundaries, API constraints) justifies this architectural cost.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Join Nodes](join.md)**: Learn how to merge data from multiple input streams.
 * **[Lookup Nodes](lookup.md)**: Discover how to enrich data by querying external sources.

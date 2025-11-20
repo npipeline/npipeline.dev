@@ -317,7 +317,7 @@ WindowStatistics stats = circuitBreaker.GetStatistics();
 // stats.FailureRate - Failure rate (0.0 to 1.0)
 ```
 
-## :white_check_mark: Best Practices
+## Best Practices
 
 1. **Choose the right threshold type**: 
    - Use `ConsecutiveFailures` for simple scenarios
@@ -347,14 +347,14 @@ WindowStatistics stats = circuitBreaker.GetStatistics();
 
 If you're experiencing issues with circuit breaker behavior, such as unexpected trips or failure to open, see the [Troubleshooting guide](../resilience/troubleshooting.md) in the resilience section for common issues and solutions.
 
-## :information_source: See Also
+## See Also
 
 * **[Resilience Overview](../resilience/index.md)**: Comprehensive guide to building fault-tolerant pipelines
 * **[Troubleshooting](../resilience/troubleshooting.md)**: Diagnose and resolve common resilience issues
 * **[Configuration Guide](../resilience/configuration-guide.md)**: Practical implementation guidance with code examples
 * **[Dependency Chains](../resilience/dependency-chains.md)**: Understanding critical prerequisite relationships for resilience features
 
-## :link: Related Topics
+## Related Topics
 
 * **[Node-level Error Handling](error-handling-guide.md)**: Learn about handling errors for individual items.
 * **[Pipeline-level Error Handling](error-handling-guide.md)**: Learn about handling errors that affect entire node streams.

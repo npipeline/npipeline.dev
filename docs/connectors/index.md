@@ -50,7 +50,7 @@ var pipeline = new PipelineBuilder()
 
 Explore the documentation for each specific connector to learn about its installation, configuration options, and usage examples.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[CSV Connector](csv.md)**: Learn how to read from and write to CSV files
 - **[Common Patterns](../core-concepts/common-patterns.md)**: See connectors in practical examples

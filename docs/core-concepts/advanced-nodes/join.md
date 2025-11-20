@@ -433,7 +433,7 @@ public sealed class EventCorrelationJoinNode : TimeWindowedJoinNode<EventA, Even
 
 Some join nodes may utilize the `KeySelectorAttribute` to automatically infer key extraction logic based on property names or custom functions. This provides a declarative way to specify join keys.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Lookup Nodes](lookup.md)**: Discover how to enrich data by querying external sources.
 * **[Branch Nodes](branch.md)**: Learn about duplicating data streams to multiple downstream paths.

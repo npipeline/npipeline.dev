@@ -760,7 +760,7 @@ public class ResilienceHealthCheck : IHealthCheck
 }
 ```
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Configuration Guide](configuration-guide.md)**: Review proper configuration patterns
 - **[Dependency Chains](dependency-chains.md)**: Understand critical prerequisite relationships

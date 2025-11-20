@@ -203,7 +203,7 @@ public class ParsingTransformTests
 }
 ```
 
-## :white_check_mark: Best Practices for Advanced Testing
+## Best Practices for Advanced Testing
 
 - **Isolate What You're Testing:** Use mocks and fakes to ensure your test focuses on a single unit of logic (e.g., one node's `ExecuteAsync` method).
 - **Test Both Success and Failure:** Don't just test the happy path. Write tests for invalid input, exceptions, cancellations, and other failure modes.

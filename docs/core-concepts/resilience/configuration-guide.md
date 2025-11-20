@@ -126,7 +126,7 @@ See [Common Configuration Patterns](execution-with-resilience.md#common-configur
 
 For avoiding configuration errors, see [Common Configuration Mistakes to Avoid](execution-with-resilience.md#common-configuration-mistakes-to-avoid).
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - [Resilient Execution Strategy](execution-with-resilience.md) - Learn how ResilientExecutionStrategy works
 - [Materialization and Buffering](materialization-and-buffering.md) - Understand memory management

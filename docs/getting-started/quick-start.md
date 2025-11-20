@@ -196,7 +196,7 @@ await foreach (var item in input.WithCancellation(cancellationToken))  // Async 
 
 Think of it like opening a file: `File.OpenRead()` is synchronous and returns immediately, but `stream.ReadAsync()` is asynchronous when you actually read data from it.
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Core Concepts](../core-concepts/index.md)**: Deep dive into the `IDataPipe`, `INode`, `IPipelineDefinition`, and `PipelineContext`
 * **[Common Patterns](../core-concepts/common-patterns.md)**: See practical examples of real-world pipeline implementations

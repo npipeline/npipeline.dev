@@ -154,7 +154,7 @@ public sealed class DatabaseSource : ISourceNode<CustomerRecord>
 }
 ```
 
-## :arrow_right: Next Steps
+## Next Steps
 
 * **[Transform Nodes](transform-nodes.md)**: Learn how to process and transform data within your pipeline
 * **[Sink Nodes](sink-nodes.md)**: Understand the final stage of data consumption

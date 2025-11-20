@@ -461,7 +461,7 @@ When using dependency injection, the `DiContainerNodeFactory` is registered inst
 * **Configuration**: You can easily inject configuration objects (`IOptions<T>`) into your nodes to change their behavior without modifying code.
 * **Service Discovery**: The DI container automatically discovers and registers your pipeline components.
 
-## :link: Related Topics
+## Related Topics
 
 * **[Parallelism](parallelism.md)**: Learn how to execute parts of your pipeline in parallel to improve performance.
 * **[Testing Extensions](./testing/index.md)**: Discover utilities for testing your pipelines and nodes effectively.

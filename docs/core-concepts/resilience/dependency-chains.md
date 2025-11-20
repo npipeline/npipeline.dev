@@ -469,7 +469,7 @@ public class FullResiliencePipeline : IPipelineDefinition
 }
 ```
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Configuration Guide](configuration-guide.md)**: Get practical implementation guidance with complete examples
 - **[Troubleshooting](troubleshooting.md)**: Learn to diagnose and resolve dependency issues

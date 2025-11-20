@@ -169,7 +169,7 @@ else
 }
 ```
 
-## :arrow_right: Next Steps
+## Next Steps
 
 - **[Error Handling Architecture](error-handling-architecture.md)** - Learn how DI works with error handlers
 - **[Extension Points](extension-points.md)** - Create custom nodes with DI support
