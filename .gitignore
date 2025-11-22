@@ -11,6 +11,8 @@
 # Mermaid generated files
 *.mmd
 *.svg
+
+# SVG images to not ignore
 !logo.svg
 
 # Misc

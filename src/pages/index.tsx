@@ -75,7 +75,6 @@ function FeaturesSection() {
         <div className={styles.featuresGrid}>
           {features.map((feature, idx) => (
             <div key={idx} className={styles.featureCard}>
-              <div className={styles.featureIcon}>◆</div>
               <h3 className={styles.featureTitle}>{feature.title}</h3>
               <p className={styles.featureDescription}>{feature.description}</p>
             </div>
@@ -254,7 +253,6 @@ function WhySection() {
         <div className={styles.whyGrid}>
           {reasons.map((reason, idx) => (
             <div key={idx} className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>✓</div>
               <h3 className={styles.whyCardTitle}>{reason.title}</h3>
               <p className={styles.whyCardDescription}>{reason.description}</p>
             </div>
