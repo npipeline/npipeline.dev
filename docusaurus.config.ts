@@ -80,7 +80,7 @@ const config: Config = {
       title: 'NPipeline',
       logo: {
         alt: 'NPipeline logo',
-        src: 'img/npipeline-logo.svg',
+        src: 'img/logo.svg',
       },
       items: [
         {

@@ -11,6 +11,7 @@
 # Mermaid generated files
 *.mmd
 *.svg
+!logo.svg
 
 # Misc
 .DS_Store
