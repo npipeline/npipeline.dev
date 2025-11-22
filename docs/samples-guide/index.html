@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.9.2">
 <title data-rh="true">Sample Applications | NPipeline</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="robots" content="noindex, nofollow"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://npipeline.dev/docs/samples-guide"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Sample Applications | NPipeline"><meta data-rh="true" name="description" content="Real-world examples demonstrating NPipeline concepts and patterns for different skill levels"><meta data-rh="true" property="og:description" content="Real-world examples demonstrating NPipeline concepts and patterns for different skill levels"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://npipeline.dev/docs/samples-guide"><link data-rh="true" rel="alternate" href="https://npipeline.dev/docs/samples-guide" hreflang="en"><link data-rh="true" rel="alternate" href="https://npipeline.dev/docs/samples-guide" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Sample Applications","item":"https://npipeline.dev/docs/samples-guide"}]}</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="NPipeline RSS Feed">
-<link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="NPipeline Atom Feed"><link rel="stylesheet" href="/assets/css/styles.7507e95c.css">
-<script src="/assets/js/runtime~main.cec67789.js" defer="defer"></script>
-<script src="/assets/js/main.0e36635f.js" defer="defer"></script>
+<link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="NPipeline Atom Feed"><link rel="stylesheet" href="/assets/css/styles.77aa73ce.css">
+<script src="/assets/js/runtime~main.773ac472.js" defer="defer"></script>
+<script src="/assets/js/main.c18441c4.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <svg style="display: none;"><defs>
@@ -18,113 +18,201 @@
 <p><strong>Location:</strong> All samples are located in the <code>/samples/</code> directory of the repository. Each sample includes complete source code, configuration files, and a README with detailed explanations.</p>
 </blockquote>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="basic-samples">Basic Samples<a href="#basic-samples" class="hash-link" aria-label="Direct link to Basic Samples" title="Direct link to Basic Samples" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-01-simple-etl-pipeline">Sample 01: Simple ETL Pipeline<a href="#sample-01-simple-etl-pipeline" class="hash-link" aria-label="Direct link to Sample 01: Simple ETL Pipeline" title="Direct link to Sample 01: Simple ETL Pipeline" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-01-basic-pipeline">Sample 01: Basic Pipeline<a href="#sample-01-basic-pipeline" class="hash-link" aria-label="Direct link to Sample 01: Basic Pipeline" title="Direct link to Sample 01: Basic Pipeline" translate="no">​</a></h3>
 <p><strong>Concepts demonstrated:</strong></p>
 <ul>
 <li class="">Basic source, transform, and sink nodes</li>
 <li class="">Simple data flow between nodes</li>
 <li class="">Pipeline definition and execution</li>
+<li class="">Dependency injection integration</li>
 </ul>
-<p><strong>What it does:</strong> Extracts data from a CSV file, transforms it by applying simple calculations, and loads the results into another CSV file. Perfect for understanding the fundamental ETL pattern in NPipeline.</p>
+<p><strong>What it does:</strong> A &quot;Hello World&quot; pipeline that demonstrates the fundamental NPipeline concepts with a source that generates data, a transform that processes it, and a sink that outputs the results.</p>
 <p><strong>Key takeaways:</strong> How to structure a basic pipeline and connect nodes together.</p>
 <hr>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-02-high-performance-transform">Sample 02: High-Performance Transform<a href="#sample-02-high-performance-transform" class="hash-link" aria-label="Direct link to Sample 02: High-Performance Transform" title="Direct link to Sample 02: High-Performance Transform" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-02-file-processing-pipeline">Sample 02: File Processing Pipeline<a href="#sample-02-file-processing-pipeline" class="hash-link" aria-label="Direct link to Sample 02: File Processing Pipeline" title="Direct link to Sample 02: File Processing Pipeline" translate="no">​</a></h3>
 <p><strong>Concepts demonstrated:</strong></p>
 <ul>
-<li class="">ValueTask optimization for transforms</li>
-<li class="">Synchronous fast paths vs. asynchronous paths</li>
-<li class="">Performance optimization techniques</li>
+<li class="">File-based source and sink nodes</li>
+<li class="">Stream processing for memory efficiency</li>
+<li class="">Line-by-line text transformation</li>
+<li class="">Atomic file writing operations</li>
 </ul>
-<p><strong>What it does:</strong> Implements a transform node that processes data with both fast synchronous paths (cache hits) and slower asynchronous paths (cache misses). Demonstrates how to minimize allocations in high-throughput scenarios.</p>
-<p><strong>Key takeaways:</strong> When and how to use ValueTask for performance-critical transforms.</p>
+<p><strong>What it does:</strong> Reads text files line by line, processes each line with configurable transformations (prefixes, line numbers, case conversion), and writes the results to output files using atomic operations.</p>
+<p><strong>Key takeaways:</strong> Working with file-based data sources and sinks in NPipeline.</p>
 <hr>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-03-fluent-configuration">Sample 03: Fluent Configuration<a href="#sample-03-fluent-configuration" class="hash-link" aria-label="Direct link to Sample 03: Fluent Configuration" title="Direct link to Sample 03: Fluent Configuration" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-03-basic-error-handling">Sample 03: Basic Error Handling<a href="#sample-03-basic-error-handling" class="hash-link" aria-label="Direct link to Sample 03: Basic Error Handling" title="Direct link to Sample 03: Basic Error Handling" translate="no">​</a></h3>
 <p><strong>Concepts demonstrated:</strong></p>
 <ul>
-<li class="">PipelineBuilder fluent API</li>
-<li class="">Configuration options</li>
-<li class="">Dependency injection setup</li>
+<li class="">Try-catch patterns in pipeline nodes</li>
+<li class="">Basic retry logic with exponential backoff</li>
+<li class="">Error logging and collection</li>
+<li class="">Graceful degradation with fallback mechanisms</li>
+<li class="">Error isolation to prevent cascading failures</li>
 </ul>
-<p><strong>What it does:</strong> Shows different ways to configure pipelines using the fluent API, including setting execution options, error handling policies, and observability features.</p>
-<p><strong>Key takeaways:</strong> How to leverage the fluent API for clean, readable pipeline configuration.</p>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="intermediate-samples">Intermediate Samples<a href="#intermediate-samples" class="hash-link" aria-label="Direct link to Intermediate Samples" title="Direct link to Intermediate Samples" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-04-csv-to-database-pipeline">Sample 04: CSV to Database Pipeline<a href="#sample-04-csv-to-database-pipeline" class="hash-link" aria-label="Direct link to Sample 04: CSV to Database Pipeline" title="Direct link to Sample 04: CSV to Database Pipeline" translate="no">​</a></h3>
-<p><strong>Concepts demonstrated:</strong></p>
-<ul>
-<li class="">Real-world data connectors</li>
-<li class="">Batch processing</li>
-<li class="">Transaction handling</li>
-</ul>
-<p><strong>What it does:</strong> Reads data from CSV files, transforms it, and writes to a SQL database with proper transaction handling and batch processing for performance.</p>
-<p><strong>Key takeaways:</strong> Working with external systems and handling data at scale.</p>
-<hr>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-05-error-handling--resilience">Sample 05: Error Handling &amp; Resilience<a href="#sample-05-error-handling--resilience" class="hash-link" aria-label="Direct link to Sample 05: Error Handling &amp; Resilience" title="Direct link to Sample 05: Error Handling &amp; Resilience" translate="no">​</a></h3>
-<p><strong>Concepts demonstrated:</strong></p>
-<ul>
-<li class="">Node-level error handling</li>
-<li class="">Retry policies</li>
-<li class="">Circuit breaker patterns</li>
-<li class="">Dead letter queues</li>
-</ul>
-<p><strong>What it does:</strong> Implements a pipeline with comprehensive error handling, including retries, circuit breakers, and dead letter queues for failed items. Shows how to build resilient production pipelines.</p>
+<p><strong>What it does:</strong> Implements a pipeline with comprehensive error handling, including retries with exponential backoff, fallback mechanisms, and error tracking. Shows how to build resilient pipelines that maintain service availability during failures.</p>
 <p><strong>Key takeaways:</strong> Designing pipelines that gracefully handle failures and maintain data integrity.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="intermediate-samples">Intermediate Samples<a href="#intermediate-samples" class="hash-link" aria-label="Direct link to Intermediate Samples" title="Direct link to Intermediate Samples" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-04-simple-data-transformation">Sample 04: Simple Data Transformation<a href="#sample-04-simple-data-transformation" class="hash-link" aria-label="Direct link to Sample 04: Simple Data Transformation" title="Direct link to Sample 04: Simple Data Transformation" translate="no">​</a></h3>
+<p><strong>Concepts demonstrated:</strong></p>
+<ul>
+<li class="">CSV to object transformation</li>
+<li class="">Data validation patterns</li>
+<li class="">Filtering mechanisms</li>
+<li class="">Data enrichment</li>
+</ul>
+<p><strong>What it does:</strong> Reads CSV data, validates it according to business rules, filters based on age and location, and enriches it with additional information like country and age categories.</p>
+<p><strong>Key takeaways:</strong> Implementing data validation, filtering, and enrichment patterns.</p>
 <hr>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-06-parallel-processing">Sample 06: Parallel Processing<a href="#sample-06-parallel-processing" class="hash-link" aria-label="Direct link to Sample 06: Parallel Processing" title="Direct link to Sample 06: Parallel Processing" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-05-parallel-processing">Sample 05: Parallel Processing<a href="#sample-05-parallel-processing" class="hash-link" aria-label="Direct link to Sample 05: Parallel Processing" title="Direct link to Sample 05: Parallel Processing" translate="no">​</a></h3>
 <p><strong>Concepts demonstrated:</strong></p>
 <ul>
 <li class="">Parallel execution strategies</li>
 <li class="">Resource management</li>
-<li class="">Performance tuning</li>
+<li class="">Thread safety</li>
+<li class="">Performance monitoring</li>
 </ul>
-<p><strong>What it does:</strong> Demonstrates different parallel processing approaches in NPipeline, showing when to use each strategy and how to configure them for optimal performance.</p>
+<p><strong>What it does:</strong> Demonstrates parallel processing capabilities for CPU-intensive workloads, showing how to configure and use parallel execution strategies for optimal resource utilization.</p>
 <p><strong>Key takeaways:</strong> How to leverage parallelism while avoiding common pitfalls.</p>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="advanced-samples">Advanced Samples<a href="#advanced-samples" class="hash-link" aria-label="Direct link to Advanced Samples" title="Direct link to Advanced Samples" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-07-time-windowed-aggregation">Sample 07: Time-Windowed Aggregation<a href="#sample-07-time-windowed-aggregation" class="hash-link" aria-label="Direct link to Sample 07: Time-Windowed Aggregation" title="Direct link to Sample 07: Time-Windowed Aggregation" translate="no">​</a></h3>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-06-advanced-error-handling">Sample 06: Advanced Error Handling<a href="#sample-06-advanced-error-handling" class="hash-link" aria-label="Direct link to Sample 06: Advanced Error Handling" title="Direct link to Sample 06: Advanced Error Handling" translate="no">​</a></h3>
 <p><strong>Concepts demonstrated:</strong></p>
 <ul>
-<li class="">Time-based windowing</li>
-<li class="">Watermarks and late data handling</li>
-<li class="">Aggregation patterns</li>
+<li class="">Circuit breaker patterns</li>
+<li class="">Dead letter queues</li>
+<li class="">Advanced retry strategies</li>
+<li class="">Error recovery mechanisms</li>
+<li class="">Monitoring and alerting</li>
 </ul>
-<p><strong>What it does:</strong> Implements a time-windowed aggregation pipeline that processes events in time windows and handles late-arriving data correctly.</p>
+<p><strong>What it does:</strong> Implements production-grade resilience patterns including circuit breakers to prevent cascading failures, dead letter queues for failed items, and comprehensive error recovery mechanisms using Polly.</p>
+<p><strong>Key takeaways:</strong> Building production-ready pipelines with comprehensive error handling.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="advanced-samples">Advanced Samples<a href="#advanced-samples" class="hash-link" aria-label="Direct link to Advanced Samples" title="Direct link to Advanced Samples" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-07-streaming-analytics">Sample 07: Streaming Analytics<a href="#sample-07-streaming-analytics" class="hash-link" aria-label="Direct link to Sample 07: Streaming Analytics" title="Direct link to Sample 07: Streaming Analytics" translate="no">​</a></h3>
+<p><strong>Concepts demonstrated:</strong></p>
+<ul>
+<li class="">Time-based windowing (tumbling and sliding windows)</li>
+<li class="">Watermarks and late data handling</li>
+<li class="">Real-time aggregations</li>
+<li class="">Branching pipelines</li>
+</ul>
+<p><strong>What it does:</strong> Implements a time-windowed aggregation pipeline that processes sensor data in real-time, handles late-arriving data, and performs statistical analysis with trend and anomaly detection.</p>
 <p><strong>Key takeaways:</strong> Building stream processing applications with correct temporal semantics.</p>
 <hr>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-08-valuetask-optimization">Sample 08: ValueTask Optimization<a href="#sample-08-valuetask-optimization" class="hash-link" aria-label="Direct link to Sample 08: ValueTask Optimization" title="Direct link to Sample 08: ValueTask Optimization" translate="no">​</a></h3>
-<p><strong>Concepts demonstrated:</strong></p>
-<ul>
-<li class="">Advanced ValueTask patterns</li>
-<li class="">Memory allocation optimization</li>
-<li class="">Performance measurement</li>
-</ul>
-<p><strong>What it does:</strong> Deep dive into ValueTask optimization with benchmarks and performance measurements. Shows how to achieve maximum throughput in memory-constrained scenarios.</p>
-<p><strong>Key takeaways:</strong> Advanced techniques for optimizing pipeline performance.</p>
-<hr>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-09-custom-node-types">Sample 09: Custom Node Types<a href="#sample-09-custom-node-types" class="hash-link" aria-label="Direct link to Sample 09: Custom Node Types" title="Direct link to Sample 09: Custom Node Types" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-08-custom-node-implementation">Sample 08: Custom Node Implementation<a href="#sample-08-custom-node-implementation" class="hash-link" aria-label="Direct link to Sample 08: Custom Node Implementation" title="Direct link to Sample 08: Custom Node Implementation" translate="no">​</a></h3>
 <p><strong>Concepts demonstrated:</strong></p>
 <ul>
 <li class="">Creating custom node implementations</li>
-<li class="">Extending NPipeline functionality</li>
-<li class="">Best practices for node design</li>
+<li class="">Lifecycle management</li>
+<li class="">Performance optimization through caching and batching</li>
+<li class="">Observability patterns</li>
 </ul>
-<p><strong>What it does:</strong> Shows how to implement custom node types for specialized processing needs, including proper error handling, observability, and lifecycle management.</p>
+<p><strong>What it does:</strong> Shows how to implement custom node types including a sensor data source, a cached transform for performance optimization, and a batching sink for improved throughput.</p>
 <p><strong>Key takeaways:</strong> Extending NPipeline to meet specific application requirements.</p>
 <hr>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-10-full-production-pipeline">Sample 10: Full Production Pipeline<a href="#sample-10-full-production-pipeline" class="hash-link" aria-label="Direct link to Sample 10: Full Production Pipeline" title="Direct link to Sample 10: Full Production Pipeline" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-09-performance-optimization">Sample 09: Performance Optimization<a href="#sample-09-performance-optimization" class="hash-link" aria-label="Direct link to Sample 09: Performance Optimization" title="Direct link to Sample 09: Performance Optimization" translate="no">​</a></h3>
 <p><strong>Concepts demonstrated:</strong></p>
 <ul>
-<li class="">Production-ready architecture</li>
-<li class="">Comprehensive monitoring</li>
-<li class="">Deployment considerations</li>
-<li class="">Performance optimization</li>
+<li class="">ValueTask optimization</li>
+<li class="">Synchronous fast paths</li>
+<li class="">Memory allocation reduction</li>
+<li class="">Performance measurement</li>
 </ul>
-<p><strong>What it does:</strong> A complete, production-ready pipeline that combines all advanced concepts: error handling, parallelism, custom nodes, monitoring, and performance optimization.</p>
-<p><strong>Key takeaways:</strong> How to architect and implement robust, scalable production pipelines.</p>
+<p><strong>What it does:</strong> Demonstrates advanced performance optimization techniques including ValueTask usage, synchronous fast paths for simple operations, memory allocation reduction with ArrayPool, and comprehensive performance measurement.</p>
+<p><strong>Key takeaways:</strong> Advanced techniques for optimizing pipeline performance.</p>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-10-complex-data-transformations">Sample 10: Complex Data Transformations<a href="#sample-10-complex-data-transformations" class="hash-link" aria-label="Direct link to Sample 10: Complex Data Transformations" title="Direct link to Sample 10: Complex Data Transformations" translate="no">​</a></h3>
+<p><strong>Concepts demonstrated:</strong></p>
+<ul>
+<li class="">Multi-stream joins</li>
+<li class="">External data lookups</li>
+<li class="">Complex aggregations</li>
+<li class="">Data lineage tracking</li>
+</ul>
+<p><strong>What it does:</strong> Implements sophisticated data processing scenarios including joining orders with customer data, product enrichment, complex aggregations, and complete data lineage tracking for auditability.</p>
+<p><strong>Key takeaways:</strong> Building complex data pipelines with joins, lookups, and lineage tracking.</p>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-11-csv-connector">Sample 11: CSV Connector<a href="#sample-11-csv-connector" class="hash-link" aria-label="Direct link to Sample 11: CSV Connector" title="Direct link to Sample 11: CSV Connector" translate="no">​</a></h3>
+<p><strong>Concepts demonstrated:</strong></p>
+<ul>
+<li class="">CSV source and sink nodes with <code>CsvSourceNode&lt;T&gt;</code> and <code>CsvSinkNode&lt;T&gt;</code></li>
+<li class="">StorageUri abstraction for file system access</li>
+<li class="">Custom validation transform with business rule enforcement</li>
+<li class="">Data transformation and enrichment patterns</li>
+<li class="">Error handling for malformed data with configurable filtering</li>
+<li class="">IPipelineDefinition pattern for reusable pipeline structures</li>
+<li class="">Pipeline configuration through parameters</li>
+<li class="">Node factory pattern for resolving constructor ambiguity</li>
+</ul>
+<p><strong>What it does:</strong> Implements a comprehensive CSV data processing pipeline that reads customer data from CSV files, validates it against business rules (ID, email format, age range, etc.), transforms and enriches the data (name normalization, country expansion, email formatting), and writes the processed results to output CSV files. The sample demonstrates proper error handling with configurable filtering of invalid records.</p>
+<p><strong>Key takeaways:</strong> Building robust CSV processing pipelines with validation, transformation, and error handling patterns using NPipeline&#x27;s CSV connector components and the IPipelineDefinition pattern for creating reusable pipeline structures.</p>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-12-batching-node">Sample 12: Batching Node<a href="#sample-12-batching-node" class="hash-link" aria-label="Direct link to Sample 12: Batching Node" title="Direct link to Sample 12: Batching Node" translate="no">​</a></h3>
+<p><strong>Concepts demonstrated:</strong></p>
+<ul>
+<li class=""><code>BatchingNode&lt;T&gt;</code> for collecting individual items into batches</li>
+<li class="">Size-based, time-based, and hybrid batching strategies</li>
+<li class="">BatchProcessingTransform for efficient batch operations</li>
+<li class="">Performance optimization through batch processing</li>
+<li class="">Bulk database operations with batched results</li>
+<li class="">BatchingExecutionStrategy for optimal performance</li>
+<li class="">Comprehensive testing patterns for batched pipelines</li>
+</ul>
+<p><strong>What it does:</strong> Demonstrates the <code>BatchingNode&lt;T&gt;</code> functionality for efficient batch processing of individual items. The sample simulates an IoT sensor data processing pipeline that collects individual sensor readings into batches, processes them with aggregations and calculations, and performs bulk database operations. It shows different batching strategies (size-based, time-based, and hybrid) and provides detailed performance analysis comparing batch processing to individual item processing.</p>
+<p><strong>Key takeaways:</strong> Using batching to significantly improve performance for computational operations, database operations, and network operations while maintaining flexibility and reliability in data processing pipelines.</p>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-13-keyed-join-node">Sample 13: Keyed Join Node<a href="#sample-13-keyed-join-node" class="hash-link" aria-label="Direct link to Sample 13: Keyed Join Node" title="Direct link to Sample 13: Keyed Join Node" translate="no">​</a></h3>
+<p><strong>Concepts demonstrated:</strong></p>
+<ul>
+<li class="">KeyedJoinNode for joining data streams based on common keys</li>
+<li class="">Inner, Left Outer, Right Outer, and Full Outer join strategies</li>
+<li class="">Multi-stream correlation and data enrichment patterns</li>
+<li class="">Real-time aggregation on joined data</li>
+<li class="">Memory management for unmatched items</li>
+<li class="">Performance considerations for key distribution</li>
+</ul>
+<p><strong>What it does:</strong> Demonstrates how to use NPipeline&#x27;s KeyedJoinNode to join data streams based on common keys in an e-commerce scenario. It shows how to join orders with customer data using different join strategies, enrich the results with product information, and generate business intelligence through real-time aggregations by customer tier and product category.</p>
+<p><strong>Key takeaways:</strong> Building sophisticated data pipelines that can correlate and enrich data from multiple streams using various join strategies while managing performance and memory efficiently.</p>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-14-time-windowed-join-node">Sample 14: Time Windowed Join Node<a href="#sample-14-time-windowed-join-node" class="hash-link" aria-label="Direct link to Sample 14: Time Windowed Join Node" title="Direct link to Sample 14: Time Windowed Join Node" translate="no">​</a></h3>
+<p><strong>Concepts demonstrated:</strong></p>
+<ul>
+<li class="">TimeWindowedJoinNode for temporal correlation of events</li>
+<li class="">Tumbling and sliding window strategies with configurable sizes</li>
+<li class="">Timestamp extraction and watermark management for event-time processing</li>
+<li class="">Out-of-order data handling with configurable tolerance</li>
+<li class="">Memory-efficient state management with automatic cleanup</li>
+<li class="">Performance optimization for time-based joins</li>
+</ul>
+<p><strong>What it does:</strong> Demonstrates time-windowed joins for correlating IoT sensor readings with maintenance events that occur within specific time windows. The sample shows how to use tumbling and sliding windows to analyze maintenance effectiveness, handle out-of-order events, and perform temporal analysis on streaming data with proper watermark management.</p>
+<p><strong>Key takeaways:</strong> Implementing sophisticated temporal data processing patterns that can correlate events based on both keys and time proximity while handling real-world challenges like out-of-order data and managing memory efficiently.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="getting-started-with-samples">Getting Started with Samples<a href="#getting-started-with-samples" class="hash-link" aria-label="Direct link to Getting Started with Samples" title="Direct link to Getting Started with Samples" translate="no">​</a></h2>
 <ol>
 <li class=""><strong>Clone the repository</strong> to access all sample code</li>
-<li class=""><strong>Start with Basic Samples</strong> if you&#x27;re new to NPipeline</li>
-<li class=""><strong>Progress to Intermediate Samples</strong> once you&#x27;re comfortable with the basics</li>
-<li class=""><strong>Explore Advanced Samples</strong> for production scenarios and optimization techniques</li>
+<li class=""><strong>Start with Basic Samples</strong> if you&#x27;re new to NPipeline<!-- -->
+<ul>
+<li class="">Sample 01: Learn the fundamental pipeline concepts</li>
+<li class="">Sample 02: Understand file-based processing</li>
+<li class="">Sample 03: Master basic error handling patterns</li>
+</ul>
+</li>
+<li class=""><strong>Progress to Intermediate Samples</strong> once you&#x27;re comfortable with the basics<!-- -->
+<ul>
+<li class="">Sample 04: Data transformation and validation</li>
+<li class="">Sample 05: Parallel processing techniques</li>
+<li class="">Sample 06: Advanced error handling and resilience</li>
+</ul>
+</li>
+<li class=""><strong>Explore Advanced Samples</strong> for production scenarios and optimization techniques<!-- -->
+<ul>
+<li class="">Sample 07: Streaming analytics and windowing</li>
+<li class="">Sample 08: Custom node development</li>
+<li class="">Sample 09: Performance optimization</li>
+<li class="">Sample 10: Complex data transformations and joins</li>
+<li class="">Sample 11: CSV connector and data processing</li>
+<li class="">Sample 12: Batching node for efficient batch processing</li>
+<li class="">Sample 13: Keyed join node for stream correlation</li>
+<li class="">Sample 14: Time windowed join node for temporal analysis</li>
+</ul>
+</li>
 </ol>
 <p>Each sample includes:</p>
 <ul>
@@ -139,6 +227,6 @@
 <li class=""><a class="" href="/docs/core-concepts">Core Concepts</a> - Understand the building blocks</li>
 <li class=""><a class="" href="/docs/learning-paths">Learning Paths</a> - Structured learning journey</li>
 <li class=""><a class="" href="/docs/advanced-topics/synchronous-fast-paths">Performance Optimization</a> - Advanced performance techniques</li>
-</ul></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/analyzers/best-practices"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Best Practice Analyzers</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/reference"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Reference</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#basic-samples" class="table-of-contents__link toc-highlight">Basic Samples</a><ul><li><a href="#sample-01-simple-etl-pipeline" class="table-of-contents__link toc-highlight">Sample 01: Simple ETL Pipeline</a></li><li><a href="#sample-02-high-performance-transform" class="table-of-contents__link toc-highlight">Sample 02: High-Performance Transform</a></li><li><a href="#sample-03-fluent-configuration" class="table-of-contents__link toc-highlight">Sample 03: Fluent Configuration</a></li></ul></li><li><a href="#intermediate-samples" class="table-of-contents__link toc-highlight">Intermediate Samples</a><ul><li><a href="#sample-04-csv-to-database-pipeline" class="table-of-contents__link toc-highlight">Sample 04: CSV to Database Pipeline</a></li><li><a href="#sample-05-error-handling--resilience" class="table-of-contents__link toc-highlight">Sample 05: Error Handling &amp; Resilience</a></li><li><a href="#sample-06-parallel-processing" class="table-of-contents__link toc-highlight">Sample 06: Parallel Processing</a></li></ul></li><li><a href="#advanced-samples" class="table-of-contents__link toc-highlight">Advanced Samples</a><ul><li><a href="#sample-07-time-windowed-aggregation" class="table-of-contents__link toc-highlight">Sample 07: Time-Windowed Aggregation</a></li><li><a href="#sample-08-valuetask-optimization" class="table-of-contents__link toc-highlight">Sample 08: ValueTask Optimization</a></li><li><a href="#sample-09-custom-node-types" class="table-of-contents__link toc-highlight">Sample 09: Custom Node Types</a></li><li><a href="#sample-10-full-production-pipeline" class="table-of-contents__link toc-highlight">Sample 10: Full Production Pipeline</a></li></ul></li><li><a href="#getting-started-with-samples" class="table-of-contents__link toc-highlight">Getting Started with Samples</a></li><li><a href="#related-documentation" class="table-of-contents__link toc-highlight">Related Documentation</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Documentation</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/docs/introduction/why-npipeline">Why NPipeline?</a></li><li class="footer__item"><a class="footer__link-item" href="/docs/getting-started/installation">Installation</a></li><li class="footer__item"><a class="footer__link-item" href="/docs/getting-started/quick-start">Quick Start</a></li><li class="footer__item"><a class="footer__link-item" href="/docs/core-concepts">Core Concepts</a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">More</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/npipeline/npipeline" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">&nbsp;</div></div></div></footer></div>
+</ul></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/analyzers/best-practices"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Best Practice Analyzers</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/reference"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Reference</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#basic-samples" class="table-of-contents__link toc-highlight">Basic Samples</a><ul><li><a href="#sample-01-basic-pipeline" class="table-of-contents__link toc-highlight">Sample 01: Basic Pipeline</a></li><li><a href="#sample-02-file-processing-pipeline" class="table-of-contents__link toc-highlight">Sample 02: File Processing Pipeline</a></li><li><a href="#sample-03-basic-error-handling" class="table-of-contents__link toc-highlight">Sample 03: Basic Error Handling</a></li></ul></li><li><a href="#intermediate-samples" class="table-of-contents__link toc-highlight">Intermediate Samples</a><ul><li><a href="#sample-04-simple-data-transformation" class="table-of-contents__link toc-highlight">Sample 04: Simple Data Transformation</a></li><li><a href="#sample-05-parallel-processing" class="table-of-contents__link toc-highlight">Sample 05: Parallel Processing</a></li><li><a href="#sample-06-advanced-error-handling" class="table-of-contents__link toc-highlight">Sample 06: Advanced Error Handling</a></li></ul></li><li><a href="#advanced-samples" class="table-of-contents__link toc-highlight">Advanced Samples</a><ul><li><a href="#sample-07-streaming-analytics" class="table-of-contents__link toc-highlight">Sample 07: Streaming Analytics</a></li><li><a href="#sample-08-custom-node-implementation" class="table-of-contents__link toc-highlight">Sample 08: Custom Node Implementation</a></li><li><a href="#sample-09-performance-optimization" class="table-of-contents__link toc-highlight">Sample 09: Performance Optimization</a></li><li><a href="#sample-10-complex-data-transformations" class="table-of-contents__link toc-highlight">Sample 10: Complex Data Transformations</a></li><li><a href="#sample-11-csv-connector" class="table-of-contents__link toc-highlight">Sample 11: CSV Connector</a></li><li><a href="#sample-12-batching-node" class="table-of-contents__link toc-highlight">Sample 12: Batching Node</a></li><li><a href="#sample-13-keyed-join-node" class="table-of-contents__link toc-highlight">Sample 13: Keyed Join Node</a></li><li><a href="#sample-14-time-windowed-join-node" class="table-of-contents__link toc-highlight">Sample 14: Time Windowed Join Node</a></li></ul></li><li><a href="#getting-started-with-samples" class="table-of-contents__link toc-highlight">Getting Started with Samples</a></li><li><a href="#related-documentation" class="table-of-contents__link toc-highlight">Related Documentation</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Documentation</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/docs/introduction/why-npipeline">Why NPipeline?</a></li><li class="footer__item"><a class="footer__link-item" href="/docs/getting-started/installation">Installation</a></li><li class="footer__item"><a class="footer__link-item" href="/docs/getting-started/quick-start">Quick Start</a></li><li class="footer__item"><a class="footer__link-item" href="/docs/core-concepts">Core Concepts</a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">More</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/npipeline/npipeline" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">&nbsp;</div></div></div></footer></div>
 </body>
 </html>
