@@ -21,13 +21,14 @@ function PerformanceHeroSection() {
           High-performance, zero-allocation data pipelines built for .NET developers. 
           Process millions of records per second with minimal GC pressure using modern async patterns 
           and fluent APIs that integrate seamlessly with your existing .NET ecosystem.
+          Compatible with .NET 8, 9, and 10.
         </p>
         <div className={styles.heroButtons}>
-          <Link className={styles.primaryButton} to="/docs/getting-started/quick-start">
-            Build Your First Pipeline
+          <Link className={styles.primaryButton} to="/docs/introduction">
+            Introduction
           </Link>
-          <Link className={styles.secondaryButton} to="/docs/introduction/why-npipeline">
-            See Performance Benchmarks
+          <Link className={styles.secondaryButton} to="/docs/getting-started/quick-start">
+            Quick Start
           </Link>
         </div>
       </div>
@@ -115,7 +116,7 @@ function ZeroAllocationSolutionSection() {
             </Link>
           </div>
           <div className={styles.imageSectionImage}>
-            [Performance Metrics Visualization]
+            <img src="/img/performance-comparison.svg" alt="Performance comparison between NPipeline and traditional approaches" className={styles.visualizationImage} />
           </div>
         </div>
       </div>
@@ -163,7 +164,7 @@ function GraphBasedArchitectureSection() {
           </div>
           
           <div className={styles.imagePlaceholder}>
-            [Graph Architecture Visualization]
+            <img src="/img/graph-architecture.svg" alt="Graph-based architecture showing node connections in NPipeline" className={styles.visualizationImage} />
           </div>
         </div>
       </div>
@@ -208,6 +209,11 @@ function ResilienceSection() {
         <p className={styles.sectionSubtitle}>
           Production-grade resilience patterns built into the framework
         </p>
+        
+        <div className={styles.resilienceVisualizationContainer}>
+          <img src="/img/resilience-patterns.svg" alt="Resilience patterns in NPipeline" className={styles.visualizationImage} />
+        </div>
+        
         <div className={styles.featuresGrid}>
           {resilienceFeatures.map((feature, idx) => (
             <div key={idx} className={styles.featureCard}>
@@ -277,13 +283,14 @@ function ImplementationQuickStartSection() {
       <div className="container">
         <div className={styles.imageSectionContent}>
           <div className={styles.imageSectionImage}>
-            [Quick Start Code Visualization]
+            <img src="/img/data-pipeline-flow.svg" alt="Data pipeline flow showing zero-allocation processing in NPipeline" className={styles.visualizationImage} />
           </div>
           <div className={styles.imageSectionText}>
             <h2>Implementation Quick Start</h2>
             <p>
               Get NPipeline running in minutes with our streamlined installation process. 
               Built as a set of NuGet packages that integrate seamlessly with your existing .NET projects.
+              Supports .NET 8, 9, and 10 for the latest features and performance improvements.
             </p>
             <p>
               Start with our pre-built components for common scenarios, then extend with custom nodes 
@@ -292,66 +299,6 @@ function ImplementationQuickStartSection() {
             </p>
             <Link className={styles.primaryButton} to="/docs/getting-started/quick-start">
               5-Minute Quick Start Guide
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function SocialProofSection() {
-  const testimonials = [
-    {
-      quote: "NPipeline reduced our data processing time by 70% while cutting memory usage in half. The zero-allocation architecture is a game-changer for high-throughput scenarios.",
-      author: "Senior Software Engineer",
-      company: "FinTech Company",
-    },
-    {
-      quote: "The graph-based design made our complex ETL processes maintainable. New team members can understand data flows in minutes, not days.",
-      author: "Data Platform Lead",
-      company: "E-commerce Platform",
-    },
-    {
-      quote: "Finally, a data pipeline library that embraces modern .NET patterns. The dependency injection integration and async-first design fit perfectly with our architecture.",
-      author: "Principal Architect",
-      company: "Enterprise Software",
-    },
-  ];
-
-  return (
-    <section className={styles.whySection}>
-      <div className="container">
-        <Heading as="h2" className={styles.sectionTitle}>
-          Trusted by .NET Developers
-        </Heading>
-        <div className={styles.whyGrid}>
-          {testimonials.map((testimonial, idx) => (
-            <div key={idx} className={styles.whyCard}>
-              <p className={styles.whyCardDescription}>"{testimonial.quote}"</p>
-              <p className={styles.whyCardTitle} style={{marginTop: '1rem', fontSize: '0.9rem'}}>
-                {testimonial.author}
-              </p>
-              <p style={{color: '#666', fontSize: '0.85rem'}}>
-                {testimonial.company}
-              </p>
-            </div>
-          ))}
-        </div>
-        <div style={{textAlign: 'center', marginTop: '3rem'}}>
-          <Heading as="h3" style={{fontSize: '1.5rem', marginBottom: '1rem'}}>
-            Join Our Growing Community
-          </Heading>
-          <p style={{color: '#666', marginBottom: '2rem', maxWidth: '600px', margin: '0 auto 2rem'}}>
-            Connect with fellow .NET developers building high-performance data pipelines. 
-            Get help, share patterns, and contribute to the project.
-          </p>
-          <div style={{display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap'}}>
-            <Link className={styles.primaryButton} to="https://github.com/npipeline/npipeline">
-              View on GitHub
-            </Link>
-            <Link className={styles.secondaryButton} to="/docs/introduction/faq">
-              Read FAQ
             </Link>
           </div>
         </div>
@@ -373,7 +320,6 @@ export default function Home(): ReactNode {
       <ResilienceSection />
       <UseCasesByPersonaSection />
       <ImplementationQuickStartSection />
-      <SocialProofSection />
     </Layout>
   );
 }

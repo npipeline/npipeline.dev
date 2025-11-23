@@ -1,0 +1,223 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient for source nodes -->
+    <linearGradient id="sourceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#005F73;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0A9396;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Gradient for transform nodes -->
+    <linearGradient id="transformGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#94D2BD;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E9D8A6;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Gradient for sink nodes -->
+    <linearGradient id="sinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EE9B00;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#CA6702;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Glow filter -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="1" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.2"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="#f8f9fa" rx="8"/>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a1a">
+    Graph-Based Pipeline Architecture
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="400" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#666">
+    Declarative node connections with compile-time validation
+  </text>
+  
+  <!-- Source Nodes -->
+  <g id="source-nodes">
+    <!-- CSV Source -->
+    <circle cx="100" cy="150" r="35" fill="url(#sourceGradient)" filter="url(#shadow)"/>
+    <text x="100" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">
+      CSV
+    </text>
+    <text x="100" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">
+      Source
+    </text>
+    
+    <!-- Database Source -->
+    <circle cx="100" cy="250" r="35" fill="url(#sourceGradient)" filter="url(#shadow)"/>
+    <text x="100" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">
+      Database
+    </text>
+    <text x="100" y="260" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">
+      Source
+    </text>
+    
+    <!-- API Source -->
+    <circle cx="100" cy="350" r="35" fill="url(#sourceGradient)" filter="url(#shadow)"/>
+    <text x="100" y="345" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">
+      API
+    </text>
+    <text x="100" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">
+      Source
+    </text>
+  </g>
+  
+  <!-- Transform Nodes -->
+  <g id="transform-nodes">
+    <!-- Validate Node -->
+    <rect x="250" y="125" width="80" height="50" rx="8" fill="url(#transformGradient)" filter="url(#shadow)"/>
+    <text x="290" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#1a1a1a">
+      Validate
+    </text>
+    <text x="290" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#1a1a1a">
+      Schema
+    </text>
+    
+    <!-- Transform Node -->
+    <rect x="250" y="225" width="80" height="50" rx="8" fill="url(#transformGradient)" filter="url(#shadow)"/>
+    <text x="290" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#1a1a1a">
+      Transform
+    </text>
+    <text x="290" y="260" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#1a1a1a">
+      Map/Filter
+    </text>
+    
+    <!-- Aggregate Node -->
+    <rect x="250" y="325" width="80" height="50" rx="8" fill="url(#transformGradient)" filter="url(#shadow)"/>
+    <text x="290" y="345" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#1a1a1a">
+      Aggregate
+    </text>
+    <text x="290" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#1a1a1a">
+      Group/Sum
+    </text>
+  </g>
+  
+  <!-- Branch Node -->
+  <g id="branch-node">
+    <polygon points="450,200 490,250 450,300 410,250" fill="#EE9B00" filter="url(#shadow)"/>
+    <text x="450" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">
+      Branch
+    </text>
+    <text x="450" y="260" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">
+      Condition
+    </text>
+  </g>
+  
+  <!-- Processing Nodes -->
+  <g id="processing-nodes">
+    <!-- Process A -->
+    <rect x="540" y="150" width="80" height="50" rx="8" fill="url(#transformGradient)" filter="url(#shadow)"/>
+    <text x="580" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#1a1a1a">
+      Process A
+    </text>
+    <text x="580" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#1a1a1a">
+      Analytics
+    </text>
+    
+    <!-- Process B -->
+    <rect x="540" y="300" width="80" height="50" rx="8" fill="url(#transformGradient)" filter="url(#shadow)"/>
+    <text x="580" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#1a1a1a">
+      Process B
+    </text>
+    <text x="580" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#1a1a1a">
+      Enrichment
+    </text>
+  </g>
+  
+  <!-- Sink Nodes -->
+  <g id="sink-nodes">
+    <!-- Storage Sink -->
+    <circle cx="700" cy="175" r="35" fill="url(#sinkGradient)" filter="url(#shadow)"/>
+    <text x="700" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">
+      Storage
+    </text>
+    <text x="700" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">
+      Sink
+    </text>
+    
+    <!-- API Sink -->
+    <circle cx="700" cy="325" r="35" fill="url(#sinkGradient)" filter="url(#shadow)"/>
+    <text x="700" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">
+      API
+    </text>
+    <text x="700" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">
+      Sink
+    </text>
+  </g>
+  
+  <!-- Connections -->
+  <g id="connections" stroke="#005F73" stroke-width="2" fill="none">
+    <!-- Source to Transform connections -->
+    <path d="M 135 150 L 250 150" marker-end="url(#arrowhead)"/>
+    <path d="M 135 250 L 250 250" marker-end="url(#arrowhead)"/>
+    <path d="M 135 350 L 250 350" marker-end="url(#arrowhead)"/>
+    
+    <!-- Transform to Branch connections -->
+    <path d="M 330 150 L 410 230" marker-end="url(#arrowhead)"/>
+    <path d="M 330 250 L 410 250" marker-end="url(#arrowhead)"/>
+    <path d="M 330 350 L 410 270" marker-end="url(#arrowhead)"/>
+    
+    <!-- Branch to Processing connections -->
+    <path d="M 490 230 L 540 175" marker-end="url(#arrowhead)"/>
+    <path d="M 490 270 L 540 325" marker-end="url(#arrowhead)"/>
+    
+    <!-- Processing to Sink connections -->
+    <path d="M 620 175 L 665 175" marker-end="url(#arrowhead)"/>
+    <path d="M 620 325 L 665 325" marker-end="url(#arrowhead)"/>
+  </g>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <polygon points="0 0, 10 5, 0 10" fill="#005F73" />
+    </marker>
+  </defs>
+  
+  <!-- Legend -->
+  <g id="legend">
+    <rect x="50" y="430" width="700" height="140" fill="white" stroke="#e8e8e8" stroke-width="1" rx="4"/>
+    
+    <text x="400" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1a1a1a">
+      Architecture Benefits
+    </text>
+    
+    <!-- Legend items -->
+    <circle cx="100" cy="485" r="15" fill="url(#sourceGradient)"/>
+    <text x="125" y="490" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Source Nodes - Data ingestion points</text>
+    
+    <rect x="85" y="510" width="30" height="20" rx="4" fill="url(#transformGradient)"/>
+    <text x="125" y="525" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Transform Nodes - Zero-allocation processing</text>
+    
+    <polygon points="100,545 115,555 100,565 85,555" fill="#EE9B00"/>
+    <text x="125" y="560" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Branch Nodes - Conditional routing</text>
+    
+    <circle cx="450" cy="485" r="15" fill="url(#sinkGradient)"/>
+    <text x="475" y="490" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Sink Nodes - Output destinations</text>
+    
+    <text x="450" y="520" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">• Compile-time validation prevents runtime errors</text>
+    <text x="450" y="540" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">• Fluent API for intuitive pipeline definition</text>
+    <text x="450" y="560" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">• Dependency injection integration for testability</text>
+  </g>
+</svg>

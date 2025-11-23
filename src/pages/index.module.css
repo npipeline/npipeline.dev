@@ -61,7 +61,7 @@ html, body {
 .primaryButton {
   background: #005F73;
   color: #fff;
-  padding: 0.9rem 2.2rem;
+  padding: 0.7rem 2.2rem;
   border-radius: 6px;
   font-weight: 600;
   font-size: 0.95rem;
@@ -81,7 +81,7 @@ html, body {
 .secondaryButton {
   background: transparent;
   color: #005F73;
-  padding: 0.9rem 2.2rem;
+  padding: 0.7rem 2.2rem;
   border-radius: 6px;
   font-weight: 600;
   font-size: 0.95rem;
@@ -124,7 +124,7 @@ html, body {
   .secondaryButton {
     width: calc(100% - 0px);
     box-sizing: border-box;
-    padding: 0.8rem 1.5rem;
+    padding: 0.6rem 1.5rem;
   }
 }
 
@@ -342,48 +342,6 @@ html, body {
   color: #e0e0e0;
 }
 
-/* ==================== Why Section ==================== */
-.whySection {
-  padding: 5rem 2rem;
-  background: #fff;
-  overflow-x: hidden;
-}
-
-.whyGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.whyCard {
-  padding: 2rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  text-align: center;
-  border: 1px solid #e8e8e8;
-  transition: all 0.3s ease;
-}
-
-.whyCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-}
-
-.whyCardTitle {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 0.75rem;
-}
-
-.whyCardDescription {
-  color: #666;
-  line-height: 1.6;
-  font-size: 0.95rem;
-}
-
 /* ==================== CTA Section ==================== */
 .ctaSection {
   padding: 4rem 2rem;
@@ -480,6 +438,31 @@ html, body {
   font-size: 0.9rem;
 }
 
+/* ==================== SVG Visualization Styling ==================== */
+.visualizationImage {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.visualizationImage:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.resilienceVisualizationContainer {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.resilienceVisualizationContainer .visualizationImage {
+  max-height: 400px;
+  object-fit: contain;
+}
+
 @media (max-width: 768px) {
   .imageSection {
     padding: 2.5rem 1rem;
@@ -512,6 +495,14 @@ html, body {
   .imageSectionImage {
     min-height: 250px;
     width: 100%;
+  }
+  
+  .visualizationImage {
+    max-height: 300px;
+  }
+  
+  .resilienceVisualizationContainer .visualizationImage {
+    max-height: 250px;
   }
 }
 
@@ -655,11 +646,6 @@ html, body {
     gap: 1.5rem;
   }
 
-  .whyGrid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
   .ctaSection {
     padding: 3rem 1rem;
   }
@@ -670,8 +656,7 @@ html, body {
 
   .featuresSection,
   .benefitsSection,
-  .useCasesSection,
-  .whySection {
+  .useCasesSection {
     padding: 3rem 1rem;
   }
 
