@@ -1,133 +1,59 @@
-<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Gradient for NPipeline bars -->
-    <linearGradient id="npipelineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#005F73;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#0A9396;stop-opacity:1" />
-    </linearGradient>
-    
-    <!-- Gradient for traditional bars -->
-    <linearGradient id="traditionalGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#EE9B00;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#CA6702;stop-opacity:1" />
-    </linearGradient>
-    
-    <!-- Shadow filter -->
-    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
-      <feOffset dx="1" dy="2" result="offsetblur"/>
-      <feComponentTransfer>
-        <feFuncA type="linear" slope="0.2"/>
-      </feComponentTransfer>
-      <feMerge>
-        <feMergeNode/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
+    <style>
+      .metric-label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; font-weight: 600; fill: #2c3e50; }
+      .metric-value { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; fill: #34495e; }
+      .metric-title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 16px; font-weight: 700; fill: #1a252f; }
+      .comparison-label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; fill: #7f8c8d; }
+    </style>
   </defs>
   
   <!-- Background -->
-  <rect width="800" height="500" fill="#f8f9fa" rx="8"/>
+  <rect width="600" height="400" fill="#ffffff" rx="8"/>
   
   <!-- Title -->
-  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a1a">
-    Performance Comparison: NPipeline vs Traditional Approaches
+  <text x="300" y="30" text-anchor="middle" class="metric-title">
+    Performance Metrics
   </text>
   
-  <!-- Chart area background -->
-  <rect x="80" y="60" width="640" height="300" fill="white" stroke="#e8e8e8" stroke-width="1" rx="4"/>
-  
-  <!-- Y-axis labels and grid lines -->
-  <g id="y-axis">
-    <!-- Grid lines -->
-    <line x1="80" y1="360" x2="720" y2="360" stroke="#e8e8e8" stroke-width="1"/>
-    <line x1="80" y1="300" x2="720" y2="300" stroke="#f0f0f0" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="80" y1="240" x2="720" y2="240" stroke="#f0f0f0" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="80" y1="180" x2="720" y2="180" stroke="#f0f0f0" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="80" y1="120" x2="720" y2="120" stroke="#f0f0f0" stroke-width="1" stroke-dasharray="2,2"/>
-    <line x1="80" y1="60" x2="720" y2="60" stroke="#e8e8e8" stroke-width="1"/>
-    
-    <!-- Y-axis labels -->
-    <text x="70" y="365" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#666">0</text>
-    <text x="70" y="305" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#666">20</text>
-    <text x="70" y="245" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#666">40</text>
-    <text x="70" y="185" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#666">60</text>
-    <text x="70" y="125" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#666">80</text>
-    <text x="70" y="65" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#666">100</text>
-    
-    <!-- Y-axis title -->
-    <text x="25" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a" transform="rotate(-90 25 210)">
-      Performance Score
-    </text>
+  <!-- Throughput Comparison -->
+  <g transform="translate(50, 70)">
+    <rect width="220" height="120" fill="#e8f5e9" rx="6" opacity="0.3"/>
+    <text x="110" y="25" text-anchor="middle" class="metric-label">Throughput</text>
+    <text x="110" y="60" text-anchor="middle" class="metric-value" font-size="28" font-weight="700" fill="#2e7d32">5M+</text>
+    <text x="110" y="82" text-anchor="middle" class="metric-value">records/second</text>
+    <text x="110" y="105" text-anchor="middle" class="comparison-label">Zero-allocation fast path</text>
   </g>
   
-  <!-- Bar Chart Data -->
-  <g id="bar-chart">
-    <!-- Throughput (millions records/sec) -->
-    <g id="throughput">
-      <rect x="120" y="120" width="40" height="240" fill="url(#npipelineGradient)" filter="url(#shadow)" rx="2"/>
-      <rect x="165" y="210" width="40" height="150" fill="url(#traditionalGradient)" filter="url(#shadow)" rx="2"/>
-      <text x="162.5" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#005F73">85</text>
-      <text x="185" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#CA6702">45</text>
-      <text x="162.5" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Throughput</text>
-    </g>
-    
-    <!-- Memory Efficiency (lower is better, inverted scale) -->
-    <g id="memory">
-      <rect x="260" y="90" width="40" height="270" fill="url(#npipelineGradient)" filter="url(#shadow)" rx="2"/>
-      <rect x="305" y="270" width="40" height="90" fill="url(#traditionalGradient)" filter="url(#shadow)" rx="2"/>
-      <text x="280" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#005F73">95</text>
-      <text x="325" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#CA6702">25</text>
-      <text x="302.5" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Memory</text>
-    </g>
-    
-    <!-- CPU Usage (lower is better, inverted scale) -->
-    <g id="cpu">
-      <rect x="400" y="105" width="40" height="255" fill="url(#npipelineGradient)" filter="url(#shadow)" rx="2"/>
-      <rect x="445" y="240" width="40" height="120" fill="url(#traditionalGradient)" filter="url(#shadow)" rx="2"/>
-      <text x="420" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#005F73">90</text>
-      <text x="465" y="225" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#CA6702">35</text>
-      <text x="442.5" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">CPU Usage</text>
-    </g>
-    
-    <!-- Latency (lower is better, inverted scale) -->
-    <g id="latency">
-      <rect x="540" y="135" width="40" height="225" fill="url(#npipelineGradient)" filter="url(#shadow)" rx="2"/>
-      <rect x="585" y="225" width="40" height="135" fill="url(#traditionalGradient)" filter="url(#shadow)" rx="2"/>
-      <text x="560" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#005F73">75</text>
-      <text x="605" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#CA6702">40</text>
-      <text x="582.5" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Latency</text>
-    </g>
+  <!-- GC Pressure Reduction -->
+  <g transform="translate(330, 70)">
+    <rect width="220" height="120" fill="#e3f2fd" rx="6" opacity="0.3"/>
+    <text x="110" y="25" text-anchor="middle" class="metric-label">GC Reduction</text>
+    <text x="110" y="60" text-anchor="middle" class="metric-value" font-size="28" font-weight="700" fill="#1565c0">95%</text>
+    <text x="110" y="82" text-anchor="middle" class="metric-value">less allocations</text>
+    <text x="110" y="105" text-anchor="middle" class="comparison-label">ValueTask optimization</text>
   </g>
   
-  <!-- Legend -->
-  <g id="legend">
-    <rect x="250" y="420" width="300" height="60" fill="white" stroke="#e8e8e8" stroke-width="1" rx="4"/>
-    
-    <rect x="270" y="435" width="20" height="12" fill="url(#npipelineGradient)" rx="2"/>
-    <text x="295" y="445" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">NPipeline (Zero-Allocation)</text>
-    
-    <rect x="270" y="455" width="20" height="12" fill="url(#traditionalGradient)" rx="2"/>
-    <text x="295" y="465" font-family="Arial, sans-serif" font-size="12" fill="#1a1a1a">Traditional (High-Allocation)</text>
-    
-    <text x="470" y="445" font-family="Arial, sans-serif" font-size="10" fill="#666">Higher is better</text>
-    <text x="470" y="460" font-family="Arial, sans-serif" font-size="10" fill="#666">(Memory, CPU, Latency)</text>
+  <!-- Memory Usage -->
+  <g transform="translate(50, 220)">
+    <rect width="220" height="120" fill="#f3e5f5" rx="6" opacity="0.3"/>
+    <text x="110" y="25" text-anchor="middle" class="metric-label">Memory Efficiency</text>
+    <text x="110" y="60" text-anchor="middle" class="metric-value" font-size="28" font-weight="700" fill="#6a1b9a">O(1)</text>
+    <text x="110" y="82" text-anchor="middle" class="metric-value">constant memory</text>
+    <text x="110" y="105" text-anchor="middle" class="comparison-label">Streaming architecture</text>
   </g>
   
-  <!-- Key Benefits Callout -->
-  <g id="callout">
-    <rect x="620" y="80" width="160" height="100" fill="#005F73" fill-opacity="0.1" stroke="#005F73" stroke-width="2" rx="4"/>
-    <text x="700" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#005F73">
-      Key Benefits
-    </text>
-    <text x="630" y="125" font-family="Arial, sans-serif" font-size="10" fill="#1a1a1a">
-      • 95% Less GC Pressure
-    </text>
-    <text x="630" y="142" font-family="Arial, sans-serif" font-size="10" fill="#1a1a1a">
-      • 2.5x Higher Throughput
-    </text>
-    <text x="630" y="159" font-family="Arial, sans-serif" font-size="10" fill="#1a1a1a">
-      • Predictable Latency
-    </text>
+  <!-- Latency -->
+  <g transform="translate(330, 220)">
+    <rect width="220" height="120" fill="#fff3e0" rx="6" opacity="0.3"/>
+    <text x="110" y="25" text-anchor="middle" class="metric-label">Latency</text>
+    <text x="110" y="60" text-anchor="middle" class="metric-value" font-size="28" font-weight="700" fill="#e65100">&lt;1µs</text>
+    <text x="110" y="82" text-anchor="middle" class="metric-value">per record</text>
+    <text x="110" y="105" text-anchor="middle" class="comparison-label">Pre-compiled delegates</text>
   </g>
+  
+  <!-- Footer note -->
+  <text x="300" y="380" text-anchor="middle" class="comparison-label" font-size="11">
+    Benchmarked on .NET 8+ with optimized pipeline configurations
+  </text>
 </svg>

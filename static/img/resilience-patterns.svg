@@ -1,293 +1,89 @@
-<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 650 450" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Gradient for success state -->
-    <linearGradient id="successGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#005F73;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#0A9396;stop-opacity:1" />
-    </linearGradient>
-    
-    <!-- Gradient for warning state -->
-    <linearGradient id="warningGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#EE9B00;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#CA6702;stop-opacity:1" />
-    </linearGradient>
-    
-    <!-- Gradient for error state -->
-    <linearGradient id="errorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#AE2012;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#9B2226;stop-opacity:1" />
-    </linearGradient>
-    
-    <!-- Gradient for recovery state -->
-    <linearGradient id="recoveryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#94D2BD;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#E9D8A6;stop-opacity:1" />
-    </linearGradient>
-    
-    <!-- Shadow filter -->
-    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
-      <feOffset dx="1" dy="2" result="offsetblur"/>
-      <feComponentTransfer>
-        <feFuncA type="linear" slope="0.2"/>
-      </feComponentTransfer>
-      <feMerge>
-        <feMergeNode/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    
-    <!-- Arrow marker -->
-    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
-      <polygon points="0 0, 10 5, 0 10" fill="#005F73" />
-    </marker>
-    
-    <!-- Dashed arrow marker -->
-    <marker id="dashedArrowhead" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
-      <polygon points="0 0, 10 5, 0 10" fill="#EE9B00" />
-    </marker>
+    <style>
+      .pattern-title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; font-weight: 600; fill: #1a252f; }
+      .pattern-desc { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; fill: #475569; }
+      .main-title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 16px; font-weight: 700; fill: #1a252f; }
+      .icon-text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 24px; }
+    </style>
   </defs>
   
   <!-- Background -->
-  <rect width="800" height="600" fill="#f8f9fa" rx="8"/>
+  <rect width="650" height="450" fill="#ffffff" rx="8"/>
   
   <!-- Title -->
-  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a1a">
-    Production-Grade Resilience Patterns
+  <text x="325" y="30" text-anchor="middle" class="main-title">
+    Built-in Resilience Patterns
   </text>
   
-  <!-- Subtitle -->
-  <text x="400" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#666">
-    Built-in error handling and recovery mechanisms for reliable data pipelines
-  </text>
-  
-  <!-- Main Pipeline Flow -->
-  <g id="main-pipeline">
-    <!-- Normal Flow -->
-    <rect x="50" y="120" width="100" height="60" rx="8" fill="url(#successGradient)" filter="url(#shadow)"/>
-    <text x="100" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">
-      Source
-    </text>
-    <text x="100" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">
-      Healthy
-    </text>
-    
-    <line x1="150" y1="150" x2="200" y2="150" stroke="#005F73" stroke-width="2" marker-end="url(#arrowhead)"/>
-    
-    <rect x="210" y="120" width="100" height="60" rx="8" fill="url(#successGradient)" filter="url(#shadow)"/>
-    <text x="260" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">
-      Process
-    </text>
-    <text x="260" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">
-      Running
-    </text>
-    
-    <line x1="310" y1="150" x2="360" y2="150" stroke="#005F73" stroke-width="2" marker-end="url(#arrowhead)"/>
-    
-    <rect x="370" y="120" width="100" height="60" rx="8" fill="url(#successGradient)" filter="url(#shadow)"/>
-    <text x="420" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">
-      Sink
-    </text>
-    <text x="420" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">
-      Success
-    </text>
+  <!-- Circuit Breaker -->
+  <g transform="translate(40, 70)">
+    <rect width="180" height="140" rx="8" fill="#dbeafe" opacity="0.5"/>
+    <text x="90" y="35" text-anchor="middle" class="icon-text">🔌</text>
+    <text x="90" y="65" text-anchor="middle" class="pattern-title">Circuit Breaker</text>
+    <text x="15" y="85" class="pattern-desc">Fail fast when downstream</text>
+    <text x="15" y="100" class="pattern-desc">services are unavailable.</text>
+    <text x="15" y="115" class="pattern-desc">Auto-recovery with</text>
+    <text x="15" y="130" class="pattern-desc">configurable thresholds.</text>
   </g>
   
-  <!-- Circuit Breaker Pattern -->
-  <g id="circuit-breaker">
-    <rect x="50" y="220" width="300" height="120" rx="8" fill="white" stroke="#EE9B00" stroke-width="2" stroke-dasharray="5,5"/>
-    <text x="200" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#EE9B00">
-      Circuit Breaker Pattern
-    </text>
-    
-    <!-- Failed Service -->
-    <rect x="70" y="260" width="80" height="50" rx="8" fill="url(#errorGradient)" filter="url(#shadow)"/>
-    <text x="110" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">
-      Service
-    </text>
-    <text x="110" y="295" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">
-      Failed
-    </text>
-    
-    <!-- Circuit Breaker -->
-    <g id="breaker">
-      <circle cx="200" cy="285" r="20" fill="#EE9B00" filter="url(#shadow)"/>
-      <text x="200" y="290" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">
-        CB
-      </text>
-    </g>
-    
-    <!-- Fallback -->
-    <rect x="250" y="260" width="80" height="50" rx="8" fill="url(#recoveryGradient)" filter="url(#shadow)"/>
-    <text x="290" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#1a1a1a">
-      Fallback
-    </text>
-    <text x="290" y="295" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#1a1a1a">
-      Cache
-    </text>
-    
-    <!-- Connections -->
-    <line x1="150" y1="285" x2="180" y2="285" stroke="#AE2012" stroke-width="2" stroke-dasharray="3,3"/>
-    <line x1="220" y1="285" x2="250" y2="285" stroke="#EE9B00" stroke-width="2" marker-end="url(#arrowhead)"/>
-  </g>
-  
-  <!-- Retry Pattern -->
-  <g id="retry-pattern">
-    <rect x="400" y="220" width="350" height="120" rx="8" fill="white" stroke="#005F73" stroke-width="2" stroke-dasharray="5,5"/>
-    <text x="575" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#005F73">
-      Retry with Exponential Backoff
-    </text>
-    
-    <!-- Retry attempts -->
-    <g id="retry-attempts">
-      <circle cx="430" cy="285" r="15" fill="url(#warningGradient)" filter="url(#shadow)"/>
-      <text x="430" y="290" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">
-        R1
-      </text>
-      
-      <circle cx="480" cy="285" r="15" fill="url(#warningGradient)" filter="url(#shadow)"/>
-      <text x="480" y="290" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">
-        R2
-      </text>
-      
-      <circle cx="530" cy="285" r="15" fill="url(#successGradient)" filter="url(#shadow)"/>
-      <text x="530" y="290" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">
-        R3
-      </text>
-      
-      <!-- Success -->
-      <rect x="570" y="270" width="80" height="30" rx="4" fill="url(#successGradient)" filter="url(#shadow)"/>
-      <text x="610" y="290" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">
-        Success
-      </text>
-    </g>
-    
-    <!-- Backoff indicators -->
-    <text x="430" y="315" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#666">100ms</text>
-    <text x="480" y="315" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#666">200ms</text>
-    <text x="530" y="315" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#666">400ms</text>
-    
-    <!-- Connections -->
-    <line x1="445" y1="285" x2="465" y2="285" stroke="#EE9B00" stroke-width="2" marker-end="url(#arrowhead)"/>
-    <line x1="495" y1="285" x2="515" y2="285" stroke="#EE9B00" stroke-width="2" marker-end="url(#arrowhead)"/>
-    <line x1="545" y1="285" x2="570" y2="285" stroke="#005F73" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <!-- Retry Policy -->
+  <g transform="translate(235, 70)">
+    <rect width="180" height="140" rx="8" fill="#fef3c7" opacity="0.5"/>
+    <text x="90" y="35" text-anchor="middle" class="icon-text">🔄</text>
+    <text x="90" y="65" text-anchor="middle" class="pattern-title">Retry Policies</text>
+    <text x="15" y="85" class="pattern-desc">Exponential backoff with</text>
+    <text x="15" y="100" class="pattern-desc">jitter for transient failures.</text>
+    <text x="15" y="115" class="pattern-desc">Configurable max attempts</text>
+    <text x="15" y="130" class="pattern-desc">and timeout policies.</text>
   </g>
   
   <!-- Dead Letter Queue -->
-  <g id="dead-letter-queue">
-    <rect x="50" y="370" width="300" height="120" rx="8" fill="white" stroke="#CA6702" stroke-width="2" stroke-dasharray="5,5"/>
-    <text x="200" y="390" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#CA6702">
-      Dead Letter Queue
-    </text>
-    
-    <!-- Failed Record -->
-    <rect x="70" y="410" width="80" height="50" rx="8" fill="url(#errorGradient)" filter="url(#shadow)"/>
-    <text x="110" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">
-      Record
-    </text>
-    <text x="110" y="445" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">
-      Failed
-    </text>
-    
-    <!-- DLQ -->
-    <rect x="180" y="410" width="80" height="50" rx="8" fill="url(#warningGradient)" filter="url(#shadow)"/>
-    <text x="220" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">
-      DLQ
-    </text>
-    <text x="220" y="445" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">
-      Storage
-    </text>
-    
-    <!-- Analysis -->
-    <rect x="290" y="410" width="50" height="50" rx="8" fill="url(#recoveryGradient)" filter="url(#shadow)"/>
-    <text x="315" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#1a1a1a">
-      Analyze
-    </text>
-    <text x="315" y="445" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#1a1a1a">
-      Later
-    </text>
-    
-    <!-- Connections -->
-    <line x1="150" y1="435" x2="180" y2="435" stroke="#CA6702" stroke-width="2" marker-end="url(#arrowhead)"/>
-    <line x1="260" y1="435" x2="290" y2="435" stroke="#EE9B00" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <g transform="translate(430, 70)">
+    <rect width="180" height="140" rx="8" fill="#f3e8ff" opacity="0.5"/>
+    <text x="90" y="35" text-anchor="middle" class="icon-text">📮</text>
+    <text x="90" y="65" text-anchor="middle" class="pattern-title">Dead Letter Queue</text>
+    <text x="15" y="85" class="pattern-desc">Isolate problematic records</text>
+    <text x="15" y="100" class="pattern-desc">for later analysis without</text>
+    <text x="15" y="115" class="pattern-desc">stopping pipeline execution.</text>
+    <text x="15" y="130" class="pattern-desc">Automatic retry scheduling.</text>
+  </g>
+  
+  <!-- Timeout Management -->
+  <g transform="translate(40, 240)">
+    <rect width="180" height="140" rx="8" fill="#fce7f3" opacity="0.5"/>
+    <text x="90" y="35" text-anchor="middle" class="icon-text">⏱️</text>
+    <text x="90" y="65" text-anchor="middle" class="pattern-title">Timeout Control</text>
+    <text x="15" y="85" class="pattern-desc">Node-level timeouts prevent</text>
+    <text x="15" y="100" class="pattern-desc">cascading failures. Cancel</text>
+    <text x="15" y="115" class="pattern-desc">operations gracefully with</text>
+    <text x="15" y="130" class="pattern-desc">CancellationToken support.</text>
+  </g>
+  
+  <!-- Graceful Degradation -->
+  <g transform="translate(235, 240)">
+    <rect width="180" height="140" rx="8" fill="#dcfce7" opacity="0.5"/>
+    <text x="90" y="35" text-anchor="middle" class="icon-text">🛡️</text>
+    <text x="90" y="65" text-anchor="middle" class="pattern-title">Degradation</text>
+    <text x="15" y="85" class="pattern-desc">Continue processing with</text>
+    <text x="15" y="100" class="pattern-desc">reduced functionality when</text>
+    <text x="15" y="115" class="pattern-desc">non-critical components fail.</text>
+    <text x="15" y="130" class="pattern-desc">Maintain service availability.</text>
   </g>
   
   <!-- Health Monitoring -->
-  <g id="health-monitoring">
-    <rect x="400" y="370" width="350" height="120" rx="8" fill="white" stroke="#005F73" stroke-width="2" stroke-dasharray="5,5"/>
-    <text x="575" y="390" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#005F73">
-      Health Monitoring & Metrics
-    </text>
-    
-    <!-- Metrics -->
-    <g id="metrics-display">
-      <rect x="420" y="410" width="70" height="40" rx="4" fill="url(#successGradient)" filter="url(#shadow)"/>
-      <text x="455" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">
-        Throughput
-      </text>
-      <text x="455" y="440" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">
-        1.2M/s
-      </text>
-      
-      <rect x="500" y="410" width="70" height="40" rx="4" fill="url(#successGradient)" filter="url(#shadow)"/>
-      <text x="535" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">
-        Success
-      </text>
-      <text x="535" y="440" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">
-        99.9%
-      </text>
-      
-      <rect x="580" y="410" width="70" height="40" rx="4" fill="url(#warningGradient)" filter="url(#shadow)"/>
-      <text x="615" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">
-        Latency
-      </text>
-      <text x="615" y="440" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">
-        45ms
-      </text>
-      
-      <rect x="660" y="410" width="70" height="40" rx="4" fill="url(#successGradient)" filter="url(#shadow)"/>
-      <text x="695" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">
-        Memory
-      </text>
-      <text x="695" y="440" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">
-        128MB
-      </text>
-    </g>
-    
-    <!-- Alert indicator -->
-    <g id="alert">
-      <circle cx="575" cy="470" r="8" fill="#EE9B00"/>
-      <text x="575" y="474" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">
-        !
-      </text>
-      <text x="575" y="485" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#666">
-        Health Check
-      </text>
-    </g>
+  <g transform="translate(430, 240)">
+    <rect width="180" height="140" rx="8" fill="#fef2f2" opacity="0.5"/>
+    <text x="90" y="35" text-anchor="middle" class="icon-text">💊</text>
+    <text x="90" y="65" text-anchor="middle" class="pattern-title">Health Checks</text>
+    <text x="15" y="85" class="pattern-desc">Built-in health monitoring</text>
+    <text x="15" y="100" class="pattern-desc">and metrics. Integrates with</text>
+    <text x="15" y="115" class="pattern-desc">ASP.NET Core health</text>
+    <text x="15" y="130" class="pattern-desc">endpoints and telemetry.</text>
   </g>
   
-  <!-- Central Resilience Hub -->
-  <g id="resilience-hub">
-    <circle cx="260" cy="150" r="25" fill="#005F73" fill-opacity="0.1" stroke="#005F73" stroke-width="2"/>
-    <text x="260" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#005F73">
-      Resilience
-    </text>
-  </g>
-  
-  <!-- Key Benefits -->
-  <g id="benefits">
-    <rect x="520" y="100" width="250" height="80" fill="#005F73" fill-opacity="0.1" stroke="#005F73" stroke-width="1" rx="4"/>
-    <text x="645" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#005F73">
-      Resilience Benefits
-    </text>
-    <text x="530" y="140" font-family="Arial, sans-serif" font-size="10" fill="#1a1a1a">
-      • Automatic failure recovery
-    </text>
-    <text x="530" y="155" font-family="Arial, sans-serif" font-size="10" fill="#1a1a1a">
-      • Configurable retry policies
-    </text>
-    <text x="530" y="170" font-family="Arial, sans-serif" font-size="10" fill="#1a1a1a">
-      • Built-in monitoring & alerting
-    </text>
-  </g>
+  <!-- Footer -->
+  <text x="325" y="420" text-anchor="middle" class="pattern-desc" opacity="0.7">
+    Production-grade resilience without additional dependencies
+  </text>
 </svg>
