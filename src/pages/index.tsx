@@ -1,3 +1,4 @@
+import React from 'react';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
@@ -454,7 +455,7 @@ function CTASection() {
   );
 }
 
-export default function Home(): JSX.Element {
+export default function Home() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
