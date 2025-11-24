@@ -1,52 +1,60 @@
-/* Home page styles - clean, professional design inspired by modern SaaS */
-
+/* ==================== Global Styles ==================== */
 * {
   box-sizing: border-box;
 }
 
-html, body {
-  overflow-x: hidden;
+.sectionTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #001219;
+  letter-spacing: -0.02em;
+}
+
+.sectionSubtitle {
+  font-size: 1.125rem;
+  text-align: center;
+  color: #555;
+  margin-bottom: 3rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
 }
 
 /* ==================== Hero Section ==================== */
 .hero {
-  background: #ffffff;
-  color: #1a1a1a;
-  padding: 5rem 2rem;
+  background: linear-gradient(135deg, #001219 0%, #005F73 100%);
+  color: #ffffff;
+  padding: 8rem 2rem 6rem;
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
-.heroContent {
+.heroContainer {
+  max-width: 800px;
+  margin: 0 auto;
   position: relative;
   z-index: 1;
-  max-width: 900px;
-  margin: 0 auto;
 }
 
 .heroTitle {
-  font-size: 3.2rem;
+  font-size: 3.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
-  line-height: 1.2;
-  color: #1a1a1a;
-  letter-spacing: -0.5px;
-}
-
-.heroTagline {
-  font-size: 1.3rem;
   margin-bottom: 1.5rem;
-  color: #005F73;
-  font-weight: 600;
+  line-height: 1.1;
+  color: #ffffff;
+  letter-spacing: -0.03em;
 }
 
-.heroDescription {
-  font-size: 1rem;
-  color: #555;
-  line-height: 1.7;
+.heroSubtitle {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: #94D2BD;
   margin-bottom: 2.5rem;
-  max-width: 750px;
+  max-width: 700px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -58,610 +66,621 @@ html, body {
   flex-wrap: wrap;
 }
 
-.primaryButton {
-  background: #005F73;
-  color: #fff;
-  padding: 0.7rem 2.2rem;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.95rem;
+.heroButtons .button {
   text-decoration: none;
-  transition: all 0.2s ease;
-  border: none;
-  display: inline-block;
-  cursor: pointer;
 }
 
-.primaryButton:hover {
-  background: #0A9396;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 95, 115, 0.25);
-}
-
-.secondaryButton {
-  background: transparent;
-  color: #005F73;
-  padding: 0.7rem 2.2rem;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.95rem;
+.heroButtons .button:hover {
   text-decoration: none;
-  transition: all 0.2s ease;
-  border: 1.5px solid #005F73;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.secondaryButton:hover {
-  background: rgba(0, 95, 115, 0.08);
-  border-color: #0A9396;
-  color: #0A9396;
-}
-
-@media (max-width: 768px) {
-  .hero {
-    padding: 3.5rem 1rem;
-  }
-
-  .heroTitle {
-    font-size: 2.2rem;
-  }
-
-  .heroTagline {
-    font-size: 1.1rem;
-  }
-
-  .heroDescription {
-    font-size: 0.95rem;
-  }
-
-  .heroButtons {
-    gap: 0.75rem;
-    flex-direction: column;
-  }
-
-  .primaryButton,
-  .secondaryButton {
-    width: calc(100% - 0px);
-    box-sizing: border-box;
-    padding: 0.6rem 1.5rem;
-  }
 }
 
 /* ==================== Features Section ==================== */
-.featuresSection {
-  padding: 5rem 2rem;
-  background: #f8f9fa;
-  overflow-x: hidden;
+.features {
+  padding: 6rem 2rem;
+  background: #ffffff;
 }
 
-.sectionTitle {
-  font-size: 2.2rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 1rem;
-  color: #1a1a1a;
-  letter-spacing: -0.3px;
-}
-
-.sectionSubtitle {
-  font-size: 1rem;
-  text-align: center;
-  color: #666;
-  margin-bottom: 3rem;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6;
-}
-
-.featuresGrid {
+.featureGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 1.5rem;
+  margin-top: 3rem;
 }
 
-.featureCard {
-  padding: 2rem;
-  border-radius: 8px;
-  background: #fff;
+.featureGrid .card {
+  height: 100%;
   transition: all 0.3s ease;
-  border: 1px solid #e8e8e8;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
+  border: 1px solid #e9ecef;
 }
 
-.featureCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+.featureGrid .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 18, 25, 0.1);
+  border-color: #0A9396;
 }
 
-.featureTitle {
-  font-size: 1.15rem;
+.featureGrid .card__header h3 {
+  font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: #1a1a1a;
+  margin: 0;
+  color: #001219;
 }
 
-.featureDescription {
-  color: #666;
-  line-height: 1.6;
-  flex-grow: 1;
+.featureGrid .card__body p {
   font-size: 0.95rem;
+  line-height: 1.6;
+  color: #555;
+  margin: 0;
 }
 
-/* ==================== Benefits Section ==================== */
-.benefitsSection {
-  padding: 5rem 2rem;
-  background: #fff;
-  overflow-x: hidden;
-}
-
-.benefitsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  align-items: center;
-}
-
-.benefitItem {
-  padding: 1.5rem 0;
-}
-
-.benefitNumber {
-  font-size: 1.3rem;
-  font-weight: 700;
+.featureGrid .card__body code {
+  background: #e9ecef;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
   color: #005F73;
-  margin-bottom: 0.5rem;
 }
 
-.benefitLabel {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 0.5rem;
+/* ==================== Performance Section ==================== */
+.performance {
+  padding: 6rem 2rem;
+  background: linear-gradient(135deg, #0A9396 0%, #005F73 100%);
+  color: #ffffff;
 }
 
-.benefitDescription {
-  color: #666;
-  line-height: 1.6;
-  font-size: 0.95rem;
+.performance .sectionTitle {
+  color: #ffffff;
 }
 
-.imagePlaceholder {
-  background: linear-gradient(135deg, #005F73 0%, #0A9396 100%);
-  border-radius: 8px;
-  aspect-ratio: 16 / 9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-  font-weight: 500;
+.performance .sectionSubtitle {
+  color: #94D2BD;
 }
 
-@media (max-width: 768px) {
-  .benefitsGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ==================== Use Cases Section ==================== */
-.useCasesSection {
-  padding: 5rem 2rem;
-  background: #f8f9fa;
-  overflow-x: hidden;
-}
-
-.useCasesGrid {
+.performanceGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  margin-top: 3rem;
 }
 
-.useCaseCard {
-  padding: 2rem;
-  border-radius: 8px;
-  background: #fff;
-  color: #1a1a1a;
-  text-decoration: none;
+.performanceGrid .card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
-  border: 1px solid #e8e8e8;
-  display: flex;
-  flex-direction: column;
 }
 
-.useCaseCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  border-color: #005F73;
+.performanceGrid .card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-4px);
 }
 
-.useCaseTitle {
-  font-size: 1.2rem;
+.performanceMetric {
+  font-size: 3rem;
   font-weight: 700;
-  margin-bottom: 0.75rem;
-  color: #1a1a1a;
+  color: #EE9B00;
+  margin-bottom: 0.5rem;
 }
 
-.useCaseDescription {
-  color: #666;
-  line-height: 1.6;
-  flex-grow: 1;
-  font-size: 0.95rem;
-  margin-bottom: 1.5rem;
-}
-
-.useCaseDetails {
-  color: #555;
-  line-height: 1.6;
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
-}
-
-.useCaseLink {
-  color: #005F73;
+.performanceLabel {
+  font-size: 1.125rem;
   font-weight: 600;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: gap 0.2s ease;
+  color: #E9D8A6;
+  margin-bottom: 1rem;
+}
+
+.performanceDetail {
   font-size: 0.95rem;
-}
-
-.useCaseLink:hover {
-  gap: 0.75rem;
-  color: #0A9396;
-}
-
-/* Code Example Styling */
-.codeExample {
-  background: #f8f9fa;
-  border: 1px solid #e8e8e8;
-  border-radius: 6px;
-  padding: 1rem;
-  margin: 1rem 0;
-  overflow-x: auto;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-  font-size: 0.85rem;
   line-height: 1.5;
+  color: #94D2BD;
+  margin: 0;
+}
+
+.performanceDetail code {
+  background: rgba(0, 18, 25, 0.3);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: #E9D8A6;
+}
+
+/* ==================== Code Example Section ==================== */
+.codeExample {
+  padding: 6rem 2rem;
+  background: #f8f9fa;
+}
+
+.codeBlock {
+  max-width: 800px;
+  margin: 3rem auto 2rem;
+  background: #001219;
+  border-radius: 12px;
+  padding: 2rem;
+  overflow-x: auto;
+  box-shadow: 0 8px 24px rgba(0, 18, 25, 0.15);
+}
+
+.codeBlock pre {
+  margin: 0;
+  padding: 0;
+}
+
+.codeBlock code {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #94D2BD;
+  display: block;
+}
+
+.codeFeatures {
+  max-width: 800px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.codeFeatures .card {
+  border: 1px solid #e9ecef;
+  transition: all 0.2s ease;
+}
+
+.codeFeatures .card:hover {
+  border-color: #0A9396;
+}
+
+.codeFeature {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
   color: #333;
 }
 
-[data-theme='dark'] .codeExample {
-  background: #2d2d2d;
-  border-color: #3a3a3a;
-  color: #e0e0e0;
+.codeFeatureIcon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0A9396;
+  color: #ffffff;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ==================== Analyzers Section ==================== */
+.analyzers {
+  padding: 6rem 2rem;
+  background: #ffffff;
+}
+
+.problemSolution {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 3rem auto;
+  max-width: 900px;
+}
+
+.alertContent {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.analyzerList {
+  max-width: 800px;
+  margin: 3rem auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.analyzerList .card {
+  border-left: 4px solid #0A9396;
+  transition: all 0.2s ease;
+}
+
+.analyzerList .card:hover {
+  border-left-color: #EE9B00;
+}
+
+.analyzerItem {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.analyzerCode {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #005F73;
+  background: #e9ecef;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.analyzerContent h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #001219;
+}
+
+.analyzerContent p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #555;
+  margin: 0;
+}
+
+/* ==================== Resilience Section ==================== */
+.resilience {
+  padding: 6rem 2rem;
+  background: #f8f9fa;
+}
+
+.resilienceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.resilienceGrid .card {
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.resilienceGrid .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 18, 25, 0.1);
+  border-color: #0A9396;
+}
+
+.resilienceGrid .card__header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: #001219;
+}
+
+.resilienceGrid .card__body p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #555;
+  margin: 0;
+}
+
+.resilienceGrid .card__body code {
+  background: #e9ecef;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: #005F73;
+}
+
+/* ==================== Ecosystem Section ==================== */
+.ecosystem {
+  padding: 6rem 2rem;
+  background: #ffffff;
+}
+
+.ecosystemGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.ecosystemGrid .card {
+  text-align: center;
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.ecosystemGrid .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 18, 25, 0.1);
+  border-color: #0A9396;
+}
+
+.ecosystemGrid .card__header h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  color: #001219;
+}
+
+.ecosystemGrid .card__body p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #555;
+  margin: 0;
+}
+
+.ecosystemGrid .card__body code {
+  background: #e9ecef;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: #005F73;
 }
 
 /* ==================== CTA Section ==================== */
-.ctaSection {
-  padding: 4rem 2rem;
-  background: #f8f9fa;
-  color: #1a1a1a;
+.cta {
+  padding: 6rem 2rem;
+  background: linear-gradient(135deg, #001219 0%, #005F73 100%);
   text-align: center;
-  overflow-x: hidden;
 }
 
-.ctaContent {
+.ctaContainer {
   max-width: 700px;
   margin: 0 auto;
 }
 
 .ctaTitle {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
+  color: #ffffff;
   margin-bottom: 1rem;
-  letter-spacing: -0.3px;
 }
 
-.ctaDescription {
-  font-size: 1rem;
-  margin-bottom: 2rem;
-  color: #666;
+.ctaSubtitle {
+  font-size: 1.125rem;
+  color: #94D2BD;
+  margin-bottom: 2.5rem;
   line-height: 1.6;
 }
 
-.ctaButton {
-  background: #005F73;
-  color: #fff;
-  padding: 1rem 2.5rem;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  border: none;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.ctaButton:hover {
-  background: #0A9396;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 95, 115, 0.25);
-}
-
-/* ==================== Image Placeholder Sections ==================== */
-.imageSection {
-  padding: 4rem 2rem;
-  background: #fff;
-  overflow-x: hidden;
-}
-
-.imageSectionContent {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: center;
-  width: 100%;
-  padding: 0;
-}
-
-.imageSectionText h2 {
-  font-size: 1.9rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 1rem;
-  letter-spacing: -0.3px;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.imageSectionText p {
-  color: #666;
-  line-height: 1.7;
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.imageSectionImage {
-  background: linear-gradient(135deg, #0A9396 0%, #94D2BD 100%);
-  border-radius: 8px;
-  aspect-ratio: 4 / 3;
+.ctaButtons {
   display: flex;
-  align-items: center;
+  gap: 1rem;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
+  flex-wrap: wrap;
 }
 
-/* ==================== SVG Visualization Styling ==================== */
-.visualizationImage {
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.ctaButtons .button {
+  text-decoration: none;
 }
 
-.visualizationImage:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+.ctaButtons .button:hover {
+  text-decoration: none;
 }
 
-.resilienceVisualizationContainer {
-  margin: 2rem 0;
-  text-align: center;
-}
-
-.resilienceVisualizationContainer .visualizationImage {
-  max-height: 400px;
-  object-fit: contain;
-}
-
+/* ==================== Responsive Design ==================== */
 @media (max-width: 768px) {
-  .imageSection {
-    padding: 2.5rem 1rem;
+  .heroTitle {
+    font-size: 2.5rem;
   }
 
-  .imageSectionContent {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    max-width: 100%;
-    width: 100%;
-    padding: 0;
+  .heroSubtitle {
+    font-size: 1.125rem;
   }
 
-  .imageSectionText {
-    width: 100%;
-  }
-
-  .imageSectionText h2 {
-    font-size: 1.5rem;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  .imageSectionText p {
-    font-size: 0.9rem;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  .imageSectionImage {
-    min-height: 250px;
-    width: 100%;
-  }
-  
-  .visualizationImage {
-    max-height: 300px;
-  }
-  
-  .resilienceVisualizationContainer .visualizationImage {
-    max-height: 250px;
-  }
-}
-
-/* ==================== Global Dark Mode ==================== */
-[data-theme='dark'] {
-  background-color: #1a1a1a;
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .hero {
-  background: #242424;
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .heroTitle {
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .heroDescription {
-  color: #b0b0b0;
-}
-
-[data-theme='dark'] .sectionTitle {
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .sectionSubtitle {
-  color: #b0b0b0;
-}
-
-[data-theme='dark'] .featuresSection {
-  background: #1a1a1a;
-}
-
-[data-theme='dark'] .featureCard {
-  background: #2d2d2d;
-  border-color: #3a3a3a;
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .featureTitle {
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .featureDescription {
-  color: #b0b0b0;
-}
-
-[data-theme='dark'] .useCasesSection {
-  background: #1a1a1a;
-}
-
-[data-theme='dark'] .useCaseCard {
-  background: #2d2d2d;
-  border-color: #3a3a3a;
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .useCaseCard:hover {
-  border-color: #94D2BD;
-}
-
-[data-theme='dark'] .useCaseTitle {
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .useCaseDescription {
-  color: #b0b0b0;
-}
-
-[data-theme='dark'] .useCaseDetails {
-  color: #a0a0a0;
-}
-
-[data-theme='dark'] .whySection {
-  background: #1a1a1a;
-}
-
-[data-theme='dark'] .whyCard {
-  background: #2d2d2d;
-  border-color: #3a3a3a;
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .whyCardTitle {
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .benefitsSection {
-  background: #1a1a1a;
-}
-
-[data-theme='dark'] .benefitItem {
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .benefitLabel {
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .benefitDescription {
-  color: #b0b0b0;
-}
-
-[data-theme='dark'] .imageSection {
-  background: #242424;
-}
-
-[data-theme='dark'] .imageSectionText h2 {
-  color: #1a1a1a;
-}
-
-[data-theme='dark'] .imageSectionText p {
-  color: #333333;
-}
-
-[data-theme='dark'] .ctaSection {
-  background: #2d2d2d;
-}
-
-[data-theme='dark'] .ctaTitle {
-  color: #e0e0e0;
-}
-
-[data-theme='dark'] .ctaDescription {
-  color: #b0b0b0;
-}
-
-@media (max-width: 768px) {
   .sectionTitle {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
 
-  .featuresGrid {
+  .featureGrid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
-  .useCasesGrid {
+  .performanceGrid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
   }
 
-  .ctaSection {
-    padding: 3rem 1rem;
+  .codeBlock {
+    padding: 1.5rem;
+  }
+
+  .codeBlock code {
+    font-size: 0.875rem;
+  }
+
+  .problemSolution {
+    grid-template-columns: 1fr;
+  }
+
+  .analyzerItem {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .analyzerCode {
+    width: fit-content;
+  }
+
+  .resilienceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .ecosystemGrid {
+    grid-template-columns: 1fr;
   }
 
   .ctaTitle {
-    font-size: 1.6rem;
+    font-size: 2rem;
   }
 
-  .featuresSection,
-  .benefitsSection,
-  .useCasesSection {
-    padding: 3rem 1rem;
+  .hero {
+    padding: 5rem 1.5rem 4rem;
   }
 
-  .imageSectionText p {
-    font-size: 0.9rem;
+  .features,
+  .performance,
+  .codeExample,
+  .analyzers,
+  .resilience,
+  .ecosystem,
+  .cta {
+    padding: 4rem 1.5rem;
   }
 }
 
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 2rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1rem;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+    text-align: center;
+  }
+
+  .heroButtons,
+  .ctaButtons {
+    flex-direction: column;
+  }
+}
+
+/* ==================== Dark Mode Support ==================== */
+[data-theme='dark'] .features {
+  background: #1a1a1a;
+}
+
+[data-theme='dark'] .sectionTitle {
+  color: #E9D8A6;
+}
+
+[data-theme='dark'] .sectionSubtitle {
+  color: #94D2BD;
+}
+
+[data-theme='dark'] .problemSolution .alert {
+  background-color: rgba(0, 18, 25, 0.3);
+  border-color: currentColor;
+}
+
+[data-theme='dark'] .featureGrid .card {
+  background: #242424;
+  border-color: #333;
+}
+
+[data-theme='dark'] .featureGrid .card:hover {
+  background: #2a2a2a;
+  box-shadow: 0 12px 24px rgba(238, 155, 0, 0.1);
+  border-color: #EE9B00;
+}
+
+[data-theme='dark'] .featureGrid .card__header h3 {
+  color: #E9D8A6;
+}
+
+[data-theme='dark'] .featureGrid .card__body p {
+  color: #b0b0b0;
+}
+
+[data-theme='dark'] .featureGrid .card__body code {
+  background: #1a1a1a;
+  color: #94D2BD;
+}
+
+[data-theme='dark'] .codeExample {
+  background: #1a1a1a;
+}
+
+[data-theme='dark'] .codeFeatures .card {
+  background: #242424;
+  border-color: #333;
+  color: #e0e0e0;
+}
+
+[data-theme='dark'] .codeFeatures .card:hover {
+  border-color: #0A9396;
+}
+
+[data-theme='dark'] .analyzers {
+  background: #1a1a1a;
+}
+
+[data-theme='dark'] .analyzerList .card {
+  background: #242424;
+  border-color: #333;
+}
+
+[data-theme='dark'] .analyzerList .card:hover {
+  background: #2a2a2a;
+  box-shadow: 0 4px 12px rgba(238, 155, 0, 0.1);
+  border-left-color: #EE9B00;
+}
+
+[data-theme='dark'] .analyzerCode {
+  background: #1a1a1a;
+  color: #94D2BD;
+}
+
+[data-theme='dark'] .analyzerContent h4 {
+  color: #E9D8A6;
+}
+
+[data-theme='dark'] .analyzerContent p {
+  color: #b0b0b0;
+}
+
+[data-theme='dark'] .resilience {
+  background: #1a1a1a;
+}
+
+[data-theme='dark'] .resilienceGrid .card {
+  background: #242424;
+  border-color: #333;
+}
+
+[data-theme='dark'] .resilienceGrid .card:hover {
+  background: #2a2a2a;
+  box-shadow: 0 12px 24px rgba(238, 155, 0, 0.1);
+  border-color: #EE9B00;
+}
+
+[data-theme='dark'] .resilienceGrid .card__header h3 {
+  color: #E9D8A6;
+}
+
+[data-theme='dark'] .resilienceGrid .card__body p {
+  color: #b0b0b0;
+}
+
+[data-theme='dark'] .resilienceGrid .card__body code {
+  background: #1a1a1a;
+  color: #94D2BD;
+}
+
+[data-theme='dark'] .ecosystem {
+  background: #1a1a1a;
+}
+
+[data-theme='dark'] .ecosystemGrid .card {
+  background: #242424;
+  border-color: #333;
+}
+
+[data-theme='dark'] .ecosystemGrid .card:hover {
+  background: #2a2a2a;
+  box-shadow: 0 12px 24px rgba(238, 155, 0, 0.1);
+  border-color: #EE9B00;
+}
+
+[data-theme='dark'] .ecosystemGrid .card__header h3 {
+  color: #E9D8A6;
+}
+
+[data-theme='dark'] .ecosystemGrid .card__body p {
+  color: #b0b0b0;
+}
+
+[data-theme='dark'] .ecosystemGrid .card__body code {
+  background: #1a1a1a;
+  color: #94D2BD;
+}
