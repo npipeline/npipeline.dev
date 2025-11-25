@@ -1,12 +1,14 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * NPipeline Documentation Site - Custom Styling
+ * Inspired by tuple.app's clean, modern aesthetic
+ * Built on Infima CSS framework
  */
 
-/* Color Palette */
+/* ============================================
+   COLOR PALETTE & BASE VARIABLES
+   ============================================ */
 :root {
-  /* Primary accent colors */
+  /* Brand Colors */
   --color-navy: #001219;
   --color-teal-dark: #005f73;
   --color-teal-medium: #0a9396;
@@ -14,48 +16,552 @@
   --color-cream: #e9d8a6;
   --color-orange: #ee9b00;
   --color-orange-dark: #ca6702;
-  --color-red-dark: #bb3e03;
-  --color-red-darker: #ae2012;
-  --color-red-darkest: #9b2226;
 
-  /* Semantic color assignments for light mode */
+  /* Light Mode Colors */
+  --ifm-background-color: #ffffff;
   --ifm-color-primary: #005f73;
-  --ifm-color-primary-dark: #0a9396;
-  --ifm-color-primary-darker: #001219;
-  --ifm-color-primary-darkest: #001219;
-  --ifm-color-primary-light: #94d2bd;
-  --ifm-color-primary-lighter: #e9d8a6;
-  --ifm-color-primary-lightest: #e9d8a6;
+  --ifm-color-primary-dark: #004d5c;
+  --ifm-color-primary-darker: #00464d;
+  --ifm-color-primary-darkest: #003a40;
+  --ifm-color-primary-light: #0a9396;
+  --ifm-color-primary-lighter: #94d2bd;
+  --ifm-color-primary-lightest: #b8e0d7;
 
-  --ifm-font-size-base: 0.88rem;
-  --ifm-h1-font-size: 2rem;
-  --ifm-h2-font-size: 1.5rem;
-  --ifm-h3-font-size: 1.25rem;
-  --ifm-h4-font-size: 1rem;
-  --ifm-h5-font-size: 0.875rem;
-  --ifm-h6-font-size: 0.85rem;
+  /* Typography */
+  --ifm-font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --ifm-font-family-monospace: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  --ifm-font-size-base: 17px;
+  --ifm-line-height-base: 1.65;
+  --ifm-font-weight-base: 400;
+  --ifm-font-weight-semibold: 600;
+  --ifm-font-weight-bold: 700;
 
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(10, 147, 150, 0.1);
+  /* Heading Sizes */
+  --ifm-h1-font-size: 2.5rem;
+  --ifm-h2-font-size: 2rem;
+  --ifm-h3-font-size: 1.5rem;
+  --ifm-h4-font-size: 1.25rem;
+  --ifm-h5-font-size: 1rem;
+  --ifm-h6-font-size: 0.875rem;
 
-  /* Infima sidebar sizing overrides */
+  /* Spacing */
+  --ifm-spacing-horizontal: 1.5rem;
+  --ifm-spacing-vertical: 1.5rem;
+  --ifm-global-spacing: 1.5rem;
+
+  /* Code */
+  --ifm-code-font-size: 0.9em;
+  --ifm-code-background: #f6f8fa;
+  --ifm-code-color: var(--color-navy);
+  --ifm-code-padding-vertical: 0.1rem;
+  --ifm-code-padding-horizontal: 0.4rem;
+  --ifm-code-border-radius: 0.25rem;
+  --docusaurus-highlighted-code-line-bg: rgba(10, 147, 150, 0.08);
+
+  /* Navbar */
+  --ifm-navbar-height: 4rem;
+  --ifm-navbar-background-color: var(--ifm-background-color);
+  --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --ifm-navbar-padding-vertical: 0.75rem;
+  --ifm-navbar-padding-horizontal: 1.5rem;
+
+  /* Sidebar */
   --ifm-menu-link-padding-vertical: 0.5rem;
   --ifm-menu-link-padding-horizontal: 0.75rem;
-  --ifm-menu-link-sublist-icon-size: 1rem;
+  --ifm-toc-link-font-size: 0.875rem;
 
-  /* Infima table of contents (right sidebar) sizing */
-  --ifm-toc-link-font-size: 1rem;
+  /* Cards & Components */
+  --ifm-card-background-color: var(--ifm-background-color);
+  --ifm-card-border-radius: 0.75rem;
+  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --card-shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Buttons */
+  --ifm-button-border-radius: 0.5rem;
+  --ifm-button-padding-vertical: 0.75rem;
+  --ifm-button-padding-horizontal: 1.5rem;
+  --ifm-button-font-weight: 600;
+
+  /* Hero */
+  --hero-gradient-start: var(--color-teal-dark);
+  --hero-gradient-end: var(--color-teal-medium);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+/* ============================================
+   DARK MODE
+   ============================================ */
 [data-theme="dark"] {
-  /* Dark mode uses lighter versions of accent colors */
+  --ifm-background-color: #0d1117;
+  --ifm-background-surface-color: #161b22;
   --ifm-color-primary: #94d2bd;
-  --ifm-color-primary-dark: #0a9396;
-  --ifm-color-primary-darker: #005f73;
-  --ifm-color-primary-darkest: #005f73;
-  --ifm-color-primary-light: #e9d8a6;
-  --ifm-color-primary-lighter: #e9d8a6;
-  --ifm-color-primary-lightest: #e9d8a6;
-  --docusaurus-highlighted-code-line-bg: rgba(233, 216, 166, 0.2);
+  --ifm-color-primary-dark: #7dc4b0;
+  --ifm-color-primary-darker: #6ebda7;
+  --ifm-color-primary-darkest: #4faf92;
+  --ifm-color-primary-light: #abdeca;
+  --ifm-color-primary-lighter: #bae5d3;
+  --ifm-color-primary-lightest: #d8f3e7;
+
+  --ifm-code-background: #161b22;
+  --ifm-code-color: #e9d8a6;
+  --docusaurus-highlighted-code-line-bg: rgba(148, 210, 189, 0.15);
+
+  --ifm-navbar-background-color: #0d1117;
+  --ifm-navbar-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1);
+
+  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --card-shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+
+  --hero-gradient-start: #1a2735;
+  --hero-gradient-end: #0d1117;
+}
+
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--ifm-font-family-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--ifm-font-weight-bold);
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: var(--ifm-h1-font-size);
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: var(--ifm-h2-font-size);
+  margin-top: 2.5rem;
+}
+
+h3 {
+  font-size: var(--ifm-h3-font-size);
+  margin-top: 2rem;
+}
+
+p {
+  margin-bottom: 1.25rem;
+  line-height: var(--ifm-line-height-base);
+}
+
+strong {
+  font-weight: var(--ifm-font-weight-semibold);
+}
+
+code {
+  background-color: var(--ifm-code-background);
+  color: var(--ifm-code-color);
+  border-radius: var(--ifm-code-border-radius);
+  padding: var(--ifm-code-padding-vertical) var(--ifm-code-padding-horizontal);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: var(--ifm-code-font-size);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] code {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.heroBanner {
+  background: linear-gradient(135deg, var(--hero-gradient-start) 0%, var(--hero-gradient-end) 100%);
+  padding: 6rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero--primary {
+  background: linear-gradient(135deg, var(--hero-gradient-start) 0%, var(--hero-gradient-end) 100%);
+}
+
+.hero__title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.hero__subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.95);
+  max-width: 800px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.hero__subtitle strong {
+  font-weight: 600;
+  color: var(--color-cream);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.button {
+  border-radius: var(--ifm-button-border-radius);
+  font-weight: var(--ifm-button-font-weight);
+  padding: var(--ifm-button-padding-vertical) var(--ifm-button-padding-horizontal);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.button--primary {
+  background-color: var(--color-cream);
+  color: var(--color-navy);
+  border-color: var(--color-cream);
+}
+
+.button--primary:hover {
+  background-color: var(--color-orange);
+  border-color: var(--color-orange);
+  color: var(--color-navy);
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.button--secondary {
+  background-color: transparent;
+  color: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
+}
+
+.button--secondary:hover {
+  background-color: var(--ifm-color-primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.button--lg {
+  font-size: 1.125rem;
+  padding: 1rem 2rem;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+.card {
+  background: var(--ifm-card-background-color);
+  border-radius: var(--ifm-card-border-radius);
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="dark"] .card {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: var(--ifm-background-surface-color);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.card h3 {
+  color: var(--ifm-color-primary);
+  margin-top: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.card h4 {
+  margin-top: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.card p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================
+   SECTIONS
+   ============================================ */
+section {
+  padding: 4rem 0;
+}
+
+section h2 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+section > .container > p {
+  font-size: 1.125rem;
+  color: var(--ifm-color-emphasis-700);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.background--light {
+  background-color: #f9fafb;
+}
+
+[data-theme="dark"] .background--light {
+  background-color: var(--ifm-background-surface-color);
+}
+
+/* ============================================
+   ALERTS
+   ============================================ */
+.alert {
+  border-radius: 0.5rem;
+  border: 1px solid;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.alert h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.alert p:last-child {
+  margin-bottom: 0;
+}
+
+.alert--info {
+  background-color: rgba(10, 147, 150, 0.08);
+  border-color: var(--color-teal-medium);
+  color: var(--ifm-color-emphasis-900);
+}
+
+[data-theme="dark"] .alert--info {
+  background-color: rgba(10, 147, 150, 0.15);
+}
+
+.alert--warning {
+  background-color: rgba(238, 155, 0, 0.08);
+  border-color: var(--color-orange);
+  color: var(--ifm-color-emphasis-900);
+}
+
+[data-theme="dark"] .alert--warning {
+  background-color: rgba(238, 155, 0, 0.15);
+}
+
+.alert--success {
+  background-color: rgba(148, 210, 189, 0.12);
+  border-color: var(--color-teal-light);
+  color: var(--ifm-color-emphasis-900);
+}
+
+[data-theme="dark"] .alert--success {
+  background-color: rgba(148, 210, 189, 0.15);
+}
+
+/* ============================================
+   CODE BLOCKS
+   ============================================ */
+pre {
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  box-shadow: var(--card-shadow);
+}
+
+pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.navbar {
+  box-shadow: var(--ifm-navbar-shadow);
+  padding: 0.5rem var(--ifm-navbar-padding-horizontal);
+}
+
+.navbar__brand {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.navbar__item {
+  font-weight: 500;
+}
+
+.navbar__link {
+  transition: color 0.2s ease;
+}
+
+.navbar__link:hover {
+  color: var(--ifm-color-primary);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Mobile: < 768px */
+@media (max-width: 767px) {
+  :root {
+    --ifm-font-size-base: 16px;
+    --ifm-h1-font-size: 2rem;
+    --ifm-h2-font-size: 1.5rem;
+    --ifm-h3-font-size: 1.25rem;
+  }
+
+  .heroBanner {
+    padding: 3rem 1rem;
+  }
+
+  .hero__title {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero__subtitle {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  section {
+    padding: 2.5rem 0;
+  }
+
+  section h2 {
+    font-size: 1.75rem;
+  }
+
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  .button {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .row {
+    margin: 0;
+  }
+
+  .col {
+    padding: 0 0.75rem;
+  }
+
+  pre {
+    font-size: 0.8rem;
+    padding: 1rem;
+    margin: 1rem -0.75rem;
+    border-radius: 0;
+  }
+}
+
+/* Tablet: 768px - 996px */
+@media (min-width: 768px) and (max-width: 996px) {
+  .heroBanner {
+    padding: 4rem 1.5rem;
+  }
+
+  section {
+    padding: 3rem 0;
+  }
+}
+
+/* Desktop: > 996px */
+@media (min-width: 997px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+.text--center {
+  text-align: center;
+}
+
+.margin-top--lg {
+  margin-top: 2rem;
+}
+
+.margin-bottom--lg {
+  margin-bottom: 2rem;
+}
+
+.margin-bottom--xl {
+  margin-bottom: 3rem;
+}
+
+.margin-vert--lg {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.padding-vert--lg {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.padding--lg {
+  padding: 1.5rem;
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.button:focus,
+a:focus {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

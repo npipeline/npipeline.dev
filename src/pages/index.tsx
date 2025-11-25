@@ -1,121 +1,82 @@
 import React from 'react';
-import Link from '@docusaurus/Link';
+import clsx from 'clsx';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
-import clsx from 'clsx';
+import Link from '@docusaurus/Link';
 
-import styles from './index.module.css';
-import UseCasesSection from '../components/UseCasesSection';
-import CoreConceptsSection from '../components/CoreConceptsSection';
-import ArchitectureDiagramSection from '../components/ArchitectureDiagramSection';
-import TechnicalDifferentiatorsSection from '../components/TechnicalDifferentiatorsSection';
-
-function HeroSection() {
+// Hero Section Component
+const HeroSection: React.FC = () => {
   const {siteConfig} = useDocusaurusContext();
   return (
-    <header className={styles.hero}>
-      <div className={styles.heroContainer}>
-        <Heading as="h1" className={styles.heroTitle}>
-          High-performance, graph-based streaming data pipelines for .NET
+    <header className={clsx('hero hero--primary', 'heroBanner')}>
+      <div className="container">
+        <Heading as="h1" className="hero__title">
+          Build High-Performance, Type-Safe Data Pipelines in .NET
         </Heading>
-        <p className={styles.heroSubtitle}>
-          Build robust workflows engineered for speed and zero-allocation overhead. 
-          Achieve up to 90% reduction in GC pressure with a framework that enforces safety at compile-time.
+        <p className="hero__subtitle">
+          <strong>NPipeline</strong> is a powerful, flexible library designed for constructing robust, graph-based streaming data workflows. 
+          By combining the type safety of C# with a directed acyclic graph (DAG) architecture, NPipeline empowers developers to build 
+          complex ETL processes, real-time data streams, and event-driven architectures that are easy to test, debug, and maintain.
         </p>
-        <div className={styles.heroButtons}>
-          <Link className={clsx('button', 'button--primary', 'button--lg')} to="/docs/getting-started/installation">
-            dotnet add package NPipeline
-          </Link>
-          <Link className={clsx('button', 'button--secondary', 'button--lg')} to="/docs/advanced-topics/performance-hygiene">
-            View Performance Benchmarks
+        <p className="hero__subtitle">
+          Stop writing spaghetti code for your data processing. Start building pipelines.
+        </p>
+        <div className={clsx('margin-top--lg')}>
+          <Link
+            className="button button--primary button--lg"
+            to="/docs/getting-started/installation">
+            Get Started
           </Link>
         </div>
       </div>
     </header>
   );
-}
+};
 
-function FeaturesSection() {
+// Why NPipeline Section Component
+const WhyNPipelineSection: React.FC = () => {
   return (
-    <section className={styles.features}>
+    <section className={clsx('margin-vert--lg', 'padding-vert--lg')}>
       <div className="container">
-        <Heading as="h2" className={styles.sectionTitle}>
-          Built for production workloads
+        <Heading as="h2" className="text--center margin-bottom--lg">
+          Why NPipeline?
         </Heading>
-        <p className={styles.sectionSubtitle}>
-          NPipeline isn't just another data processing library. It's architected from the ground up for enterprise-grade performance.
+        <p className={clsx('text--center', 'margin-bottom--xl')}>
+          Traditional data processing in .NET often devolves into unmanageable chains of nested loops or heavy dependencies on external ETL tools. 
+          NPipeline bridges the gap, offering a code-first approach that prioritizes developer experience and execution efficiency.
         </p>
-        
-        <div className={styles.featureGrid}>
-          <div className="card">
-            <div className="card__header">
-              <h3>Zero-allocation fast paths</h3>
-            </div>
-            <div className="card__body">
+        <div className="row">
+          <div className="col col--4">
+            <div className="card padding--lg">
+              <Heading as="h3" className="text--center margin-bottom--md">
+                Graph-Based Architecture
+              </Heading>
               <p>
-                Utilizing <code>ValueTask&lt;T&gt;</code> for cache hits means zero GC pressure. 
-                In high-cache scenarios, eliminate tens of thousands of allocations per second.
+                Visualize your data flow clearly. Pipelines are built as interconnected nodes (Sources, Transforms, Sinks), 
+                ensuring visibility into the data's journey.
               </p>
             </div>
           </div>
-
-          <div className="card">
-            <div className="card__header">
-              <h3>Compile-time safety</h3>
-            </div>
-            <div className="card__body">
+          <div className="col col--4">
+            <div className="card padding--lg">
+              <Heading as="h3" className="text--center margin-bottom--md">
+                Compile-Time Safety
+              </Heading>
               <p>
-                Roslyn analyzers catch configuration errors, blocking operations, and data loss patterns 
-                before they reach production.
+                Connect nodes using a fluent, type-safe API. The compiler ensures that the output type of an upstream node 
+                matches the input of the downstream node, eliminating runtime type errors.
               </p>
             </div>
           </div>
-
-          <div className="card">
-            <div className="card__header">
-              <h3>Streaming-first architecture</h3>
-            </div>
-            <div className="card__body">
+          <div className="col col--4">
+            <div className="card padding--lg">
+              <Heading as="h3" className="text--center margin-bottom--md">
+                Async-First
+              </Heading>
               <p>
-                Process millions of records with constant memory usage. Only active items stay in memory, 
-                not your entire dataset.
-              </p>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="card__header">
-              <h3>Intelligent parallelism</h3>
-            </div>
-            <div className="card__body">
-              <p>
-                Configurable parallel execution with automatic backpressure. Scale CPU-bound and I/O-bound 
-                operations independently.
-              </p>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="card__header">
-              <h3>Built-in resilience</h3>
-            </div>
-            <div className="card__body">
-              <p>
-                Automatic retries, circuit breakers, and node restart capabilities. 
-                Keep your pipelines running through transient failures.
-              </p>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="card__header">
-              <h3>Graph-based composition</h3>
-            </div>
-            <div className="card__body">
-              <p>
-                Build complex workflows as directed acyclic graphs. Compose, reuse, and test 
-                pipeline components independently.
+                Built for modern .NET, leveraging asynchronous patterns and <code>IAsyncEnumerable&lt;T&gt;</code> for 
+                non-blocking I/O and efficient resource usage.
               </p>
             </div>
           </div>
@@ -123,49 +84,57 @@ function FeaturesSection() {
       </div>
     </section>
   );
-}
+};
 
-function PerformanceSection() {
+// Use Cases Section Component
+const UseCasesSection: React.FC = () => {
   return (
-    <section className={styles.performance}>
+    <section className={clsx('margin-vert--lg', 'padding-vert--lg', 'background--light')}>
       <div className="container">
-        <Heading as="h2" className={styles.sectionTitle}>
-          Engineered for throughput: The zero-allocation advantage
+        <Heading as="h2" className="text--center margin-bottom--lg">
+          Use Cases
         </Heading>
-        <p className={styles.sectionSubtitle}>
-          We don't just wrap System.Threading.Channels. We optimized the hot path.
+        <p className={clsx('text--center', 'margin-bottom--xl')}>
+          NPipeline is engineered to handle structured, high-throughput scenarios where reliability is paramount.
         </p>
-        
-        <div className={styles.performanceGrid}>
-          <div className="card card--full-height">
-            <div className="card__body text--center">
-              <div className={styles.performanceMetric}>90%</div>
-              <div className={styles.performanceLabel}>Less garbage</div>
-              <p className={styles.performanceDetail}>
-                Utilizing <code>ValueTask&lt;T&gt;</code>, transforms use a two-path pattern. 
-                In high-cache-hit scenarios, this eliminates tens of thousands of Task allocations per second
+        <div className="row">
+          <div className="col col--6">
+            <div className="card padding--lg margin-bottom--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                ETL Workflows
+              </Heading>
+              <p>
+                Build reliable ingestion pipelines that extract data, apply complex transformations, and load into storage.
               </p>
             </div>
           </div>
-
-          <div className="card card--full-height">
-            <div className="card__body text--center">
-              <div className={styles.performanceMetric}>O(k)</div>
-              <div className={styles.performanceLabel}>Streaming-first design</div>
-              <p className={styles.performanceDetail}>
-                Using <code>IAsyncEnumerable&lt;T&gt;</code> means only active items are in memory. 
-                Process datasets far larger than your available RAM with predictable, low-latency execution
+          <div className="col col--6">
+            <div className="card padding--lg margin-bottom--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Real-time Stream Processing
+              </Heading>
+              <p>
+                Handle low-latency data streams from message queues or IoT devices.
               </p>
             </div>
           </div>
-
-          <div className="card card--full-height">
-            <div className="card__body text--center">
-              <div className={styles.performanceMetric}>Zero</div>
-              <div className={styles.performanceLabel}>Per-item branching</div>
-              <p className={styles.performanceDetail}>
-                Execution plans are compiled once. We eliminate per-item branching and reflection 
-                during steady-state processing, optimizing CPU cache hits
+          <div className="col col--6">
+            <div className="card padding--lg margin-bottom--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Data Validation & Cleansing
+              </Heading>
+              <p>
+                Implement rigorous quality checks and validation rules as discrete, testable steps.
+              </p>
+            </div>
+          </div>
+          <div className="col col--6">
+            <div className="card padding--lg margin-bottom--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Microservice Integration
+              </Heading>
+              <p>
+                Facilitate structured data exchange and transformation between decoupled services.
               </p>
             </div>
           </div>
@@ -173,310 +142,333 @@ function PerformanceSection() {
       </div>
     </section>
   );
-}
+};
 
-function CodeExampleSection() {
+// Engineered for Performance Section Component
+const PerformanceSection: React.FC = () => {
   return (
-    <section className={styles.codeExample}>
+    <section className={clsx('margin-vert--lg', 'padding-vert--lg')}>
       <div className="container">
-        <Heading as="h2" className={styles.sectionTitle}>
-          Fluent, type-safe, and graph-based
+        <Heading as="h2" className="text--center margin-bottom--lg">
+          Engineered for Performance
         </Heading>
-        <p className={styles.sectionSubtitle}>
-          Define your data flow using a clear builder pattern that handles connection logic and 
-          ensures type compatibility at compile time.
+        <p className={clsx('text--center', 'margin-bottom--xl')}>
+          Performance is not an afterthought; it is the cornerstone of NPipeline's design. The library is architected to 
+          minimize garbage collection overhead and maximize throughput.
         </p>
         
-        <div className={styles.codeBlock}>
-          <pre><code>{`public void Define(PipelineBuilder builder, PipelineContext context)
+        <div className="row margin-bottom--xl">
+          <div className="col col--12">
+            <div className="card padding--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Zero-Allocation Fast Paths
+              </Heading>
+              <p className="margin-bottom--md">
+                In high-throughput systems, every allocation counts. NPipeline utilizes <code>ValueTask&lt;T&gt;</code> to implement a "two-path" pattern.
+              </p>
+              <div className="row">
+                <div className="col col--4">
+                  <div className="alert alert--info margin-bottom--md">
+                    <Heading as="h4">Fast Path (Synchronous)</Heading>
+                    <p>
+                      If a result is available immediately (e.g., cache hits, simple math), it allocates on the stack with 
+                      <strong> zero GC pressure</strong>.
+                    </p>
+                  </div>
+                </div>
+                <div className="col col--4">
+                  <div className="alert alert--info margin-bottom--md">
+                    <Heading as="h4">Slow Path (Asynchronous)</Heading>
+                    <p>
+                      Seamlessly transitions to true async only when I/O or heavy computation is required.
+                    </p>
+                  </div>
+                </div>
+                <div className="col col--4">
+                  <div className="alert alert--info margin-bottom--md">
+                    <Heading as="h4">Impact</Heading>
+                    <p>
+                      In high-cache-hit scenarios, this can eliminate thousands of allocations per second, 
+                      drastically reducing garbage collection pauses.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="row">
+          <div className="col col--12">
+            <div className="card padding--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Plan-Based Execution
+              </Heading>
+              <p>
+                NPipeline separates the "planning" phase from the "execution" phase. The pipeline structure is compiled once, 
+                meaning per-item processing avoids expensive reflection or routing logic during the steady state.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Resilience & Reliability Section Component
+const ResilienceSection: React.FC = () => {
+  return (
+    <section className={clsx('margin-vert--lg', 'padding-vert--lg', 'background--light')}>
+      <div className="container">
+        <Heading as="h2" className="text--center margin-bottom--lg">
+          Resilience & Reliability
+        </Heading>
+        <p className={clsx('text--center', 'margin-bottom--xl')}>
+          Production pipelines fail—it's inevitable. NPipeline provides a comprehensive resilience framework to detect, 
+          handle, and recover from failures without crashing your application.
+        </p>
+        
+        <div className="row margin-bottom--xl">
+          <div className="col col--12">
+            <div className="card padding--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Granular Error Handling
+              </Heading>
+              <div className="row">
+                <div className="col col--6">
+                  <div className="alert alert--warning margin-bottom--md">
+                    <Heading as="h4">Node-Level</Heading>
+                    <p>
+                      Handle specific item failures (e.g., malformed JSON) by retrying, skipping, or routing to a Dead Letter Queue.
+                    </p>
+                  </div>
+                </div>
+                <div className="col col--6">
+                  <div className="alert alert--warning margin-bottom--md">
+                    <Heading as="h4">Pipeline-Level</Heading>
+                    <p>
+                      Manage stream-wide failures (e.g., database outages) with Circuit Breakers and automatic Node Restarts.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="row">
+          <div className="col col--12">
+            <div className="card padding--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Build-Time Analyzers
+              </Heading>
+              <p className="margin-bottom--md">
+                Don't wait for a 3 AM page to find a configuration error. NPipeline includes Roslyn analyzers that enforce best practices at compile time.
+              </p>
+              <div className="row">
+                <div className="col col--6">
+                  <div className="alert alert--success margin-bottom--md">
+                    <Heading as="h4">Prevents Silent Failures</Heading>
+                    <p>
+                      Detects missing prerequisites for node restarts (e.g., missing materialization buffers).
+                    </p>
+                  </div>
+                </div>
+                <div className="col col--6">
+                  <div className="alert alert--success margin-bottom--md">
+                    <Heading as="h4">Enforces Streaming Patterns</Heading>
+                    <p>
+                      Flags blocking operations or non-streaming patterns that could lead to memory exhaustion.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Fluent API & Type Safety Section Component
+const FluentAPISection: React.FC = () => {
+  return (
+    <section className={clsx('margin-vert--lg', 'padding-vert--lg')}>
+      <div className="container">
+        <Heading as="h2" className="text--center margin-bottom--lg">
+          Fluent API & Type Safety
+        </Heading>
+        <p className={clsx('text--center', 'margin-bottom--xl')}>
+          Constructing a pipeline is intuitive and readable. The builder pattern allows you to define sources, transforms, and sinks, and connect them logically.
+        </p>
+        
+        <div className="card padding--lg">
+          <pre className="language-csharp">
+            <code>
+{`public void Define(PipelineBuilder builder, PipelineContext context) 
 {
-    // 1. Define Nodes: Source -> Transform -> Sink
-    var source = builder.AddSource<KafkaSource, Order>("orders_topic");
-    var enricher = builder.AddTransform<CustomerEnricher, Order, EnrichedOrder>("enrich");
-    var dbSink = builder.AddSink<DatabaseSink, EnrichedOrder>("sql_store");
+    // 1. Add Nodes
+    var source = builder.AddSource<OrderSource, Order>();
+    var filter = builder.AddTransform<FraudCheckTransform, Order, Order>();
+    var sink = builder.AddSink<DatabaseSink, Order>();
 
-    // 2. Connect the Graph (DAG) - Type checked at compile time
-    builder.Connect(source, enricher);
-    builder.Connect(enricher, dbSink);
-
+    // 2. Connect the Graph
+    // The compiler ensures type compatibility between nodes
+    builder.Connect(source, filter);
+    builder.Connect(filter, sink);
+    
     // 3. Configure Resilience
     builder.WithRetryOptions(new PipelineRetryOptions(
         MaxItemRetries: 3, 
         MaxNodeRestartAttempts: 2
     ));
-}`}</code></pre>
-        </div>
-
-        <div className={styles.codeFeatures}>
-          <div className="card shadow--tl">
-            <div className="card__body">
-              <div className={styles.codeFeature}>
-                <div className={styles.codeFeatureIcon}>✓</div>
-                <span>Visual clarity with DAG approach</span>
-              </div>
-            </div>
-          </div>
-          <div className="card shadow--tl">
-            <div className="card__body">
-              <div className={styles.codeFeature}>
-                <div className={styles.codeFeatureIcon}>✓</div>
-                <span>Type-safe connections at compile-time</span>
-              </div>
-            </div>
-          </div>
-          <div className="card shadow--tl">
-            <div className="card__body">
-              <div className={styles.codeFeature}>
-                <div className={styles.codeFeatureIcon}>✓</div>
-                <span>Full async/await support</span>
-              </div>
-            </div>
-          </div>
-          <div className="card shadow--tl">
-            <div className="card__body">
-              <div className={styles.codeFeature}>
-                <div className={styles.codeFeatureIcon}>✓</div>
-                <span>Built-in resilience configuration</span>
-              </div>
-            </div>
-          </div>
+}`}
+            </code>
+          </pre>
         </div>
       </div>
     </section>
   );
-}
+};
 
-function AnalyzersSection() {
+// Ecosystem & Extensions Section Component
+const EcosystemSection: React.FC = () => {
   return (
-    <section className={styles.analyzers}>
+    <section className={clsx('margin-vert--lg', 'padding-vert--lg', 'background--light')}>
       <div className="container">
-        <Heading as="h2" className={styles.sectionTitle}>
-          Your compiler is your safety net
+        <Heading as="h2" className="text--center margin-bottom--lg">
+          Ecosystem & Extensions
         </Heading>
-        <p className={styles.sectionSubtitle}>
-          Most pipelines fail silently at runtime. NPipeline catches issues before you commit.
+        <p className={clsx('text--center', 'margin-bottom--xl')}>
+          NPipeline is modular by design. Keep the core lightweight and add capabilities as you need them.
         </p>
-
-        <div className={styles.problemSolution}>
-          <div className={clsx('alert', 'alert--danger')}>
-            <div className={styles.alertContent}>
-              <strong>The Problem:</strong> In complex async pipelines, missing a buffer configuration or blocking a thread can cause 
-              silent data loss or deadlocks in production. These issues manifest as intermittent failures 
-              that are nearly impossible to debug.
+        
+        <div className="row">
+          <div className="col col--6">
+            <div className="card padding--lg margin-bottom--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Dependency Injection
+              </Heading>
+              <p>
+                Seamlessly integrate with <code>Microsoft.Extensions.DependencyInjection</code> for robust service management.
+              </p>
             </div>
           </div>
-          
-          <div className={clsx('alert', 'alert--success')}>
-            <div className={styles.alertContent}>
-              <strong>The Solution: NPL 9000 Series Analyzers:</strong> Included out-of-the-box, these Roslyn analyzers act as proactive guardrails, catching 
-              configuration errors at build time. Think of them as automated code review by experts who 
-              understand how high-performance streaming systems should work.
+          <div className="col col--6">
+            <div className="card padding--lg margin-bottom--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Parallelism
+              </Heading>
+              <p>
+                Utilize the <code>ParallelExecutionStrategy</code> to process nodes concurrently, increasing throughput for CPU-bound tasks.
+              </p>
             </div>
           </div>
-        </div>
-
-        <div className={styles.analyzerList}>
-          <div className="card shadow--lw">
-            <div className="card__body">
-              <div className={styles.analyzerItem}>
-                <div className={styles.analyzerCode}>NP90XX</div>
-                <div className={styles.analyzerContent}>
-                  <h4>Resilience Checks</h4>
-                  <p>Detects if you've requested a node restart but forgot the mandatory materialization buffers</p>
-                </div>
-              </div>
+          <div className="col col--6">
+            <div className="card padding--lg margin-bottom--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Connectors
+              </Heading>
+              <p>
+                Use pre-built Source and Sink connectors for common targets like CSV files, leveraging a unified storage abstraction.
+              </p>
             </div>
           </div>
-
-          <div className="card shadow--lw">
-            <div className="card__body">
-              <div className={styles.analyzerItem}>
-                <div className={styles.analyzerCode}>NP91XX</div>
-                <div className={styles.analyzerContent}>
-                  <h4>Performance Hygiene</h4>
-                  <p>Flags blocking operations (.Result, .Wait()) inside async nodes that starve the thread pool</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="card shadow--lw">
-            <div className="card__body">
-              <div className={styles.analyzerItem}>
-                <div className={styles.analyzerCode}>NP93XX</div>
-                <div className={styles.analyzerContent}>
-                  <h4>Data Integrity</h4>
-                  <p>Ensures sink nodes actually consume their input, preventing silent data drops</p>
-                </div>
-              </div>
+          <div className="col col--6">
+            <div className="card padding--lg margin-bottom--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Testing
+              </Heading>
+              <p>
+                Specialized libraries including integration with <em>FluentAssertions</em> and <em>AwesomeAssertions</em> to unit test your pipelines in memory.
+              </p>
             </div>
           </div>
         </div>
       </div>
     </section>
   );
-}
+};
 
-function ResilienceSection() {
+// Get Started Section Component
+const GetStartedSection: React.FC = () => {
   return (
-    <section className={styles.resilience}>
+    <section className={clsx('margin-vert--lg', 'padding-vert--lg')}>
       <div className="container">
-        <Heading as="h2" className={styles.sectionTitle}>
-          Resilience is not an afterthought
+        <Heading as="h2" className="text--center margin-bottom--lg">
+          Get Started
         </Heading>
-        <p className={styles.sectionSubtitle}>
-          Recover from failures without system breakdown using configurable, granular strategies.
-        </p>
-
-        <div className={styles.resilienceGrid}>
-          <div className="card">
-            <div className="card__header">
-              <h3>Node-level recovery</h3>
-            </div>
-            <div className="card__body">
-              <p>
-                Handle individual item failures with precision. Configure policies to <strong>Retry</strong> transient 
-                network blips, <strong>Skip</strong> malformed data, or route to a <strong>Dead-Letter Queue</strong> for 
-                later analysis.
-              </p>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="card__header">
-              <h3>Circuit breakers</h3>
-            </div>
-            <div className="card__body">
-              <p>
-                Prevent cascading failures with intelligent circuit breakers. If a dependent service goes down, 
-                the pipeline can pause or fail gracefully rather than overwhelming the system.
-              </p>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="card__header">
-              <h3>Restarts with state</h3>
-            </div>
-            <div className="card__body">
-              <p>
-                The <code>ResilientExecutionStrategy</code> allows specific nodes to restart while buffering 
-                upstream data, ensuring self-healing pipelines without manual intervention.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function EcosystemSection() {
-  return (
-    <section className={styles.ecosystem}>
-      <div className="container">
-        <Heading as="h2" className={styles.sectionTitle}>
-          Batteries included
-        </Heading>
-        <p className={styles.sectionSubtitle}>
-          A mature ecosystem, not just a single class library.
-        </p>
-
-        <div className={styles.ecosystemGrid}>
-          <div className="card card--full-height">
-            <div className="card__header">
-              <h3>Connectors</h3>
-            </div>
-            <div className="card__body">
-              <p>
-                Integrate quickly with pre-built nodes for CSV, Filesystem, and Cloud Storage via 
-                the <code>IStorageProvider</code> abstraction.
-              </p>
-            </div>
-          </div>
-
-          <div className="card card--full-height">
-            <div className="card__header">
-              <h3>Dependency injection</h3>
-            </div>
-            <div className="card__body">
-              <p>
-                Seamless integration with <code>Microsoft.Extensions.DependencyInjection</code> for 
-                clean constructor injection in your nodes.
-              </p>
-            </div>
-          </div>
-
-          <div className="card card--full-height">
-            <div className="card__header">
-              <h3>Parallelism</h3>
-            </div>
-            <div className="card__body">
-              <p>
-                Need more speed? Enable <code>ParallelExecutionStrategy</code> to process nodes 
-                concurrently with configurable degrees of parallelism.
-              </p>
-            </div>
-          </div>
-
-          <div className="card card--full-height">
-            <div className="card__header">
-              <h3>Testing utilities</h3>
-            </div>
-            <div className="card__body">
-              <p>
-                Comprehensive testing utilities including in-memory sources/sinks and assertion 
-                libraries (FluentAssertions / AwesomeAssertions).
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function CTASection() {
-  return (
-    <section className={styles.cta}>
-      <div className={styles.ctaContainer}>
-        <Heading as="h2" className={styles.ctaTitle}>
+        <p className={clsx('text--center', 'margin-bottom--xl')}>
           Ready to build better pipelines?
-        </Heading>
-        <p className={styles.ctaSubtitle}>
-          Stop writing boilerplate retry logic and fighting memory leaks.
         </p>
-        <div className={styles.ctaButtons}>
-          <Link className={clsx('button', 'button--primary', 'button--lg')} to="/docs/getting-started/installation">
-            Get the NuGet Package
-          </Link>
-          <Link className={clsx('button', 'button--secondary', 'button--lg')} to="/docs/getting-started/quick-start">
-            Read the Quick Start Guide
-          </Link>
+        
+        <div className="row margin-bottom--xl">
+          <div className="col col--12">
+            <div className="card padding--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Install via NuGet:
+              </Heading>
+              <pre className="language-bash">
+                <code>
+{`dotnet add package NPipeline
+dotnet add package NPipeline.Extensions.DependencyInjection`}
+                </code>
+              </pre>
+            </div>
+          </div>
+        </div>
+        
+        <div className="row">
+          <div className="col col--12">
+            <div className="card padding--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Next Steps
+              </Heading>
+              <p>
+                Would you like to see a <strong>"Deep Dive into Custom Node Creation"</strong> tutorial or explore the 
+                <strong>"Resilience Configuration Guide"</strong>?
+              </p>
+              <div className={clsx('margin-top--md')}>
+                <Link
+                  className="button button--primary margin-right--sm"
+                  to="/docs/core-concepts/nodes">
+                  Custom Node Creation
+                </Link>
+                <Link
+                  className="button button--secondary"
+                  to="/docs/core-concepts/resilience">
+                  Resilience Configuration
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
-}
+};
 
-export default function Home() {
+// Main Homepage Component
+const Home: React.FC = () => {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description="High-performance, graph-based streaming data pipelines for .NET">
+      description="High-performance, streaming data pipelines for .NET">
       <HeroSection />
-      <AnalyzersSection />
-      <UseCasesSection />
-      <CoreConceptsSection />
-      <ArchitectureDiagramSection />
-      <TechnicalDifferentiatorsSection />
-      <PerformanceSection />
-      <ResilienceSection />
-      <CodeExampleSection />
-      <FeaturesSection />
-      <EcosystemSection />
-      <CTASection />
+      <main>
+        <WhyNPipelineSection />
+        <UseCasesSection />
+        <PerformanceSection />
+        <ResilienceSection />
+        <FluentAPISection />
+        <EcosystemSection />
+        <GetStartedSection />
+      </main>
     </Layout>
   );
-}
+};
+
+export default Home;
