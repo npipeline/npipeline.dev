@@ -6,6 +6,10 @@ import Heading from '@theme/Heading';
 import clsx from 'clsx';
 
 import styles from './index.module.css';
+import UseCasesSection from '../components/UseCasesSection';
+import CoreConceptsSection from '../components/CoreConceptsSection';
+import ArchitectureDiagramSection from '../components/ArchitectureDiagramSection';
+import TechnicalDifferentiatorsSection from '../components/TechnicalDifferentiatorsSection';
 
 function HeroSection() {
   const {siteConfig} = useDocusaurusContext();
@@ -463,6 +467,10 @@ export default function Home() {
       description="High-performance, graph-based streaming data pipelines for .NET">
       <HeroSection />
       <AnalyzersSection />
+      <UseCasesSection />
+      <CoreConceptsSection />
+      <ArchitectureDiagramSection />
+      <TechnicalDifferentiatorsSection />
       <PerformanceSection />
       <ResilienceSection />
       <CodeExampleSection />
