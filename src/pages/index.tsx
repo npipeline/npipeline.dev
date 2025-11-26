@@ -333,13 +333,13 @@ const FluentAPISection: React.FC = () => {
   );
 };
 
-// Ecosystem & Extensions Section Component
+// Connectors & Extensions Section Component
 const EcosystemSection: React.FC = () => {
   return (
     <section className={clsx('margin-vert--lg', 'padding-vert--lg', 'background--light')}>
       <div className="container">
         <Heading as="h2" className="text--center margin-bottom--lg">
-          Ecosystem & Extensions
+          Connectors & Extensions
         </Heading>
         <p className={clsx('text--center', 'margin-bottom--lg')}>
           NPipeline is modular by design. Keep the core lightweight and add capabilities as you need them.
