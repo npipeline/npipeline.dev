@@ -15,7 +15,7 @@ const HeroSection: React.FC = () => {
           Build High-Performance, Type-Safe Data Pipelines in .NET
         </Heading>
         <p className="hero__subtitle">
-          <strong>NPipeline</strong> is a powerful, flexible library designed for constructing robust, graph-based streaming data workflows. 
+          NPipeline is a powerful, flexible library designed for constructing robust, graph-based streaming data workflows. 
           By combining the type safety of C# with a directed acyclic graph (DAG) architecture, NPipeline empowers developers to build 
           complex ETL processes, real-time data streams, and event-driven architectures that are easy to test, debug, and maintain.
         </p>
@@ -42,7 +42,7 @@ const WhyNPipelineSection: React.FC = () => {
         <Heading as="h2" className="text--center margin-bottom--lg">
           Why NPipeline?
         </Heading>
-        <p className={clsx('text--center', 'margin-bottom--xl')}>
+        <p className={clsx('text--center', 'margin-bottom--lg')}>
           Traditional data processing in .NET often devolves into unmanageable chains of nested loops or heavy dependencies on external ETL tools. 
           NPipeline bridges the gap, offering a code-first approach that prioritizes developer experience and execution efficiency.
         </p>
@@ -94,7 +94,7 @@ const UseCasesSection: React.FC = () => {
         <Heading as="h2" className="text--center margin-bottom--lg">
           Use Cases
         </Heading>
-        <p className={clsx('text--center', 'margin-bottom--xl')}>
+        <p className={clsx('text--center', 'margin-bottom--lg')}>
           NPipeline is engineered to handle structured, high-throughput scenarios where reliability is paramount.
         </p>
         <div className="row">
@@ -152,12 +152,12 @@ const PerformanceSection: React.FC = () => {
         <Heading as="h2" className="text--center margin-bottom--lg">
           Engineered for Performance
         </Heading>
-        <p className={clsx('text--center', 'margin-bottom--xl')}>
+        <p className={clsx('text--center', 'margin-bottom--lg')}>
           Performance is not an afterthought; it is the cornerstone of NPipeline's design. The library is architected to 
           minimize garbage collection overhead and maximize throughput.
         </p>
         
-        <div className="row margin-bottom--xl">
+        <div className="row margin-bottom--md">
           <div className="col col--12">
             <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
@@ -224,12 +224,12 @@ const ResilienceSection: React.FC = () => {
         <Heading as="h2" className="text--center margin-bottom--lg">
           Resilience & Reliability
         </Heading>
-        <p className={clsx('text--center', 'margin-bottom--xl')}>
+        <p className={clsx('text--center', 'margin-bottom--lg')}>
           Production pipelines fail—it's inevitable. NPipeline provides a comprehensive resilience framework to detect, 
           handle, and recover from failures without crashing your application.
         </p>
         
-        <div className="row margin-bottom--xl">
+        <div className="row margin-bottom--md">
           <div className="col col--12">
             <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
@@ -300,11 +300,11 @@ const FluentAPISection: React.FC = () => {
         <Heading as="h2" className="text--center margin-bottom--lg">
           Fluent API & Type Safety
         </Heading>
-        <p className={clsx('text--center', 'margin-bottom--xl')}>
+        <p className={clsx('text--center', 'margin-bottom--lg')}>
           Constructing a pipeline is intuitive and readable. The builder pattern allows you to define sources, transforms, and sinks, and connect them logically.
         </p>
         
-        <div className="card padding--lg">
+        <div className="card padding--md">
           <pre className="language-csharp">
             <code>
 {`public void Define(PipelineBuilder builder, PipelineContext context) 
@@ -341,7 +341,7 @@ const EcosystemSection: React.FC = () => {
         <Heading as="h2" className="text--center margin-bottom--lg">
           Ecosystem & Extensions
         </Heading>
-        <p className={clsx('text--center', 'margin-bottom--xl')}>
+        <p className={clsx('text--center', 'margin-bottom--lg')}>
           NPipeline is modular by design. Keep the core lightweight and add capabilities as you need them.
         </p>
         
@@ -400,51 +400,25 @@ const GetStartedSection: React.FC = () => {
         <Heading as="h2" className="text--center margin-bottom--lg">
           Get Started
         </Heading>
-        <p className={clsx('text--center', 'margin-bottom--xl')}>
+        <p className={clsx('text--center', 'margin-bottom--lg')}>
           Ready to build better pipelines?
         </p>
         
-        <div className="row margin-bottom--xl">
+        <div className="row">
           <div className="col col--12">
-            <div className="card padding--lg">
+            <div className="card padding-horiz--lg padding-top--lg">
               <Heading as="h3" className="margin-bottom--md">
                 Install via NuGet:
               </Heading>
               <pre className="language-bash">
                 <code>
-{`dotnet add package NPipeline
-dotnet add package NPipeline.Extensions.DependencyInjection`}
+{`dotnet add package NPipeline`}
                 </code>
               </pre>
             </div>
           </div>
         </div>
         
-        <div className="row">
-          <div className="col col--12">
-            <div className="card padding--lg">
-              <Heading as="h3" className="margin-bottom--md">
-                Next Steps
-              </Heading>
-              <p>
-                Would you like to see a <strong>"Deep Dive into Custom Node Creation"</strong> tutorial or explore the 
-                <strong>"Resilience Configuration Guide"</strong>?
-              </p>
-              <div className={clsx('margin-top--md')}>
-                <Link
-                  className="button button--primary margin-right--sm"
-                  to="/docs/core-concepts/nodes">
-                  Custom Node Creation
-                </Link>
-                <Link
-                  className="button button--secondary"
-                  to="/docs/core-concepts/resilience">
-                  Resilience Configuration
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

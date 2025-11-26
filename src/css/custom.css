@@ -389,13 +389,13 @@ html {
 }
 
 /* ============================================
-   LOGO & NAVBAR FIXES
+   LOGO & NAVBAR
    ============================================ */
 
 /* Fix logo sizing - constrain the massive SVG */
 .navbar__logo {
-  max-width: 40px;
-  max-height: 40px;
+  max-width: 30px;
+  max-height: 30px;
   width: auto;
   height: auto;
 }
@@ -408,16 +408,15 @@ html {
 }
 
 /* ============================================
-   HERO SECTION FIXES
+   HERO SECTION
    ============================================ */
 .hero.hero--primary.heroBanner {
-  background: linear-gradient(135deg, var(--color-blue-900) 0%, var(--color-teal-700) 100%);
-  padding: var(--section-padding-y-lg) var(--space-4);
+  background: linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+  padding: var(--space-20) var(--space-4) var(--space-28) var(--space-4);
   text-align: center;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   width: 100%;
-  min-height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -432,16 +431,15 @@ html {
   right: 0;
   bottom: 0;
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 20%),
-    radial-gradient(circle at 80% 60%, rgba(255, 255, 255, 0.03) 0%, transparent 20%),
-    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 15%);
+    radial-gradient(circle at 20% 50%, rgba(10, 147, 150, 0.03) 0%, transparent 25%),
+    radial-gradient(circle at 80% 20%, rgba(233, 216, 166, 0.02) 0%, transparent 30%);
   background-size: 100% 100%;
   pointer-events: none;
   z-index: 1;
 }
 
 .hero--primary {
-  background: linear-gradient(135deg, var(--color-blue-900) 0%, var(--color-teal-700) 100%);
+  background: linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
 }
 
 .heroBanner .container {
@@ -452,27 +450,26 @@ html {
 }
 
 .hero__title {
-  font-size: clamp(2.5rem, 5vw + 1rem, 3.5rem);
+  font-size: clamp(2.5rem, 5vw + 1rem, 3rem);
   font-weight: var(--font-weight-black);
-  color: var(--color-text-inverse);
-  margin-bottom: var(--space-6);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-8);
   line-height: 1.1;
   letter-spacing: var(--letter-spacing-tight);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .hero__subtitle {
-  font-size: clamp(1.125rem, 2vw + 0.5rem, 1.375rem);
-  color: rgba(255, 255, 255, 0.95);
-  max-width: 800px;
-  margin: 0 auto var(--space-8);
+  font-size: clamp(1rem, 2vw + 0.5rem, 1.2rem);
+  color: var(--color-text-secondary);
+  max-width: 700px;
+  margin: 0 auto var(--space-12);
   line-height: var(--line-height-relaxed);
   font-weight: var(--font-weight-normal);
 }
 
 .hero__subtitle strong {
   font-weight: var(--font-weight-semibold);
-  color: var(--color-yellow-300);
+  color: var(--color-primary);
 }
 
 .margin-top--lg {
@@ -484,9 +481,9 @@ html {
 }
 
 .margin-top--lg .button {
-  font-size: var(--font-size-lg);
-  padding: var(--space-4) var(--space-8);
-  border-radius: var(--space-3);
+  font-size: var(--font-size-base);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--space-2);
   font-weight: var(--font-weight-semibold);
   transition: all var(--transition-base);
   position: relative;
@@ -515,32 +512,33 @@ html {
 }
 
 .margin-top--lg .button--primary {
-  background-color: var(--color-yellow-300);
-  color: var(--color-blue-900);
-  border-color: var(--color-yellow-300);
-  box-shadow: 0 4px 14px 0 rgba(233, 216, 166, 0.25);
+  background-color: var(--color-primary);
+  color: var(--color-text-on-primary);
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(10, 147, 150, 0.2);
 }
 
 .margin-top--lg .button--primary:hover:not(:disabled) {
-  background-color: #e0cc90;
-  border-color: #e0cc90;
-  color: var(--color-blue-900);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(233, 216, 166, 0.35), 0 6px 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  color: var(--color-text-on-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(10, 147, 150, 0.3);
 }
 
 .margin-top--lg .button--secondary {
   background-color: transparent;
-  color: var(--color-text-inverse);
-  border-color: var(--color-text-inverse);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
   box-shadow: none;
 }
 
 .margin-top--lg .button--secondary:hover:not(:disabled) {
-  background-color: var(--color-text-inverse);
-  color: var(--color-blue-900);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.15), 0 6px 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-bg-secondary);
+  color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(10, 147, 150, 0.15);
 }
 
 /* Hero animation on load */
@@ -573,22 +571,21 @@ html {
 
 /* Dark mode adjustments */
 [data-theme="dark"] .hero.hero--primary.heroBanner {
-  background: linear-gradient(135deg, var(--color-blue-900) 0%, var(--color-teal-700) 100%);
+  background: linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
 }
 
 [data-theme="dark"] .hero.hero--primary.heroBanner::before {
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 20%),
-    radial-gradient(circle at 80% 60%, rgba(255, 255, 255, 0.02) 0%, transparent 20%),
-    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 15%);
+    radial-gradient(circle at 20% 50%, rgba(10, 147, 150, 0.04) 0%, transparent 25%),
+    radial-gradient(circle at 80% 20%, rgba(233, 216, 166, 0.03) 0%, transparent 30%);
 }
 
 [data-theme="dark"] .margin-top--lg .button--primary {
-  box-shadow: 0 4px 14px 0 rgba(233, 216, 166, 0.15);
+  box-shadow: 0 2px 8px rgba(10, 147, 150, 0.15);
 }
 
 [data-theme="dark"] .margin-top--lg .button--primary:hover:not(:disabled) {
-  box-shadow: 0 10px 25px rgba(233, 216, 166, 0.25), 0 6px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px rgba(10, 147, 150, 0.2);
 }
 
 /* ============================================
@@ -597,7 +594,7 @@ html {
 
 /* Base Section Styles */
 section {
-  padding: var(--section-padding-y) 0;
+  padding: var(--space-24) 0;
   position: relative;
   width: 100%;
   transition: var(--transition-colors);
@@ -613,21 +610,21 @@ section .container {
 
 /* Section headings */
 h2.text--center {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-6);
   line-height: var(--line-height-tight);
   letter-spacing: var(--letter-spacing-tight);
 }
 
 p.text--center {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   color: var(--color-text-secondary);
   line-height: var(--line-height-relaxed);
   font-weight: var(--font-weight-normal);
-  max-width: 800px;
-  margin: 0 auto var(--space-8);
+  max-width: 700px;
+  margin: 0 auto var(--space-12);
 }
 
 /* Alternating section backgrounds */
@@ -639,6 +636,11 @@ p.text--center {
 section {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Reduce bottom padding for tighter spacing on last section */
+section:last-child {
+  padding-bottom: var(--space-20);
 }
 
 /* ============================================
@@ -654,11 +656,13 @@ section {
   height: 100%;
   opacity: 1;
   visibility: visible;
+  border: 1px solid var(--color-border-primary);
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   box-shadow: var(--card-shadow-hover);
+  border-color: var(--color-border-secondary);
 }
 
 /* Dark mode card adjustments for better contrast */
@@ -677,7 +681,7 @@ section {
 
 /* Card headings */
 .card h3 {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin-bottom: var(--space-3);
@@ -696,7 +700,7 @@ section {
 .card p {
   font-size: var(--font-size-base);
   color: var(--color-text-secondary);
-  line-height: var(--line-height-relaxed);
+  line-height: var(--line-height-normal);
   margin-bottom: 0;
 }
 
@@ -705,7 +709,7 @@ section {
 }
 
 /* ============================================
-   FOOTER STYLING FIXES
+   FOOTER STYLING
    ============================================ */
 footer {
   color: var(--color-text-secondary) !important;
@@ -743,40 +747,54 @@ footer a:hover {
 }
 
 /* ============================================
-   CARD SPACING FIXES
+   CARD SPACING SOLUTIONS
    ============================================ */
-/* Add proper gap/margin below cards */
-.row {
-  margin-bottom: var(--space-8);
+/* Primary Solution: Add margin to columns for consistent card spacing */
+.row .col {
+  margin-bottom: var(--space-4);
 }
 
-/* Ensure consistent spacing between cards in grid layouts */
-.col.col--4 .card,
-.col.col--6 .card {
+/* Secondary Solution: Target cards with margin-bottom--lg class specifically */
+.row .col .card.margin-bottom--lg {
+  margin-bottom: var(--space-4) !important;
+}
+
+/* Tertiary Solution: Add spacing between row sections */
+.row:not(:last-child) {
   margin-bottom: var(--space-6);
 }
 
-/* Maintain spacing in responsive viewports */
+/* Responsive adjustments for smaller screens */
 @media (max-width: 996px) {
-  .col.col--4 .card,
-  .col.col--6 .card {
+  .row .col {
+    margin-bottom: var(--space-3);
+  }
+  
+  .row .col .card.margin-bottom--lg {
+    margin-bottom: var(--space-3) !important;
+  }
+  
+  .row:not(:last-child) {
     margin-bottom: var(--space-4);
   }
 }
 
 @media (max-width: 768px) {
-  .row {
-    margin-bottom: var(--space-6);
+  .row .col {
+    margin-bottom: var(--space-3);
   }
   
-  .col.col--4 .card,
-  .col.col--6 .card {
+  .row .col .card.margin-bottom--lg {
+    margin-bottom: var(--space-3) !important;
+  }
+  
+  .row:not(:last-child) {
     margin-bottom: var(--space-4);
   }
 }
 
 /* ============================================
-   BUTTON STYLING FIXES
+   BUTTON STYLING
    ============================================ */
 /* Fix the "Resilience Configuration" button styling */
 .button--secondary {
@@ -784,13 +802,31 @@ footer a:hover {
   color: var(--color-primary) !important;
   border-color: var(--color-primary) !important;
   box-shadow: none !important;
+  font-weight: var(--font-weight-semibold) !important;
 }
 
 .button--secondary:hover:not(:disabled) {
+  background-color: var(--color-bg-secondary) !important;
+  color: var(--color-primary-hover) !important;
+  border-color: var(--color-primary-hover) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(10, 147, 150, 0.1) !important;
+}
+
+/* Primary button styling */
+.button--primary {
   background-color: var(--color-primary) !important;
   color: var(--color-text-on-primary) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 2px 8px rgba(10, 147, 150, 0.15) !important;
+  font-weight: var(--font-weight-semibold) !important;
+}
+
+.button--primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover) !important;
+  border-color: var(--color-primary-hover) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(10, 147, 150, 0.25) !important;
 }
 
 /* Dark mode button adjustments */
@@ -800,10 +836,63 @@ footer a:hover {
 }
 
 [data-theme="dark"] .button--secondary:hover:not(:disabled) {
-  background-color: var(--color-primary-light) !important;
-  color: var(--color-neutral-900) !important;
+  background-color: rgba(10, 147, 150, 0.1) !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+[data-theme="dark"] .button--primary {
+  box-shadow: 0 2px 8px rgba(10, 147, 150, 0.1) !important;
+}
+
+[data-theme="dark"] .button--primary:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(10, 147, 150, 0.2) !important;
 }
 
 /* ============================================
    RESPONSIVE ADJUSTMENTS
    ============================================ */
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  section {
+    padding: var(--space-16) 0;
+  }
+
+  h2.text--center {
+    font-size: var(--font-size-2xl);
+  }
+
+  p.text--center {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-8);
+  }
+
+  .hero.hero--primary.heroBanner {
+    padding: var(--space-16) var(--space-4) var(--space-20) var(--space-4);
+  }
+
+  .hero__title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .hero__subtitle {
+    font-size: var(--font-size-lg);
+  }
+
+  .margin-top--lg .button {
+    font-size: var(--font-size-sm);
+    padding: var(--space-2-5) var(--space-4);
+  }
+}
+
+/* Tablet optimizations */
+@media (max-width: 996px) {
+  section {
+    padding: var(--space-20) 0;
+  }
+
+  h2.text--center {
+    font-size: var(--font-size-2xl);
+  }
+}
