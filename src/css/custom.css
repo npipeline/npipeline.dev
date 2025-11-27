@@ -9,15 +9,17 @@
 :root {
   /* Color Palette - Base Colors */
   --color-blue-900: #001219;
-  --color-teal-700: #005F70;
-  --color-teal-600: #0A9396;
-  --color-teal-400: #94D2BD;
-  --color-yellow-300: #E9D8A6;
-  --color-orange-500: #EE9B00;
-  --color-orange-600: #CA6702;
-  --color-orange-700: #BB3E03;
-  --color-red-700: #AE2012;
-  --color-red-800: #9B2226;
+  --color-teal-700: #005f70;
+  --color-teal-600: #0a9396;
+  --color-teal-400: #94d2bd;
+  --color-yellow-300: #e9d8a6;
+  --color-orange-500: #ee9b00;
+  --color-orange-600: #ca6702;
+  --color-orange-700: #bb3e03;
+  --color-red-700: #ae2012;
+  --color-red-800: #9b2226;
+
+  --color-gradient-base: #005f73;
 
   /* Semantic Color Mappings - Light Mode */
   --color-primary: var(--color-teal-700);
@@ -30,7 +32,7 @@
   --color-warning: var(--color-orange-500);
   --color-danger: var(--color-red-700);
   --color-info: var(--color-teal-600);
-  
+
   /* Neutral Colors */
   --color-neutral-50: #ffffff;
   --color-neutral-100: #f8fafc;
@@ -84,13 +86,18 @@
   --ifm-color-emphasis-600: var(--color-text-secondary);
   --ifm-color-emphasis-900: var(--color-text-primary);
 
+  /* Link color (global) */
+  --color-link: #005f73;
+
   /* Typography System */
-  --font-family-base: 'Inter Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-family-monospace: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-  
+  --font-family-base: "Inter Variable", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-monospace: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono",
+    Consolas, "Courier New", monospace;
+
   /* Font Features */
-  --font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-  
+  --font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+
   /* Font Weights */
   --font-weight-thin: 100;
   --font-weight-extralight: 200;
@@ -101,7 +108,7 @@
   --font-weight-bold: 700;
   --font-weight-extrabold: 800;
   --font-weight-black: 900;
-  
+
   /* Font Sizes - Fluid Typography */
   --font-size-xs: clamp(0.75rem, 0.75rem + 0vw, 0.75rem);
   --font-size-sm: clamp(0.875rem, 0.825rem + 0.25vw, 1rem);
@@ -112,14 +119,14 @@
   --font-size-3xl: clamp(1.875rem, 1.5rem + 1.875vw, 3rem);
   --font-size-4xl: clamp(2.25rem, 1.75rem + 2.5vw, 3.75rem);
   --font-size-5xl: clamp(3rem, 2rem + 5vw, 6rem);
-  
+
   /* Line Heights */
   --line-height-tight: 1.25;
   --line-height-snug: 1.375;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.625;
   --line-height-loose: 2;
-  
+
   /* Letter Spacing */
   --letter-spacing-tighter: -0.05em;
   --letter-spacing-tight: -0.025em;
@@ -225,23 +232,25 @@
   --ifm-card-background-color: var(--color-bg-surface);
   --ifm-card-border-radius: var(--space-3);
   --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --card-shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --card-shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   /* Buttons */
-  --ifm-button-border-radius: var(--space-2);
-  --ifm-button-padding-vertical: var(--space-3);
+  --ifm-button-border-radius: var(--space-1);
+  --ifm-button-padding-vertical: var(--space-2);
   --ifm-button-padding-horizontal: var(--space-6);
   --ifm-button-font-weight: var(--font-weight-semibold);
 
-  /* Hero */
-  --hero-gradient-start: var(--color-primary);
-  --hero-gradient-end: var(--color-primary-hover);
+  /* Gradient text utility */
+  --gradient-text-from: var(--color-gradient-base);
+  --gradient-text-to: #0a9396;
 
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
   --transition-slow: 350ms ease;
-  --transition-colors: color var(--transition-base), background-color var(--transition-base), border-color var(--transition-base);
+  --transition-colors: color var(--transition-base),
+    background-color var(--transition-base), border-color var(--transition-base);
   --transition-transform: transform var(--transition-base);
   --transition-all: all var(--transition-base);
 }
@@ -261,18 +270,18 @@
   --color-warning: var(--color-orange-500);
   --color-danger: var(--color-red-700);
   --color-info: var(--color-teal-400);
-  
+
   /* Neutral Colors - Dark Mode */
-  --color-neutral-50: #0f172a;
-  --color-neutral-100: #1e293b;
-  --color-neutral-200: #334155;
-  --color-neutral-300: #475569;
-  --color-neutral-400: #64748b;
-  --color-neutral-500: #94a3b8;
-  --color-neutral-600: #cbd5e1;
-  --color-neutral-700: #e2e8f0;
-  --color-neutral-800: #f1f5f9;
-  --color-neutral-900: #f8fafc;
+  --color-neutral-50: #001219; /* base */
+  --color-neutral-100: #081826;
+  --color-neutral-200: #0f2b3b;
+  --color-neutral-300: #163f52;
+  --color-neutral-400: #2b556e;
+  --color-neutral-500: #4a718b;
+  --color-neutral-600: #8aa6b9;
+  --color-neutral-700: #c8e0ea;
+  --color-neutral-800: #eaf7fb;
+  --color-neutral-900: #ffffff;
 
   /* Text Colors - Dark Mode */
   --color-text-primary: var(--color-neutral-900);
@@ -288,7 +297,7 @@
   --color-bg-tertiary: var(--color-neutral-200);
   --color-bg-inverse: var(--color-neutral-900);
   --color-bg-surface: var(--color-neutral-100);
-  --color-bg-overlay: rgba(248, 250, 252, 0.9);
+  --color-bg-overlay: rgba(234, 247, 251, 0.9);
 
   /* Border Colors - Dark Mode */
   --color-border-primary: var(--color-neutral-200);
@@ -323,16 +332,24 @@
   --ifm-navbar-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1);
 
   --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  --card-shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.4),
+    0 10px 10px -5px rgba(0, 0, 0, 0.3);
+}
 
-  --hero-gradient-start: var(--color-neutral-100);
-  --hero-gradient-end: var(--color-bg-primary);
+/* Dark-mode link overrides */
+[data-theme="dark"] a {
+  color: var(--color-neutral-600);
+}
+
+[data-theme="dark"] a:hover,
+[data-theme="dark"] a:focus {
+  color: var(--color-neutral-900);
 }
 
 /* ============================================
    GLOBAL STYLES & BASE ELEMENTS
    ============================================ */
-@import url('https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&display=swap");
 
 html {
   font-size: 16px;
@@ -362,6 +379,17 @@ body {
 ::selection {
   background-color: var(--color-primary);
   color: var(--color-text-on-primary);
+}
+
+/* Global link styles */
+a {
+  color: var(--color-link);
+  transition: color var(--transition-base);
+}
+
+a:hover,
+a:focus {
+  color: #0a9396;
 }
 
 /* Scrollbar */
@@ -406,8 +434,8 @@ body {
    HERO SECTION
    ============================================ */
 .hero.hero--primary.heroBanner {
-  background: linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
-  padding: var(--space-20) var(--space-4) var(--space-28) var(--space-4);
+  background: var(--color-bg-primary);
+  padding: var(--space-20) var(--space-4) var(--space-20) var(--space-4);
   text-align: center;
   position: relative;
   overflow: visible;
@@ -417,24 +445,8 @@ body {
   justify-content: center;
 }
 
-/* Subtle background pattern */
-.hero.hero--primary.heroBanner::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle at 20% 50%, rgba(10, 147, 150, 0.03) 0%, transparent 25%),
-    radial-gradient(circle at 80% 20%, rgba(233, 216, 166, 0.02) 0%, transparent 30%);
-  background-size: 100% 100%;
-  pointer-events: none;
-  z-index: 1;
-}
-
 .hero--primary {
-  background: linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+  background: var(--color-bg-primary);
 }
 
 .heroBanner .container {
@@ -445,12 +457,25 @@ body {
 }
 
 .hero__title {
-  font-size: clamp(2.5rem, 5vw + 1rem, 3rem);
+  font-size: clamp(2.5rem, 5vw + 1rem, 3.5rem);
   font-weight: var(--font-weight-black);
   color: var(--color-text-primary);
   margin-bottom: var(--space-8);
   line-height: 1.1;
   letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(
+    90deg,
+    var(--gradient-text-from),
+    var(--gradient-text-to)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
 }
 
 .hero__subtitle {
@@ -505,13 +530,18 @@ body {
 
 /* Dark mode hero adjustments */
 [data-theme="dark"] .hero.hero--primary.heroBanner {
-  background: linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+  background: var(--color-bg-primary);
+}
+
+[data-theme="dark"] .gradient-text {
+  background: linear-gradient(90deg, var(--color-gradient-base), #94d2bd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 [data-theme="dark"] .hero.hero--primary.heroBanner::before {
-  background-image: 
-    radial-gradient(circle at 20% 50%, rgba(10, 147, 150, 0.04) 0%, transparent 25%),
-    radial-gradient(circle at 80% 20%, rgba(233, 216, 166, 0.03) 0%, transparent 30%);
+  display: none;
 }
 
 /* ============================================
@@ -629,6 +659,22 @@ section:last-child {
    BUTTON STYLING
    ============================================ */
 
+/* Primary button styling */
+.button--primary {
+  background-color: var(--color-primary) !important;
+  color: var(--color-text-on-primary) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 2px 8px rgba(10, 147, 150, 0.15) !important;
+  font-weight: var(--font-weight-semibold) !important;
+}
+
+.button--primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover) !important;
+  border-color: var(--color-primary-hover) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(10, 147, 150, 0.25) !important;
+}
+
 /* Secondary button styling */
 .button--secondary {
   background-color: transparent !important;
@@ -646,23 +692,31 @@ section:last-child {
   box-shadow: 0 2px 8px rgba(10, 147, 150, 0.1) !important;
 }
 
-/* Primary button styling */
-.button--primary {
-  background-color: var(--color-primary) !important;
-  color: var(--color-text-on-primary) !important;
-  border-color: var(--color-primary) !important;
-  box-shadow: 0 2px 8px rgba(10, 147, 150, 0.15) !important;
-  font-weight: var(--font-weight-semibold) !important;
-}
-
-.button--primary:hover:not(:disabled) {
-  background-color: var(--color-primary-hover) !important;
-  border-color: var(--color-primary-hover) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(10, 147, 150, 0.25) !important;
-}
-
 /* Dark mode button adjustments */
+[data-theme="dark"] .button--primary {
+  box-shadow: 0 2px 8px rgba(10, 147, 150, 0.1) !important;
+}
+
+[data-theme="dark"] .button--primary:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(10, 147, 150, 0.2) !important;
+}
+
+/* Hero-specific: make Quick Start button darker in dark mode for better contrast */
+[data-theme="dark"] .hero.hero--primary.heroBanner .button--primary {
+  background-color: #005f73 !important;
+  border-color: #005f73 !important;
+  color: var(--color-text-on-primary) !important;
+  box-shadow: 0 2px 8px rgba(0, 95, 115, 0.12) !important;
+}
+
+[data-theme="dark"]
+  .hero.hero--primary.heroBanner
+  .button--primary:hover:not(:disabled) {
+  background-color: #0a9396 !important; /* slightly lighter on hover */
+  border-color: #0a9396 !important;
+  box-shadow: 0 4px 12px rgba(10, 147, 150, 0.18) !important;
+}
+
 [data-theme="dark"] .button--secondary {
   color: var(--color-primary-light) !important;
   border-color: var(--color-primary-light) !important;
@@ -674,14 +728,6 @@ section:last-child {
   border-color: var(--color-primary) !important;
 }
 
-[data-theme="dark"] .button--primary {
-  box-shadow: 0 2px 8px rgba(10, 147, 150, 0.1) !important;
-}
-
-[data-theme="dark"] .button--primary:hover:not(:disabled) {
-  box-shadow: 0 4px 12px rgba(10, 147, 150, 0.2) !important;
-}
-
 /* ============================================
    FOOTER STYLING
    ============================================ */
@@ -690,24 +736,27 @@ footer {
 }
 
 footer a {
-  color: var(--color-teal-600) !important;
+  color: var(--color-link) !important;
 }
 
 footer a:hover {
-  color: var(--color-teal-700) !important;
+  color: #0a9396 !important;
 }
 
 /* Dark mode footer adjustments */
 [data-theme="dark"] footer {
   color: var(--color-neutral-400) !important;
+  background-color: var(--color-bg-primary) !important;
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-6);
 }
 
 [data-theme="dark"] footer a {
-  color: var(--color-teal-400) !important;
+  color: var(--color-neutral-600) !important;
 }
 
 [data-theme="dark"] footer a:hover {
-  color: var(--color-teal-300) !important;
+  color: var(--color-neutral-900) !important;
 }
 
 /* ============================================
@@ -755,4 +804,51 @@ footer a:hover {
   h2.text--center {
     font-size: var(--font-size-2xl);
   }
+
+  /* Utility: hide content on mobile, visible on larger screens */
+  .hide-on-mobile {
+    display: inline;
+  }
+
+  @media (max-width: 768px) {
+    .hide-on-mobile {
+      display: none;
+    }
+  }
+}
+
+/* ============================================
+   SIDEBAR & TOC TYPOGRAPHY ADJUSTMENTS
+   - De-emphasize left-hand main nav by reducing font-size
+   - Emphasize right-hand TOC by increasing font-size via variable
+   ============================================ */
+
+/* Left sidebar main navigation: slightly smaller on desktop to
+   visually de-emphasize the primary navigation. Keep this scoped
+   to larger viewports so mobile menu sizing is unaffected. */
+@media (min-width: 997px) {
+  nav[aria-label="Docs sidebar"] .menu__link,
+  .theme-doc-sidebar-menu .menu__link {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.25;
+  }
+
+  /* Ensure any generated label spans inherit the link size. */
+  nav[aria-label="Docs sidebar"] .menu__link span,
+  .theme-doc-sidebar-menu .menu__link span {
+    font-size: inherit;
+  }
+}
+
+/* Ensure the table-of-contents components use the adjusted variable
+   and increase line-height for readability. */
+.table-of-contents,
+.table-of-contents ul {
+  font-size: var(--ifm-toc-link-font-size) !important;
+}
+
+.table-of-contents__link {
+  font-size: var(--ifm-toc-link-font-size) !important;
+  line-height: 1.4;
 }
