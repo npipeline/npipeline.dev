@@ -232,6 +232,12 @@ context.UseExponentialBackoffDelay(
     baseDelay: TimeSpan.FromSeconds(1),
     multiplier: 2.0,
     maxDelay: TimeSpan.FromMinutes(1));
+
+// Direct delegate creation
+var exponentialBackoff = BackoffStrategies.ExponentialBackoff(
+    baseDelay: TimeSpan.FromSeconds(1),
+    multiplier: 2.0,
+    maxDelay: TimeSpan.FromMinutes(1));
 ```
 
 **Delay progression:** 1s → 2s → 4s → 8s → 16s → 32s → 60s (capped)
@@ -257,6 +263,12 @@ context.UseLinearBackoffDelay(
     baseDelay: TimeSpan.FromSeconds(1),
     increment: TimeSpan.FromSeconds(2),
     maxDelay: TimeSpan.FromSeconds(30));
+
+// Direct delegate creation
+var linearBackoff = BackoffStrategies.LinearBackoff(
+    baseDelay: TimeSpan.FromSeconds(1),
+    increment: TimeSpan.FromSeconds(2),
+    maxDelay: TimeSpan.FromSeconds(30));
 ```
 
 **Delay progression:** 1s → 3s → 5s → 7s → 9s → ... → 30s (capped)
@@ -277,6 +289,10 @@ var config = new FixedDelayConfiguration(
 // Runtime configuration
 context.UseFixedDelay(
     delay: TimeSpan.FromSeconds(5));
+
+// Direct delegate creation
+var fixedBackoff = BackoffStrategies.FixedDelay(
+    delay: TimeSpan.FromSeconds(5));
 ```
 
 **Delay progression:** 5s → 5s → 5s → 5s → ...
@@ -287,25 +303,20 @@ context.UseFixedDelay(
 
 ### Available Jitter Strategies
 
-#### Full Jitter
-
-Provides best protection against thundering herd:
+Jitter strategies are now implemented as delegates rather than interfaces, providing a more streamlined API:
 
 ```csharp
-var config = new FullJitterConfiguration();
+// Jitter strategy delegate type
+using JitterStrategy = Func<TimeSpan, Random, TimeSpan>;
+
+// Built-in jitter strategies
+JitterStrategy fullJitter = JitterStrategies.FullJitter();
+JitterStrategy equalJitter = JitterStrategies.EqualJitter();
+JitterStrategy decorrelatedJitter = JitterStrategies.DecorrelatedJitter();
+JitterStrategy noJitter = JitterStrategies.NoJitter();
 ```
 
-**Formula:** `random(0, baseDelay)`
-
-#### Equal Jitter
-
-Balances predictability with randomness:
-
-```csharp
-var config = new EqualJitterConfiguration();
-```
-
-**Formula:** `baseDelay/2 + random(0, baseDelay/2)`
+This delegate approach reduces complexity while maintaining the same functionality. Each jitter strategy takes a base delay and a Random instance, and returns a jittered delay.
 
 #### Decorrelated Jitter
 
@@ -315,6 +326,9 @@ Adapts based on previous delays:
 var config = new DecorrelatedJitterConfiguration(
     maxDelay: TimeSpan.FromMinutes(1),
     multiplier: 3.0);
+
+// Direct delegate creation
+var decorrelatedJitter = JitterStrategies.DecorrelatedJitter();
 ```
 
 #### No Jitter
@@ -323,6 +337,9 @@ Deterministic timing (useful for testing):
 
 ```csharp
 var config = new NoJitterConfiguration();
+
+// Direct delegate creation
+var noJitter = JitterStrategies.NoJitter();
 ```
 
 ### Recommended Strategy Combinations
@@ -333,6 +350,11 @@ context.UseExponentialBackoffDelay(
     baseDelay: TimeSpan.FromSeconds(1),
     multiplier: 2.0,
     maxDelay: TimeSpan.FromMinutes(1));
+
+// Or using delegates directly
+var backoff = BackoffStrategies.ExponentialBackoff(
+    TimeSpan.FromSeconds(1), 2.0, TimeSpan.FromMinutes(1));
+var jitter = JitterStrategies.FullJitter();
 ```
 
 **Database Operations:**
@@ -341,12 +363,21 @@ context.UseLinearBackoffDelay(
     baseDelay: TimeSpan.FromMilliseconds(100),
     increment: TimeSpan.FromMilliseconds(200),
     maxDelay: TimeSpan.FromSeconds(5));
+
+// Or using delegates directly
+var backoff = BackoffStrategies.LinearBackoff(
+    TimeSpan.FromMilliseconds(100), 
+    TimeSpan.FromMilliseconds(200), 
+    TimeSpan.FromSeconds(5));
 ```
 
 **File Processing:**
 ```csharp
 context.UseFixedDelay(
     delay: TimeSpan.FromSeconds(2));
+
+// Or using delegates directly
+var backoff = BackoffStrategies.FixedDelay(TimeSpan.FromSeconds(2));
 ```
 
 ### Configuration at Initialization
@@ -412,72 +443,67 @@ public interface IRetryDelayStrategy
 
 Defines the contract for calculating retry delays. The `attemptNumber` is 0-based (0 = first retry).
 
-#### IBackoffStrategy
+#### BackoffStrategy (Delegate Type)
 
 ```csharp
-public interface IBackoffStrategy
-{
-    TimeSpan CalculateDelay(int attemptNumber);
-}
+public delegate TimeSpan BackoffStrategy(int attemptNumber);
 ```
 
-Determines how delays increase over time based on attempt number.
-
-#### IJitterStrategy
-
-```csharp
-public interface IJitterStrategy
-{
-    TimeSpan ApplyJitter(TimeSpan baseDelay, Random random);
-}
-```
-
-Adds randomness to retry delays to prevent synchronized retries.
+Represents a backoff strategy that calculates delay based on attempt number. This delegate type replaces the IBackoffStrategy interface with a simpler function-based approach.
 
 ### Strategy Classes
 
-#### ExponentialBackoffStrategy
+#### BackoffStrategies Static Class
 
 ```csharp
-public sealed class ExponentialBackoffStrategy : IBackoffStrategy
+public static class BackoffStrategies
 {
-    public ExponentialBackoffStrategy(ExponentialBackoffConfiguration configuration);
-    public TimeSpan CalculateDelay(int attemptNumber);
+    public static BackoffStrategy ExponentialBackoff(TimeSpan baseDelay, double multiplier = 2.0, TimeSpan? maxDelay = null);
+    public static BackoffStrategy LinearBackoff(TimeSpan baseDelay, TimeSpan? increment = null, TimeSpan? maxDelay = null);
+    public static BackoffStrategy FixedDelay(TimeSpan delay);
 }
+```
+
+Provides factory methods for creating backoff strategy delegates.
+
+#### Exponential Backoff
+
+```csharp
+var exponentialBackoff = BackoffStrategies.ExponentialBackoff(
+    baseDelay: TimeSpan.FromSeconds(1),
+    multiplier: 2.0,
+    maxDelay: TimeSpan.FromMinutes(1));
 ```
 
 Formula: `delay = baseDelay × multiplier^attemptNumber` (capped at maxDelay)
 
-#### LinearBackoffStrategy
+#### Linear Backoff
 
 ```csharp
-public sealed class LinearBackoffStrategy : IBackoffStrategy
-{
-    public LinearBackoffStrategy(LinearBackoffConfiguration configuration);
-    public TimeSpan CalculateDelay(int attemptNumber);
-}
+var linearBackoff = BackoffStrategies.LinearBackoff(
+    baseDelay: TimeSpan.FromSeconds(1),
+    increment: TimeSpan.FromSeconds(2),
+    maxDelay: TimeSpan.FromSeconds(30));
 ```
 
 Formula: `delay = baseDelay + (increment × attemptNumber)` (capped at maxDelay)
 
-#### FixedDelayStrategy
+#### Fixed Delay
 
 ```csharp
-public sealed class FixedDelayStrategy : IBackoffStrategy
-{
-    public FixedDelayStrategy(FixedDelayConfiguration configuration);
-    public TimeSpan CalculateDelay(int attemptNumber);
-}
+var fixedBackoff = BackoffStrategies.FixedDelay(delay: TimeSpan.FromSeconds(5));
 ```
 
 Returns the same delay for all attempts.
 
 #### Jitter Strategies
 
-**FullJitterStrategy:** `random(0, baseDelay)`
-**EqualJitterStrategy:** `baseDelay/2 + random(0, baseDelay/2)`
-**DecorrelatedJitterStrategy:** `random(baseDelay, min(maxDelay, previousDelay × multiplier))`
-**NoJitterStrategy:** Returns baseDelay unchanged
+**JitterStrategies.FullJitter():** Returns a delegate that implements `random(0, baseDelay)`
+**JitterStrategies.EqualJitter():** Returns a delegate that implements `baseDelay/2 + random(0, baseDelay/2)`
+**JitterStrategies.DecorrelatedJitter():** Returns a delegate that implements `random(baseDelay, min(maxDelay, previousDelay × multiplier))`
+**JitterStrategies.NoJitter():** Returns a delegate that returns baseDelay unchanged
+
+These static methods on the `JitterStrategies` class provide convenient access to built-in jitter implementations as delegates, eliminating the need to instantiate strategy classes.
 
 #### CompositeRetryDelayStrategy
 
@@ -485,12 +511,12 @@ Returns the same delay for all attempts.
 public sealed class CompositeRetryDelayStrategy : IRetryDelayStrategy
 {
     public CompositeRetryDelayStrategy(
-        IBackoffStrategy backoffStrategy,
-        IJitterStrategy jitterStrategy);
+        BackoffStrategy backoffStrategy,
+        JitterStrategy jitterStrategy);
 }
 ```
 
-Combines backoff and jitter strategies.
+Combines backoff and jitter strategies. Both strategies are now delegates rather than interface implementations.
 
 #### NoOpRetryDelayStrategy
 
@@ -618,13 +644,13 @@ public static class PipelineContextRetryDelayExtensions
 public sealed class DefaultRetryDelayStrategyFactory
 {
     public IRetryDelayStrategy CreateStrategy(RetryDelayStrategyConfiguration configuration);
-    public IRetryDelayStrategy CreateExponentialBackoff(ExponentialBackoffConfiguration config);
-    public IRetryDelayStrategy CreateLinearBackoff(LinearBackoffConfiguration config);
-    public IRetryDelayStrategy CreateFixedDelay(FixedDelayConfiguration config);
+    public IRetryDelayStrategy CreateExponentialBackoff(ExponentialBackoffConfiguration config, JitterStrategy jitterStrategy = null);
+    public IRetryDelayStrategy CreateLinearBackoff(LinearBackoffConfiguration config, JitterStrategy jitterStrategy = null);
+    public IRetryDelayStrategy CreateFixedDelay(FixedDelayConfiguration config, JitterStrategy jitterStrategy = null);
 }
 ```
 
-Creates retry delay strategies from configurations.
+Creates retry delay strategies from configurations. The jitter strategy parameter is now a delegate rather than an interface implementation.
 
 ### Validation
 
