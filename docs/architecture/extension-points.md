@@ -23,7 +23,7 @@ public class DatabaseSourceNode : ISourceNode<Order>
         _connectionString = connectionString;
     }
 
-    public IDataPipe<Order> CreateDataPipe(
+    public IDataPipe<Order> Initialize(
         PipelineContext context,
         CancellationToken cancellationToken = default)
     {

@@ -178,7 +178,7 @@ The method is called `Execute`, not `ExecuteAsync`, because it returns synchrono
 
 **Phase 1 (Synchronous):** The source creates a pipe immediately
 ```csharp
-var pipe = source.CreateDataPipe(context, cancellationToken);  // Returns instantly
+var pipe = source.Initialize(context, cancellationToken);  // Returns instantly
 ```
 
 **Phase 2 (Asynchronous):** The sink consumes data asynchronously
