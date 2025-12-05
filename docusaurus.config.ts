@@ -105,7 +105,7 @@ const config: Config = {
           items: [
             {
               label: 'Why NPipeline?',
-              to: '/docs/introduction/why-npipeline',
+              to: '/docs/getting-started/why-npipeline',
             },
             {
               label: 'Installation',
