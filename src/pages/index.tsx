@@ -12,17 +12,21 @@ const HeroSection: React.FC = () => {
     <header className={clsx("hero hero--primary", "heroBanner")}>
       <div className="container">
         <Heading as="h1" className="hero__title gradient-text">
-          The streaming data pipeline library
+          Build High-Performance, Type-Safe&nbsp;
           <span className="hide-on-mobile">
             <br />
           </span>
-          your .NET code deserves
+          Data Pipelines in .NET
         </Heading>
         <p className="hero__subtitle">
-          NPipeline lets you build graph-based data pipelines that process
-          datasets far larger than your available memory—with predictable
-          performance, zero-allocation fast paths, and code that's actually
-          pleasant to test and maintain.
+          NPipeline is a powerful, flexible library designed for constructing
+          robust, graph-based streaming data workflows.
+        </p>
+        <p className="hero__subtitle">
+          By combining the type safety of C# with a directed acyclic graph (DAG)
+          architecture, NPipeline empowers developers to build complex ETL
+          processes, real-time data streams, and event-driven architectures that
+          are easy to test, debug, and maintain.
         </p>
         <div className="margin-top--lg">
           <Link
@@ -32,7 +36,7 @@ const HeroSection: React.FC = () => {
             Get Started
           </Link>
           <Link
-            className="button button--secondary button--lg margin-left--md"
+            className="button button--secondary button--lg"
             to="/docs/getting-started/why-npipeline"
           >
             Why NPipeline?
@@ -46,7 +50,7 @@ const HeroSection: React.FC = () => {
 // The Problem Section Component
 const ProblemSection: React.FC = () => {
   return (
-    <section className={clsx("padding-vert--xl", "background--light")}>
+    <section className="background--light">
       <div className="container">
         <Heading as="h2" className="text--center margin-bottom--lg">
           Data processing in .NET shouldn't feel like this
@@ -55,7 +59,7 @@ const ProblemSection: React.FC = () => {
           <div className="col col--4">
             <div className="card padding--lg">
               <Heading as="h3" className="text--center margin-bottom--md">
-                😵 Memory nightmares
+                Memory nightmares
               </Heading>
               <p>
                 Your pipeline loads everything into memory, then crashes at 2 AM
@@ -67,7 +71,7 @@ const ProblemSection: React.FC = () => {
           <div className="col col--4">
             <div className="card padding--lg">
               <Heading as="h3" className="text--center margin-bottom--md">
-                🍝 Spaghetti transforms
+                Spaghetti transforms
               </Heading>
               <p>
                 Your data processing logic started simple. Now it's 2,000 lines
@@ -79,7 +83,7 @@ const ProblemSection: React.FC = () => {
           <div className="col col--4">
             <div className="card padding--lg">
               <Heading as="h3" className="text--center margin-bottom--md">
-                🔥 Silent failures
+                Silent failures
               </Heading>
               <p>
                 One malformed record takes down your entire batch. You've
@@ -97,7 +101,7 @@ const ProblemSection: React.FC = () => {
 // Solution Section Component
 const SolutionSection: React.FC = () => {
   return (
-    <section className="padding-vert--xl">
+    <section>
       <div className="container">
         <Heading as="h2" className="text--center margin-bottom--md">
           A better way to process data
@@ -165,7 +169,7 @@ const SolutionSection: React.FC = () => {
 // Streaming Section Component
 const StreamingSection: React.FC = () => {
   return (
-    <section className={clsx("padding-vert--xl", "background--light")}>
+    <section className="background--light">
       <div className="container">
         <Heading as="h2" className="text--center margin-bottom--lg">
           Process more data than fits in memory
@@ -224,7 +228,7 @@ const StreamingSection: React.FC = () => {
 // Performance Section Component
 const PerformanceSection: React.FC = () => {
   return (
-    <section className="padding-vert--xl">
+    <section>
       <div className="container">
         <Heading as="h2" className="text--center margin-bottom--lg">
           Zero-allocation fast paths for high-throughput scenarios
@@ -299,7 +303,7 @@ const PerformanceSection: React.FC = () => {
 // Resilience Section Component
 const ResilienceSection: React.FC = () => {
   return (
-    <section className={clsx("padding-vert--xl", "background--light")}>
+    <section className="background--light">
       <div className="container">
         <Heading as="h2" className="text--center margin-bottom--lg">
           Built for the real world, where things fail
@@ -355,7 +359,7 @@ const ResilienceSection: React.FC = () => {
 // Code Example Section Component
 const CodeExampleSection: React.FC = () => {
   return (
-    <section className="padding-vert--xl">
+    <section>
       <div className="container">
         <Heading as="h2" className="text--center margin-bottom--lg">
           Code that reads like a diagram
@@ -403,7 +407,7 @@ const CodeExampleSection: React.FC = () => {
 // Testability Section Component
 const TestabilitySection: React.FC = () => {
   return (
-    <section className={clsx("padding-vert--xl", "background--light")}>
+    <section className="background--light">
       <div className="container">
         <Heading as="h2" className="text--center margin-bottom--lg">
           Designed for testing from day one
@@ -456,7 +460,7 @@ const TestabilitySection: React.FC = () => {
 // Use Cases Section Component
 const UseCasesSection: React.FC = () => {
   return (
-    <section className="padding-vert--xl">
+    <section>
       <div className="container">
         <Heading as="h2" className="text--center margin-bottom--lg">
           Built for these problems
@@ -540,7 +544,7 @@ const UseCasesSection: React.FC = () => {
 // Ecosystem Section Component
 const EcosystemSection: React.FC = () => {
   return (
-    <section className={clsx("padding-vert--xl", "background--light")}>
+    <section className="background--light">
       <div className="container">
         <Heading as="h2" className="text--center margin-bottom--lg">
           Modular by design
@@ -603,7 +607,7 @@ const EcosystemSection: React.FC = () => {
 // Get Started Section Component
 const GetStartedSection: React.FC = () => {
   return (
-    <section className="padding-vert--xl">
+    <section>
       <div className="container">
         <Heading as="h2" className="text--center margin-bottom--lg">
           Ready to build better pipelines?
@@ -626,7 +630,7 @@ const GetStartedSection: React.FC = () => {
                   Quick Start Guide
                 </Link>
                 <Link
-                  className="button button--secondary button--lg margin-left--md"
+                  className="button button--secondary button--lg"
                   to="/docs/core-concepts"
                 >
                   Explore Core Concepts

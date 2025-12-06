@@ -766,7 +766,7 @@ footer a:hover {
 /* Mobile optimizations */
 @media (max-width: 768px) {
   section {
-    padding: var(--space-16) 0;
+    padding: var(--space-8) var(--space-2);
   }
 
   h2.text--center {
@@ -779,7 +779,7 @@ footer a:hover {
   }
 
   .hero.hero--primary.heroBanner {
-    padding: var(--space-16) var(--space-4) var(--space-20) var(--space-4);
+    padding: var(--space-8) var(--space-2);
   }
 
   .hero__title {
@@ -798,7 +798,7 @@ footer a:hover {
 /* Tablet optimizations */
 @media (max-width: 996px) {
   section {
-    padding: var(--space-20) 0;
+    padding: var(--space-8) var(--space-2);
   }
 
   h2.text--center {
