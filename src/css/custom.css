@@ -237,7 +237,7 @@
 
   /* Buttons */
   --ifm-button-border-radius: var(--space-1);
-  --ifm-button-padding-vertical: var(--space-1);
+  --ifm-button-padding-vertical: var(--space-2);
   --ifm-button-padding-horizontal: var(--space-4);
   --ifm-button-font-weight: var(--font-weight-semibold);
 
