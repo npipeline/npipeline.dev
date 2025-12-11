@@ -12,23 +12,23 @@ const HeroSection: React.FC = () => {
     <header className={clsx("hero hero--primary", "heroBanner")}>
       <div className="container">
         <Heading as="h1" className="hero__title gradient-text">
-          Build High-Performance, Type-Safe&nbsp;
-          <span className="hide-on-mobile">
+          High-Performance, Type-Safe,&nbsp;
+          <span className="hide-on-mobile hide-on-tablet">
             <br />
           </span>
-          Data Pipelines in .NET
+          Streaming Data Pipelines in .NET
         </Heading>
         <p className="hero__subtitle">
           NPipeline is a powerful, flexible library designed for constructing
           robust, graph-based streaming data workflows.
         </p>
-        <p className="hero__subtitle">
+        <p className="hero__subtitle margin-bottom--xl">
           By combining the type safety of C# with a directed acyclic graph (DAG)
           architecture, NPipeline empowers developers to build complex ETL
           processes, real-time data streams, and event-driven architectures that
           are easy to test, debug, and maintain.
         </p>
-        <div className="margin-top--lg">
+        <div className="hero__cta margin-top--lg">
           <Link
             className="button button--primary button--lg"
             to="/docs/getting-started/quick-start"
@@ -76,7 +76,7 @@ const ProblemSection: React.FC = () => {
               <p>
                 Your data processing logic started simple. Now it's 2,000 lines
                 of nested loops and conditional statements that nobody wants to
-                touch—or test.
+                touch - or test.
               </p>
             </div>
           </div>
@@ -177,8 +177,8 @@ const StreamingSection: React.FC = () => {
         <p className={clsx("text--center", "margin-bottom--lg")}>
           NPipeline is streaming-first. Data flows through your pipeline item by
           item, so memory usage stays constant regardless of dataset size.
-          Process a million records or a billion—your memory footprint stays the
-          same.
+          Process a million records or a billion - your memory footprint stays
+          the same.
         </p>
 
         <div className="row margin-bottom--md">
@@ -316,7 +316,7 @@ const ResilienceSection: React.FC = () => {
 
         <div className="row">
           <div className="col col--4">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 Retry policies
               </Heading>
@@ -328,7 +328,7 @@ const ResilienceSection: React.FC = () => {
             </div>
           </div>
           <div className="col col--4">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 Circuit breakers
               </Heading>
@@ -340,7 +340,7 @@ const ResilienceSection: React.FC = () => {
             </div>
           </div>
           <div className="col col--4">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 Granular error handling
               </Heading>
@@ -414,12 +414,12 @@ const TestabilitySection: React.FC = () => {
         </Heading>
         <p className={clsx("text--center", "margin-bottom--lg")}>
           Every node is a standalone class. Test your transforms with simple
-          unit tests—no mocking of pipeline infrastructure required.
+          unit tests — no mocking of pipeline infrastructure required.
         </p>
 
         <div className="row">
           <div className="col col--4">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 Isolated nodes
               </Heading>
@@ -430,7 +430,7 @@ const TestabilitySection: React.FC = () => {
             </div>
           </div>
           <div className="col col--4">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 In-memory testing
               </Heading>
@@ -441,7 +441,7 @@ const TestabilitySection: React.FC = () => {
             </div>
           </div>
           <div className="col col--4">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 Assertion libraries
               </Heading>
@@ -467,7 +467,7 @@ const UseCasesSection: React.FC = () => {
         </Heading>
         <div className="row">
           <div className="col col--4">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 ETL workflows
               </Heading>
@@ -479,7 +479,7 @@ const UseCasesSection: React.FC = () => {
             </div>
           </div>
           <div className="col col--4">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 Real-time streaming
               </Heading>
@@ -490,7 +490,7 @@ const UseCasesSection: React.FC = () => {
             </div>
           </div>
           <div className="col col--4">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 Data validation
               </Heading>
@@ -502,7 +502,7 @@ const UseCasesSection: React.FC = () => {
             </div>
           </div>
           <div className="col col--4">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 Batch processing
               </Heading>
@@ -513,7 +513,7 @@ const UseCasesSection: React.FC = () => {
             </div>
           </div>
           <div className="col col--4">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 Event-driven systems
               </Heading>
@@ -524,7 +524,7 @@ const UseCasesSection: React.FC = () => {
             </div>
           </div>
           <div className="col col--4">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 Microservice integration
               </Heading>
@@ -555,7 +555,7 @@ const EcosystemSection: React.FC = () => {
 
         <div className="row">
           <div className="col col--6">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 NPipeline.DependencyInjection
               </Heading>
@@ -566,7 +566,7 @@ const EcosystemSection: React.FC = () => {
             </div>
           </div>
           <div className="col col--6">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 NPipeline.Parallelism
               </Heading>
@@ -577,7 +577,7 @@ const EcosystemSection: React.FC = () => {
             </div>
           </div>
           <div className="col col--6">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 NPipeline.Connectors
               </Heading>
@@ -588,13 +588,14 @@ const EcosystemSection: React.FC = () => {
             </div>
           </div>
           <div className="col col--6">
-            <div className="card padding--lg margin-bottom--lg">
+            <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
                 NPipeline.Testing
               </Heading>
               <p>
                 In-memory test nodes. Assertion helpers for FluentAssertions and
-                AwesomeAssertions. Test your pipelines without external deps.
+                AwesomeAssertions. Test your pipelines without external
+                dependencies.
               </p>
             </div>
           </div>
@@ -619,7 +620,7 @@ const GetStartedSection: React.FC = () => {
         <div className="row">
           <div className="col col--12">
             <div className="card padding--lg text--center">
-              <pre className="language-bash margin-bottom--md">
+              <pre className="margin-bottom--md">
                 <code>{`dotnet add package NPipeline`}</code>
               </pre>
               <div className="margin-top--lg">

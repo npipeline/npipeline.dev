@@ -237,8 +237,8 @@
 
   /* Buttons */
   --ifm-button-border-radius: var(--space-1);
-  --ifm-button-padding-vertical: var(--space-2);
-  --ifm-button-padding-horizontal: var(--space-6);
+  --ifm-button-padding-vertical: var(--space-1);
+  --ifm-button-padding-horizontal: var(--space-4);
   --ifm-button-font-weight: var(--font-weight-semibold);
 
   /* Gradient text utility */
@@ -482,7 +482,7 @@ a:focus {
   font-size: clamp(1rem, 2vw + 0.5rem, 1.2rem);
   color: var(--color-text-secondary);
   max-width: 700px;
-  margin: 0 auto var(--space-12);
+  margin: 0 auto var(--space-10);
   line-height: var(--line-height-relaxed);
   font-weight: var(--font-weight-normal);
 }
@@ -503,22 +503,22 @@ a:focus {
 /* Hero animation on load */
 .hero__title,
 .hero__subtitle,
-.margin-top--lg {
+.hero__cta {
   opacity: 0;
   transform: translateY(30px);
   animation: heroFadeIn 0.8s ease forwards;
 }
 
 .hero__title {
-  animation-delay: 0.2s;
+  animation-delay: 0.3s;
 }
 
 .hero__subtitle {
-  animation-delay: 0.4s;
+  animation-delay: 0.6s;
 }
 
-.margin-top--lg {
-  animation-delay: 0.6s;
+.hero__cta {
+  animation-delay: 0.9s;
 }
 
 @keyframes heroFadeIn {
@@ -736,17 +736,18 @@ footer {
 }
 
 footer a {
-  color: var(--color-link) !important;
+  color: var(--color-neutral-400) !important;
 }
 
 footer a:hover {
-  color: #0a9396 !important;
+  color: var(--color-teal-400) !important;
+  text-decoration: none;
 }
 
 /* Dark mode footer adjustments */
 [data-theme="dark"] footer {
   color: var(--color-neutral-400) !important;
-  background-color: var(--color-bg-primary) !important;
+  background-color: var(--color-bg-secondary) !important;
   padding-top: var(--space-6);
   padding-bottom: var(--space-6);
 }
@@ -756,14 +757,23 @@ footer a:hover {
 }
 
 [data-theme="dark"] footer a:hover {
-  color: var(--color-neutral-900) !important;
+  color: var(--color-teal-400) !important;
 }
 
 /* ============================================
    RESPONSIVE ADJUSTMENTS
    ============================================ */
 
+.hide-on-mobile {
+  display: inline;
+}
+
+.hide-on-tablet {
+  display: inline;
+}
+
 /* Mobile optimizations */
+
 @media (max-width: 768px) {
   section {
     padding: var(--space-8) var(--space-2);
@@ -788,15 +798,24 @@ footer a:hover {
 
   .hero__subtitle {
     font-size: var(--font-size-lg);
+    margin-bottom: var(--space-8);
   }
 
   .row .col {
     margin-bottom: var(--space-3);
   }
+
+  .hide-on-mobile {
+    display: none;
+  }
 }
 
 /* Tablet optimizations */
 @media (max-width: 996px) {
+  .hero__subtitle {
+    margin-bottom: var(--space-8);
+  }
+
   section {
     padding: var(--space-8) var(--space-2);
   }
@@ -805,15 +824,8 @@ footer a:hover {
     font-size: var(--font-size-2xl);
   }
 
-  /* Utility: hide content on mobile, visible on larger screens */
-  .hide-on-mobile {
-    display: inline;
-  }
-
-  @media (max-width: 768px) {
-    .hide-on-mobile {
-      display: none;
-    }
+  .hide-on-tablet {
+    display: none;
   }
 }
 
