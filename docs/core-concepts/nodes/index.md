@@ -41,6 +41,7 @@ Selecting the appropriate node type is crucial for building efficient and mainta
 
 ## Next Steps
 
-1. **[Transform Nodes](transform-nodes.md)** - Learn implementation details and patterns
-2. **[Source Nodes](source-nodes.md)** - Discover how to create data sources
-3. **[Sink Nodes](sink-nodes.md)** - Understand data consumption patterns
+1. **[Node Definition Structure](../node-definition.md)** - Understanding the nested configuration structure of NodeDefinition
+2. **[Transform Nodes](transform-nodes.md)** - Learn implementation details and patterns
+3. **[Source Nodes](source-nodes.md)** - Discover how to create data sources
+4. **[Sink Nodes](sink-nodes.md)** - Understand data consumption patterns

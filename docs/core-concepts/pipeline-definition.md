@@ -212,5 +212,4 @@ Both approaches ultimately use the `PipelineRunner` with an `IPipelineDefinition
 * **[Pipeline Execution](pipeline-execution/index.md)**: Learn how to run your defined pipelines.
 * **[Pipeline Context](pipeline-context.md)**: Understand how to pass state and configuration to your pipeline nodes.
 * **[Pipeline](ipipeline.md)**: Learn about the executable instance of your data pipeline.
-
-
+* **[Node Definition Structure](node-definition.md)**: Learn about the nested configuration structure of NodeDefinition.

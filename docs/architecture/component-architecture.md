@@ -312,6 +312,7 @@ graph TD
 
 ## Next Steps
 
+- **[Node Definition Structure](../core-concepts/node-definition.md)** - Understanding the nested configuration structure of NodeDefinition
 - **[Node Instantiation](node-instantiation.md)** - Understand node creation patterns and performance
 - **[Execution Flow](execution-flow.md)** - Understand sequential and parallel execution
 - **[Dependency Injection Integration](dependency-injection.md)** - Learn about DI integration

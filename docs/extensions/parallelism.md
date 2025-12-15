@@ -69,8 +69,8 @@ public sealed class ParallelPipeline : IPipelineDefinition
         builder.WithParallelOptions(transform,
             new ParallelOptions { MaxDegreeOfParallelism = 4 });
 
-        // Set the execution strategy to ParallelExecutionStrategy
-        transform.ExecutionStrategy = new ParallelExecutionStrategy();
+        // Set execution strategy to ParallelExecutionStrategy
+        transform.NodeDefinition.ExecutionConfig.ExecutionStrategy = new ParallelExecutionStrategy();
     }
 }
 
@@ -143,8 +143,8 @@ public sealed class NonOrderedParallelPipeline : IPipelineDefinition
                 PreserveOrdering = false  // Disable ordering to maximize throughput
             });
 
-        // Set the execution strategy to ParallelExecutionStrategy
-        transform.ExecutionStrategy = new ParallelExecutionStrategy();
+        // Set execution strategy to ParallelExecutionStrategy
+        transform.NodeDefinition.ExecutionConfig.ExecutionStrategy = new ParallelExecutionStrategy();
     }
 }
 

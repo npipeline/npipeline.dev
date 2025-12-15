@@ -433,6 +433,25 @@ public sealed class EventCorrelationJoinNode : TimeWindowedJoinNode<EventA, Even
 
 Some join nodes may utilize the `KeySelectorAttribute` to automatically infer key extraction logic based on property names or custom functions. This provides a declarative way to specify join keys.
 
+## Delegate Types
+
+Join operations use the following delegate types located in the `NPipeline.Graph.PipelineDelegates` namespace:
+
+- `CustomMergeDelegate`: For custom merge logic in join nodes
+- `JoinKeySelectorDelegate`: For extracting join keys
+
+When using these delegates, ensure you import the correct namespace:
+
+```csharp
+using NPipeline.Graph.PipelineDelegates;
+
+// Use the delegates in your join implementation
+CustomMergeDelegate? myCustomMerge = (node, dataPipes, cancellationToken) => {
+    // Custom merge implementation
+    return mergedDataPipe;
+};
+```
+
 ## Next Steps
 
 * **[Lookup Nodes](lookup.md)**: Discover how to enrich data by querying external sources.

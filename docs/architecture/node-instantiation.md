@@ -311,6 +311,7 @@ public class ProblematicNode : TransformNode<string, int>
 ## Related Documentation
 
 - [Component Architecture](./component-architecture.md) - Overview of node factory role
+- [Node Definition Structure](../core-concepts/node-definition.md) - Understanding the nested configuration structure of NodeDefinition
 - [Dependency Injection Integration](./dependency-injection.md) - DI setup and patterns
 - [PipelineBuilder](../core-concepts/pipelinebuilder.md) - How nodes are added to pipelines
 - [Performance Characteristics](./performance-characteristics.md) - Overall framework performance

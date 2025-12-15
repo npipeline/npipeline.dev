@@ -183,6 +183,7 @@ public static class Program
 
 ## See Also
 
+- [Node Definition Structure](node-definition.md) - Understanding the nested configuration structure
 - [Nodes Overview](./nodes/index.md) - Understanding the node types you'll be connecting
 - [Pipeline Execution](./pipeline-execution/index.md) - Learn how built pipelines are executed
 - [Execution Strategies](./pipeline-execution/execution-strategies.md) - Control how nodes process data

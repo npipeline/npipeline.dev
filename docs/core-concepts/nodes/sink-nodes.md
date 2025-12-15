@@ -204,6 +204,139 @@ public sealed class MetricsSink : ISinkNode<ProcessedEvent>
 }
 ```
 
+## Lineage Support in Sink Nodes
+
+For sink nodes that need to work with lineage data, the `SinkLineageUnwrapDelegate` is available in the `NPipeline.Graph.PipelineDelegates` namespace:
+
+```csharp
+using NPipeline.Graph.PipelineDelegates;
+
+// Example sink with lineage support
+public class LineageAwareSink : ISinkNode<Output>
+{
+    private readonly SinkLineageUnwrapDelegate? _lineageUnwrap;
+    
+    public LineageAwareSink(SinkLineageUnwrapDelegate? lineageUnwrap = null)
+    {
+        _lineageUnwrap = lineageUnwrap;
+    }
+    
+    public async Task ExecuteAsync(
+        IDataPipe<Output> input, 
+        PipelineContext context, 
+        CancellationToken cancellationToken)
+    {
+        // Use lineage unwrap delegate if provided
+        if (_lineageUnwrap != null)
+        {
+            var unwrappedInput = _lineageUnwrap(
+                input,
+                context.LineageSink,
+                context.CurrentNodeId,
+                context.LineageOptions,
+                cancellationToken);
+                
+            // Process with unwrapped input
+            await ProcessItemsAsync(unwrappedInput, cancellationToken);
+        }
+        else
+        {
+            // Standard processing without lineage
+            await ProcessItemsAsync(input, cancellationToken);
+        }
+    }
+    
+    private async Task ProcessItemsAsync(IDataPipe<Output> items, CancellationToken cancellationToken)
+    {
+        // Your sink processing logic here
+        await foreach (var item in items.WithCancellation(cancellationToken))
+        {
+            // Process each item
+            await ProcessItemAsync(item, cancellationToken);
+        }
+    }
+    
+    private async Task ProcessItemAsync(Output item, CancellationToken cancellationToken)
+    {
+        // Your actual item processing logic
+        await SaveToDestinationAsync(item, cancellationToken);
+    }
+    
+    private async Task SaveToDestinationAsync(Output item, CancellationToken cancellationToken)
+    {
+        // Your save logic here
+        // For example: save to database, file, API, etc.
+    }
+}
+```
+
+## Implementation Example
+
+```csharp
+using NPipeline;
+using NPipeline.Nodes;
+using NPipeline.Pipeline;
+using NPipeline.Graph.PipelineDelegates;
+
+/// <summary>
+/// Sink node that outputs messages to console.
+/// Demonstrates terminal node pattern for pipeline output.
+/// </summary>
+public sealed class ConsoleSink : ISinkNode<string>
+{
+    public async Task ExecuteAsync(IDataPipe<string> input, PipelineContext context, CancellationToken cancellationToken)
+    {
+        // Process each message as it arrives from upstream
+        await foreach (var message in input.WithCancellation(cancellationToken))
+        {
+            Console.WriteLine(message);
+        }
+    }
+}
+
+/// <summary>
+/// Sink node with lineage support that outputs messages to console.
+/// Demonstrates how to work with lineage data in sink nodes.
+/// </summary>
+public sealed class LineageConsoleSink : ISinkNode<string>
+{
+    private readonly SinkLineageUnwrapDelegate? _lineageUnwrap;
+    
+    public LineageConsoleSink(SinkLineageUnwrapDelegate? lineageUnwrap = null)
+    {
+        _lineageUnwrap = lineageUnwrap;
+    }
+    
+    public async Task ExecuteAsync(IDataPipe<string> input, PipelineContext context, CancellationToken cancellationToken)
+    {
+        // Use lineage unwrap delegate if provided
+        if (_lineageUnwrap != null)
+        {
+            var unwrappedInput = _lineageUnwrap(
+                input,
+                context.LineageSink,
+                context.CurrentNodeId,
+                context.LineageOptions,
+                cancellationToken);
+                
+            // Process with unwrapped input
+            await foreach (var message in unwrappedInput.WithCancellation(cancellationToken))
+            {
+                Console.WriteLine(message);
+            }
+        }
+        else
+        {
+            // Standard processing without lineage
+            await foreach (var message in input.WithCancellation(cancellationToken))
+            {
+                Console.WriteLine(message);
+            }
+        }
+    }
+}
+```
+
 ## Next Steps
 
 * **[Node Types](../nodes/index.md)**: Explore sophisticated patterns like aggregation and batching

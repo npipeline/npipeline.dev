@@ -27,7 +27,7 @@ This guide helps you diagnose and resolve common issues with resilience configur
 ```csharp
 // 1. Check if ResilientExecutionStrategy is applied
 var nodeDefinition = pipeline.GetNodeDefinition("problematicNode");
-var hasResilientStrategy = nodeDefinition.ExecutionStrategy is ResilientExecutionStrategy;
+var hasResilientStrategy = nodeDefinition.ExecutionConfig.ExecutionStrategy is ResilientExecutionStrategy;
 Console.WriteLine($"Has ResilientExecutionStrategy: {hasResilientStrategy}");
 
 // 2. Check materialization configuration
