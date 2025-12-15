@@ -164,7 +164,12 @@ public class AsyncTransform : TransformNode<int, string>
 {
     private readonly int _delayMs;
 
-    public AsyncTransform(int delayMs) => _delayMs = delayMs;
+    public AsyncTransform(int delayMs)
+    {
+        _delayMs = delayMs;
+        // ExecutionStrategy can be set here if needed, or via the builder's WithExecutionStrategy method
+        // ExecutionStrategy = new ParallelExecutionStrategy();
+    }
 
     public override async Task<string> ExecuteAsync(int item, PipelineContext context, CancellationToken cancellationToken)
     {
