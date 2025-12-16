@@ -515,7 +515,7 @@ A: No - the cache key includes the pipeline definition type for isolation.
 
 ## See Also
 
-- [Pipeline Runner Configuration](../core-concepts/pipeline-execution/runner-configuration.md) - Configuring the pipeline runner
+- [Pipeline Runner Configuration](../core-concepts/pipeline-execution/ipipelinerunner.md) - Configuring the pipeline runner
 - [Optimization Principles](./optimization-principles.md) - Performance design decisions
 - [Performance Characteristics](./performance-characteristics.md) - Understanding pipeline performance
 - [Advanced Topics](../advanced-topics/index.md) - Performance tuning and optimization

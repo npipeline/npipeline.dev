@@ -46,7 +46,7 @@ These nodes are connected to form a directed acyclic graph (DAG), ensuring a cle
 2. **[Installation](./installation.md)** - Get NPipeline set up in your development environment
 3. **[Quick Start](./quick-start.md)** - Build your first working pipeline (15 minutes)
 4. **[Core Concepts](../core-concepts/index.md)** - Understand the building blocks (sources, transforms, sinks)
-5. **[Grouping Strategies](../core-concepts/grouping-strategies.md)** - Learn the critical choice between batching and aggregation
+5. **[Grouping Strategies](../core-concepts/grouping-strategies.md)** - Learn critical choice between batching and aggregation
 6. **[Core Resilience Concepts](../core-concepts/resilience/index.md)** - Build fault-tolerant pipelines
 7. **[Optimization Principles](../architecture/optimization-principles.md)** - Understand how NPipeline achieves high performance
 8. **[Performance Hygiene](../advanced-topics/performance-hygiene.md)** - Apply optimization patterns to your code
