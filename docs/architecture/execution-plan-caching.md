@@ -6,7 +6,7 @@ sidebar_position: 14
 
 # Execution Plan Caching: Eliminating Compilation Overhead
 
-**This page explains HOW execution plan caching works and WHEN it's applied.** For configuration details, see [Pipeline Runner Configuration](../core-concepts/pipeline-execution/runner-configuration.md).
+**This page explains HOW execution plan caching works and WHEN it's applied.** For configuration details, see [Pipeline Runner Configuration](../core-concepts/pipeline-execution/ipipelinerunner.md).
 
 ## The Problem: Compilation Overhead
 

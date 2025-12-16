@@ -282,7 +282,7 @@ dotnet_diagnostic.NP9505.severity = warning
 dotnet_code_fix.NP9505.enable = true
 ```
 
-See [Node Instantiation Optimization](../architecture/node-instantiation.md) for architectural details and [Best Practices: NP9505](./best-practices.md#np9505-node-instantiation) for comprehensive guidance.
+See [Node Instantiation Optimization](../../architecture/node-instantiation.md) for architectural details and [Best Practices: NP9505](./best-practices.md#np9505-node-instantiation) for comprehensive guidance.
 
 #### NP9101: Blocking Operations in Async Methods
 
