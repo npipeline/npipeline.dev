@@ -253,6 +253,111 @@ The key: each node solves one problem, and you compose them.
 
 ---
 
+## Intent-Driven Grouping API
+
+NPipeline provides a fluent API that guides you toward the correct grouping strategy by requiring explicit intent declaration. This API makes the distinction between batching and aggregation clear at the point of use.
+
+### Using the Grouping API
+
+Start with `builder.GroupItems<T>()` and declare your intent:
+
+#### For Operational Efficiency (Batching)
+
+When you need to reduce I/O overhead by processing items in batches:
+
+```csharp
+var batcher = builder.GroupItems<Order>()
+    .ForOperationalEfficiency(
+        batchSize: 100,
+        maxWait: TimeSpan.FromSeconds(5),
+        name: "order-batcher");
+```
+
+This creates a batching node that groups items by count or time, whichever comes first. Perfect for:
+
+- Bulk database inserts
+- Batch API calls
+- File writes with buffering
+- Message queue batch publishing
+
+#### For Temporal Correctness (Aggregation)
+
+When data timing is critical and you need time-based windowing:
+
+```csharp
+var aggregator = builder.GroupItems<Sale>()
+    .ForTemporalCorrectness(
+        windowSize: TimeSpan.FromHours(1),
+        keySelector: sale => sale.Category,
+        initialValue: () => 0m,
+        accumulator: (sum, sale) => sum + sale.Amount,
+        timestampExtractor: sale => sale.Timestamp);
+```
+
+This creates an aggregate node with tumbling windows. Perfect for:
+
+- Hourly sales totals by category
+- 5-minute average sensor readings
+- Session-based user activity
+- Per-minute request rates
+
+#### For Rolling Windows (Sliding Aggregation)
+
+When you need overlapping time windows for continuous aggregations:
+
+```csharp
+var rollingAvg = builder.GroupItems<Metric>()
+    .ForRollingWindow(
+        windowSize: TimeSpan.FromMinutes(15),
+        slideInterval: TimeSpan.FromMinutes(5),
+        keySelector: metric => metric.Name,
+        initialValue: () => new { Sum = 0.0, Count = 0 },
+        accumulator: (acc, m) => new { Sum = acc.Sum + m.Value, Count = acc.Count + 1 },
+        timestampExtractor: metric => metric.Timestamp);
+```
+
+This creates a sliding window aggregate node. Perfect for:
+
+- Rolling averages (e.g., 15-minute window sliding every 5 minutes)
+- Moving percentiles for monitoring
+- Continuous rate calculations
+- Sliding window anomaly detection
+
+### Why Use the Intent-Driven API?
+
+The intent-driven API:
+
+- **Guides correct usage** by forcing you to declare your intent upfront
+- **Prevents confusion** between batching and aggregation
+- **Self-documents** your pipeline with clear, readable code
+- **Provides discoverability** through IntelliSense and method names
+
+### Composing Both Strategies
+
+You can use both strategies in the same pipeline:
+
+```csharp
+// First: aggregate for temporal correctness
+var aggregator = builder.GroupItems<Sale>()
+    .ForTemporalCorrectness(
+        windowSize: TimeSpan.FromHours(1),
+        keySelector: s => s.Category,
+        initialValue: () => 0m,
+        accumulator: (sum, s) => sum + s.Amount);
+
+// Then: batch for operational efficiency
+var batcher = builder.GroupItems<decimal>()
+    .ForOperationalEfficiency(
+        batchSize: 1000,
+        maxWait: TimeSpan.FromSeconds(30));
+
+builder.Connect(aggregator, batcher);
+```
+
+This pattern handles late data correctly (aggregation) and optimizes external system interactions (batching).
+
+---
+
 ## See Also
 
 - [Batching Nodes](./nodes/batching.md) - Deep dive into batching configuration and patterns
