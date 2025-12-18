@@ -570,7 +570,7 @@ public Pipeline BuildPipelineWithErrorHandling(bool skipExtendedValidation = fal
 - `Validate()` and `Describe()` construct a temporary `PipelineGraph` for analysis
 - No graph freezing occurs - builder state remains mutable
 - `CanConnect()` uses depth-first search for cycle detection (O(V+E) complexity)
-- Extended validation rules add minimal overhead (typically <1ms per build)
+- Extended validation rules add minimal overhead (typically &lt;1ms per build)
 - Use `WithoutExtendedValidation()` only if you need maximum build performance in hot paths
 - Consider caching validation results for repeated validations
 
