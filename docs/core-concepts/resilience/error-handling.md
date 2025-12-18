@@ -312,6 +312,119 @@ public class ValidationErrorHandler : INodeErrorHandler<IValidatorNode, string>
 }
 ```
 
+#### Fluent Error Handler Builder
+
+For simpler scenarios where creating a full error handler class would be verbose, NPipeline provides a fluent builder API that allows you to construct error handlers inline using a chainable syntax.
+
+The `ErrorHandler` static class provides factory methods for quickly building error handlers:
+
+```csharp
+using NPipeline.ErrorHandling;
+
+// Create a handler that retries on timeout, skips on validation errors
+var handler = ErrorHandler.ForNode<MyTransform, string>()
+    .On<TimeoutException>().Retry(3)
+    .On<ValidationException>().Skip()
+    .OnAny().DeadLetter()
+    .Build();
+```
+
+**Pre-built Handler Factories:**
+
+NPipeline includes several pre-built handlers for common scenarios:
+
+```csharp
+// Retry all errors up to N times, then dead-letter
+var retryHandler = ErrorHandler.RetryAlways<MyTransform, string>(maxRetries: 3);
+
+// Skip all errors and continue processing
+var skipHandler = ErrorHandler.SkipAlways<MyTransform, string>();
+
+// Send all errors to dead-letter sink
+var deadLetterHandler = ErrorHandler.DeadLetterAlways<MyTransform, string>();
+```
+
+**Exception Type Matching:**
+
+The fluent builder supports matching on specific exception types, including derived types. Rules are evaluated in order, so place more specific rules before more general ones:
+
+```csharp
+var handler = ErrorHandler.ForNode<MyTransform, string>()
+    .On<TimeoutException>().Retry(3)
+    .On<IOException>().Retry(5)
+    .On<ArgumentException>().Skip()
+    .On<InvalidOperationException>().Fail()
+    .OnAny().DeadLetter()  // Catch-all for any unmatched exceptions (must be last)
+    .Build();
+```
+
+**Important**: `OnAny()` must be the last rule because it matches all exceptions. Placing other rules after it will have no effect.
+
+**Custom Predicate Matching:**
+
+For more complex scenarios, use custom predicates to match exceptions:
+
+```csharp
+var handler = ErrorHandler.ForNode<MyTransform, string>()
+    .When(ex => ex.Message.Contains("timeout", StringComparison.OrdinalIgnoreCase))
+        .Retry(3)
+    .When(ex => ex.Message.Contains("invalid", StringComparison.OrdinalIgnoreCase))
+        .Skip()
+    .OnAny().Fail()
+    .Build();
+```
+
+**Default Behavior:**
+
+Use `Otherwise()` to set a default behavior when no rules match:
+
+```csharp
+var handler = ErrorHandler.ForNode<MyTransform, string>()
+    .On<TimeoutException>().Retry(2)
+    .Otherwise(NodeErrorDecision.Skip)  // Skip other exceptions
+    .Build();
+```
+
+**How the Fluent Builder Works:**
+
+1. **Rule Evaluation Order**: Rules are evaluated in the order they are added. The first matching rule determines the action. This means `OnAny()` must be the last rule as a catch-all for unmatched exceptions.
+2. **Retry Counting**: The builder automatically tracks retry attempts and transitions to dead-letter after max retries are exhausted.
+3. **Type Hierarchy**: Exception matching respects inheritance - `On<ArgumentException>()` will also match `ArgumentNullException`.
+4. **Catch-All Pattern**: Use `OnAny()` only at the end as a catch-all for exceptions not matched by earlier rules.
+
+**Using with PipelineBuilder:**
+
+Once built, the handler can be registered like any other error handler:
+
+```csharp
+public void Define(PipelineBuilder builder, PipelineContext context)
+{
+    var handler = ErrorHandler.ForNode<MyTransform, string>()
+        .On<TimeoutException>().Retry(3)
+        .On<ValidationException>().Skip()
+        .OnAny().DeadLetter()
+        .Build();
+    
+    var transform = builder.AddTransform<MyTransform, string, string>("my-transform");
+    
+    // Register the handler with the specific node
+    builder.WithErrorHandler(transform, handler.GetType());
+    
+    // Continue with pipeline definition...
+}
+```
+
+**When to Use the Fluent Builder:**
+
+- ✅ Simple error handling logic with clear exception-to-action mapping
+- ✅ Prototyping or quick implementations
+- ✅ Straightforward retry/skip/dead-letter strategies
+- ❌ Complex state management across multiple items
+- ❌ Advanced logging, metrics, or custom recovery logic
+- ❌ Error handling that requires dependency injection
+
+For complex scenarios requiring custom logic, state management, or dependency injection, implement `INodeErrorHandler<TNode, TData>` directly.
+
 ### Pipeline-Level Error Handling
 
 Pipeline-level error handling in NPipeline is designed to manage errors that affect an entire node's stream rather than individual items. These are typically more severe errors that might impact the entire pipeline execution flow, such as infrastructure failures or external service outages.
