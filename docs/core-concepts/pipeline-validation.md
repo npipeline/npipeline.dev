@@ -228,25 +228,164 @@ Extended rules are **enabled by default** to provide additional guidance on best
 
 ### Resilience Configuration Rule Details
 
+**Purpose:** Ensures nodes using `ResilientExecutionStrategy` are fully configured for proper restart behavior.
+
+**Why This Matters:** Partial resilience configuration silently disables node restarts, allowing the entire pipeline to fail instead of recovering individual nodes. This can lead to unexplained pipeline crashes in production.
+
 For nodes with `ResilientExecutionStrategy`, validates:
 
 - **Error Handler** - `IPipelineErrorHandler` is registered (required for restart decisions)
+  - Error handler makes the decision to restart, retry, skip, or fail on exceptions
+  - Missing error handler means restarts can never be triggered
+  
 - **Restart Attempts** - `MaxNodeRestartAttempts > 0` is configured
+  - Controls how many times a node can be restarted
+  - Must be greater than 0 to enable restarts
+  - Value of 0 disables restart functionality silently
+  
 - **Materialization** - `MaxMaterializedItems` is positive (not null or zero) to prevent unbounded memory
+  - Streaming inputs must be materialized before retry to preserve them for restart
+  - `null` (unbounded) disables materialization and makes restarts impossible
+  - Zero or negative values are treated as disabled
+  
 - **Retry Configuration** - Retry options are set at graph or node level
+  - Ensures at least one layer of retry configuration exists
 
-**Quick Fix:** Configure error handling and retry options before enabling resilience (see [Extended Validation with Advanced Features](#extended-validation-with-advanced-features) example below).
+**When Validation Occurs:** During `Build()` or `Validate()` calls with extended validation enabled (default).
+
+**Severity:** Warning (does not prevent build, but indicates likely misconfiguration).
+
+**Example Problems and Solutions:**
+
+```csharp
+// PROBLEM: ResilientExecutionStrategy without error handler
+var resilientTransform = builder.AddTransform<MyTransform, int, string>("transform")
+    .WithExecutionStrategy(builder, new ResilientExecutionStrategy(...));
+// Missing: builder.AddPipelineErrorHandler<MyErrorHandler>();
+builder.Validate(); // WARNING: Error handler not configured
+
+// SOLUTION: Configure all three prerequisites
+builder.AddPipelineErrorHandler<MyErrorHandler>();
+builder.WithRetryOptions(opts => opts.With(
+    maxNodeRestartAttempts: 3,
+    maxMaterializedItems: 1000));
+var resilientTransform = builder.AddTransform<MyTransform, int, string>("transform")
+    .WithExecutionStrategy(builder, new ResilientExecutionStrategy(...));
+builder.Validate(); // OK: All prerequisites configured
+```
+
+**Quick Fix Checklist:**
+
+- [ ] Apply `ResilientExecutionStrategy` to nodes that need restart capability
+- [ ] Register an `IPipelineErrorHandler` implementation
+- [ ] Set `MaxNodeRestartAttempts > 0` (typically 2-3)
+- [ ] Set `MaxMaterializedItems` to a positive value based on item size (typically 100-10000)
+
+**See Also:** [Getting Started with Resilience](./resilience/getting-started.md), [Resilience Architecture](../../architecture/error-handling-architecture.md)
 
 ### Parallel Configuration Rule Details
+
+**Purpose:** Ensures nodes using parallel execution have appropriate queue and threading settings to prevent resource exhaustion and performance degradation.
+
+**Why This Matters:** Misconfigured parallelism can cause:
+- **Unbounded memory growth** when queue limits aren't set
+- **High latency and buffering** when ordering is preserved with excessive parallelism
+- **Thread pool starvation** when parallelism is too high
+- **Silent performance degradation** when drop policies are used without bounded queues
 
 For nodes with parallel execution, validates:
 
 - **Queue Limits** - No high parallelism (>4) without `MaxQueueLength` to prevent unbounded memory growth
+  - High parallelism without queue limits allows unlimited items in memory
+  - Items accumulate if downstream processing is slower than upstream production
+  - Recommended: Set `MaxQueueLength` to 2-10x your parallelism level
+  
 - **Order Preservation** - Warns if high parallelism (>8) with `PreserveOrdering: true` causes buffering/latency
+  - Preserving order with high parallelism requires buffering all out-of-order items
+  - Causes significant memory overhead and latency
+  - Recommended: Set `PreserveOrdering: false` unless order is critical
+  
 - **Drop Policies** - Detects `MaxQueueLength: null` with drop policies (policy would have no effect)
+  - Drop policies (`DropOldest`, `DropNewest`) only work with bounded queues
+  - Setting a drop policy without `MaxQueueLength` is ineffective
+  - Recommended: Either set `MaxQueueLength` or use `Block` policy
+  
 - **Thread Explosion** - Warns if parallelism exceeds `ProcessorCount * 4`
+  - Excessive parallelism may indicate configuration error or unusual workload
+  - General guideline: Parallelism should be 1-4x processor count for most workloads
 
-**Quick Fix:** Set appropriate `MaxQueueLength` and `PreserveOrdering` based on workload (see [Extended Validation with Advanced Features](#extended-validation-with-advanced-features) example below).
+**When Validation Occurs:** During `Build()` or `Validate()` calls with extended validation enabled (default).
+
+**Severity:** Warning (informational, helps prevent performance issues).
+
+**Example Problems and Solutions:**
+
+```csharp
+// PROBLEM 1: High parallelism without queue limits
+var parallelOptions = new ParallelOptions(
+    MaxDegreeOfParallelism: 16,
+    MaxQueueLength: null,  // Unbounded!
+    QueuePolicy: BoundedQueuePolicy.Block);
+builder.SetNodeExecutionOption(transform.Id, parallelOptions);
+builder.Validate(); // WARNING: High parallelism without queue limits
+
+// SOLUTION 1: Set appropriate queue length
+var parallelOptions = new ParallelOptions(
+    MaxDegreeOfParallelism: 16,
+    MaxQueueLength: 100,  // Bounded to prevent memory issues
+    QueuePolicy: BoundedQueuePolicy.Block);
+builder.SetNodeExecutionOption(transform.Id, parallelOptions);
+
+// PROBLEM 2: High parallelism with order preservation
+var parallelOptions = new ParallelOptions(
+    MaxDegreeOfParallelism: 16,
+    MaxQueueLength: 100,
+    QueuePolicy: BoundedQueuePolicy.Block,
+    PreserveOrdering: true);  // High overhead with 16 parallel tasks!
+builder.SetNodeExecutionOption(transform.Id, parallelOptions);
+builder.Validate(); // WARNING: Order preservation causes buffering
+
+// SOLUTION 2: Disable ordering if not needed
+var parallelOptions = new ParallelOptions(
+    MaxDegreeOfParallelism: 16,
+    MaxQueueLength: 100,
+    QueuePolicy: BoundedQueuePolicy.Block,
+    PreserveOrdering: false);  // Better performance
+builder.SetNodeExecutionOption(transform.Id, parallelOptions);
+
+// PROBLEM 3: Drop policy without queue length
+var parallelOptions = new ParallelOptions(
+    MaxDegreeOfParallelism: 8,
+    MaxQueueLength: null,  // Unbounded - drop policy won't work!
+    QueuePolicy: BoundedQueuePolicy.DropOldest);
+builder.SetNodeExecutionOption(transform.Id, parallelOptions);
+builder.Validate(); // WARNING: Drop policy ineffective
+
+// SOLUTION 3: Set queue length for drop policies
+var parallelOptions = new ParallelOptions(
+    MaxDegreeOfParallelism: 8,
+    MaxQueueLength: 100,  // Bounded queue for drop policy
+    QueuePolicy: BoundedQueuePolicy.DropOldest);
+builder.SetNodeExecutionOption(transform.Id, parallelOptions);
+```
+
+**Parallelism Sizing Guide:**
+
+| Workload Type | Recommended DOP | Queue Length | PreserveOrder | Reason |
+|---------------|-----------------|--------------|---------------|--------|
+| CPU-bound | ProcessorCount | 2x-4x DOP | Only if needed | Limited by CPU resources |
+| I/O-bound | 2x-4x ProcessorCount | 4x-10x DOP | Only if needed | Can handle more concurrent I/O |
+| Network | 4x-8x ProcessorCount | 8x-20x DOP | Only if needed | Very high latency allows more concurrency |
+| Memory-constrained | ProcessorCount/2 | 1x-2x DOP | Only if needed | Conservative allocation |
+
+**Quick Fix Checklist:**
+
+- [ ] For high parallelism (>4), set `MaxQueueLength` to 2-10x your parallelism level
+- [ ] Set `PreserveOrdering: false` unless downstream requires strict ordering
+- [ ] If using drop policies, ensure `MaxQueueLength` is set to a positive value
+- [ ] Monitor actual utilization to ensure parallelism matches your workload
+
+**See Also:** [Parallel Execution Guide](./extensions/parallelism.md), [Performance Optimization](../../architecture/optimization-principles.md)
 
 ## Validation Workflow & Patterns
 

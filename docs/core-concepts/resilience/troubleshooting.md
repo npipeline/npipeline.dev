@@ -11,6 +11,41 @@ sidebar_position: 6
 
 This guide helps you diagnose and resolve common issues with resilience configuration in NPipeline. It provides symptom-based troubleshooting, debugging techniques, and solutions for common anti-patterns.
 
+## Quick Diagnosis: Use Build-Time Validation
+
+**Start here first:** Before debugging at runtime, run the pipeline builder's validation to catch configuration issues early:
+
+```csharp
+var builder = new PipelineBuilder();
+// ... configure pipeline ...
+
+// Validate before building
+var result = builder.Validate();
+if (!result.IsValid)
+{
+    Console.WriteLine("Configuration errors:");
+    foreach (var error in result.Errors)
+        Console.WriteLine($"  ❌ {error}");
+}
+
+if (result.Warnings.Count > 0)
+{
+    Console.WriteLine("Configuration warnings:");
+    foreach (var warning in result.Warnings)
+        Console.WriteLine($"  ⚠️  {warning}");
+}
+
+var pipeline = builder.Build();
+```
+
+The **ResilienceConfigurationRule** automatically validates that your resilience setup is complete:
+
+- **Error Handler Registered?** Required to make restart decisions
+- **MaxNodeRestartAttempts > 0?** Controls restart capability
+- **MaxMaterializedItems Set?** Prevents unbounded memory growth
+
+See [Resilience Configuration Rule Details](../pipeline-validation.md#resilience-configuration-rule-details) for complete validation documentation.
+
 ## Symptom-Based Troubleshooting
 
 ### Symptom: Node Doesn't Restart Despite Failures
