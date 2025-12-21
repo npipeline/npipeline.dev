@@ -7,12 +7,6 @@ slug: /core-concepts/pipelinebuilder
 
 # PipelineBuilder
 
-## Prerequisites
-
-Before using PipelineBuilder, you should be familiar with:
-- [Nodes Overview](./nodes/index.md) - Understanding the node types you'll be connecting
-- [Core Concepts Overview](./index.md) - Basic NPipeline concepts and terminology
-
 The `PipelineBuilder` is a fluent API that provides a simple and expressive way to define the structure of your data pipeline. It is the primary tool for adding nodes, connecting them, and compiling the final, runnable `IPipeline` instance.
 
 ## The Core Workflow

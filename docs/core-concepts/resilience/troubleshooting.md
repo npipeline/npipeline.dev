@@ -9,7 +9,7 @@ sidebar_position: 6
 >**Related Documentation**
 >This guide covers **resilience-specific issues** (retries, node restarts, materialization). For general pipeline execution issues, see [General Troubleshooting](../../reference/troubleshooting.md).
 
-This guide helps you diagnose and resolve common issues with resilience configuration in NPipeline. It provides symptom-based troubleshooting, debugging techniques, and solutions for common anti-patterns.
+This guide covers diagnosing and resolving common issues with resilience configuration in NPipeline. It provides symptom-based troubleshooting, debugging techniques, and solutions for common anti-patterns.
 
 ## Quick Diagnosis: Use Build-Time Validation
 

@@ -204,7 +204,7 @@ public class MessageQueueDeadLetterSink : IDeadLetterSink
 
 ## Registering a Dead Letter Sink
 
-You register a dead letter sink with your DI container:
+You register a dead letter sink with your Dependency Injection (DI) container:
 
 ```csharp
 // File-based dead letter sink

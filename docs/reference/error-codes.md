@@ -27,10 +27,10 @@ Error codes are organized by category:
 
 ```csharp
 var builder = new PipelineBuilder();
-// builder.Build(); // :x: Would throw NP0101
+// builder.Build(); // Would throw NP0101
 
 builder.AddSource<MySourceNode>();
-var pipeline = builder.Build(); // :heavy_check_mark: Works
+var pipeline = builder.Build(); // Works
 ```
 
 ---
@@ -50,7 +50,7 @@ builder.AddSource<SourceNode>("src");
 builder.AddTransform<MyTransform>("transform");
 // Missing: builder.Connect("src", "transform");
 
-builder.Build(); // :x: Would throw NP0102
+builder.Build(); // Would throw NP0102
 ```
 
 ---
@@ -69,7 +69,7 @@ builder.Build(); // :x: Would throw NP0102
 builder.AddTransform<Transform1>("t1");
 builder.AddTransform<Transform2>("t2");
 builder.Connect("t1", "t2");
-builder.Connect("t2", "t1"); // :x: Creates cycle
+builder.Connect("t2", "t1"); // Creates cycle
 
 builder.Build(); // Would throw NP0103
 ```
@@ -88,7 +88,7 @@ builder.Build(); // Would throw NP0103
 
 ```csharp
 builder.AddTransform<MyTransform>("transform");
-builder.AddTransform<MyTransform>("transform"); // :x: Duplicate ID
+builder.AddTransform<MyTransform>("transform"); // Duplicate ID
 
 builder.Build(); // Would throw NP0104
 ```
@@ -107,7 +107,7 @@ builder.Build(); // Would throw NP0104
 
 ```csharp
 builder.AddTransform<Transform1>("step");
-builder.AddTransform<Transform2>("step"); // :x: Duplicate name
+builder.AddTransform<Transform2>("step"); // Duplicate name
 
 builder.Build(); // Would throw NP0105
 ```
@@ -129,12 +129,12 @@ builder.Build(); // Would throw NP0105
 ```csharp
 builder.AddSource<StringSource>("src");     // Outputs: string
 builder.AddTransform<IntTransform>("trans"); // Inputs: int
-builder.Connect("src", "trans"); // :x: Type mismatch
+builder.Connect("src", "trans"); // Type mismatch
 
 // Solution: Add type converter
 builder.AddTransform<StringToIntConverter>("converter");
 builder.Connect("src", "converter");
-builder.Connect("converter", "trans"); // :heavy_check_mark: Works
+builder.Connect("converter", "trans"); // Works
 ```
 
 ---
@@ -182,13 +182,13 @@ await pipeline.ExecuteAsync(source, context);
 **Example:**
 
 ```csharp
-// :x: Bad: private constructor
+// Bad: private constructor
 public record Order(int Id)
 {
     private Order() { }
 }
 
-// :heavy_check_mark: Good: public constructor
+// Good: public constructor
 public record Order(int Id);
 ```
 
@@ -342,7 +342,7 @@ This can cause:
 **Example of Problem Code:**
 
 ```csharp
-// :x: PROBLEM: SinkNode ignores input
+// PROBLEM: SinkNode ignores input
 public class MySinkNode : SinkNode<string>
 {
     public override Task ExecuteAsync(IDataPipe<string> input, PipelineContext context, CancellationToken cancellationToken)
@@ -359,7 +359,7 @@ public class MySinkNode : SinkNode<string>
 Always consume input in SinkNode implementations:
 
 ```csharp
-// :heavy_check_mark: SOLUTION: Process all items from input
+// SOLUTION: Process all items from input
 public class MySinkNode : SinkNode<string>
 {
     public override async Task ExecuteAsync(IDataPipe<string> input, PipelineContext context, CancellationToken cancellationToken)
@@ -417,7 +417,7 @@ These unsafe patterns can cause:
 **Example of Problem Code:**
 
 ```csharp
-// :x: PROBLEM: Unsafe access patterns
+// PROBLEM: Unsafe access patterns
 public async Task ProcessContext(PipelineContext context)
 {
     // NP9303: Direct access to nullable property
@@ -435,7 +435,7 @@ public async Task ProcessContext(PipelineContext context)
 **Solution - Use Safe Access Patterns:**
 
 ```csharp
-// :heavy_check_mark: SOLUTION: Safe access patterns
+// SOLUTION: Safe access patterns
 public async Task ProcessContext(PipelineContext context)
 {
     // Use null-conditional operator
@@ -487,7 +487,7 @@ Missing even one of these prerequisites will **silently disable restart**, causi
 **Example of Problem Code:**
 
 ```csharp
-// :x: PROBLEM: RestartNode is possible, but prerequisites are missing
+// PROBLEM: RestartNode is possible, but prerequisites are missing
 
 var myErrorHandler = new MyErrorHandler();
 
@@ -505,7 +505,7 @@ var pipeline = builder
 **For detailed step-by-step configuration instructions, see the [Getting Started with Resilience](../core-concepts/resilience/getting-started.md) guide.**
 
 ```csharp
-// :heavy_check_mark: SOLUTION: All three prerequisites configured
+// SOLUTION: All three prerequisites configured
 
 // STEP 1: Apply ResilientExecutionStrategy
 var nodeHandle = builder
@@ -535,7 +535,7 @@ await pipeline.ExecuteAsync(source, context);
 **Read More:**
 
 - **[Getting Started with Resilience](../core-concepts/resilience/getting-started.md)** - Complete quick-start and step-by-step configuration guide
-- [Build-Time Resilience Analyzer Guide](../tooling/analyzers/resilience.md)
+- [Build-Time Resilience Analyzer Guide](../analyzers/resilience.md)
 - [Error Handling Guide](../core-concepts/resilience/error-handling.md)
 - [Materialization & Buffering](../core-concepts/resilience/materialization.md)
 
@@ -568,7 +568,7 @@ These patterns can cause:
 **Example of Problem Code:**
 
 ```csharp
-// :x: PROBLEM: Materializing all data in memory
+// PROBLEM: Materializing all data in memory
 public class BadSourceNode : SourceNode<string>
 {
     public override IDataPipe<string> Initialize(PipelineContext context, CancellationToken cancellationToken)
@@ -598,7 +598,7 @@ public class BadSourceNode : SourceNode<string>
 **Solution - Use Streaming Patterns:**
 
 ```csharp
-// :heavy_check_mark: CORRECT: Using IAsyncEnumerable with yield return
+// CORRECT: Using IAsyncEnumerable with yield return
 public class GoodSourceNode : SourceNode<string>
 {
     public override IDataPipe<string> Initialize(PipelineContext context, CancellationToken cancellationToken)
@@ -641,7 +641,7 @@ public class GoodSourceNode : SourceNode<string>
 
 **Read More:**
 
-- [Build-Time Resilience Analyzer Guide](../tooling/analyzers/resilience.md)
+- [Build-Time Resilience Analyzer Guide](../analyzers/resilience.md)
 - [Source Node Best Practices](../core-concepts/nodes/source-nodes.md)
 - [Performance Optimization Guide](../advanced-topics/performance-hygiene.md)
 
@@ -665,7 +665,7 @@ This pattern can lead to:
 **Example of Problem Code:**
 
 ```csharp
-// :x: PROBLEM: Using ITransformNode with streaming return type
+// PROBLEM: Using ITransformNode with streaming return type
 public class DataProcessor : ITransformNode<string, IAsyncEnumerable<int>>
 {
     public Task<IAsyncEnumerable<int>> ExecuteAsync(
@@ -692,7 +692,7 @@ public class DataProcessor : ITransformNode<string, IAsyncEnumerable<int>>
 **Solution - Use IStreamTransformNode:**
 
 ```csharp
-// :heavy_check_mark: SOLUTION: Using IStreamTransformNode for stream processing
+// SOLUTION: Using IStreamTransformNode for stream processing
 public class DataProcessor : IStreamTransformNode<string, int>
 {
     public IAsyncEnumerable<int> ExecuteAsync(
@@ -754,7 +754,7 @@ This mismatch can lead to:
 **Example of Problem Code:**
 
 ```csharp
-// :x: PROBLEM: Using non-stream execution strategy with IStreamTransformNode
+// PROBLEM: Using non-stream execution strategy with IStreamTransformNode
 public class StreamProcessor : IStreamTransformNode<string, int>
 {
     public IAsyncEnumerable<int> ExecuteAsync(
@@ -783,7 +783,7 @@ public class StreamProcessor : IStreamTransformNode<string, int>
 **Solution - Use Stream-Optimized Execution Strategy:**
 
 ```csharp
-// :heavy_check_mark: SOLUTION: Using stream execution strategy with IStreamTransformNode
+// SOLUTION: Using stream execution strategy with IStreamTransformNode
 public class StreamProcessor : IStreamTransformNode<string, int>
 {
     public IAsyncEnumerable<int> ExecuteAsync(
@@ -852,7 +852,7 @@ These anti-patterns violate the Dependency Inversion Principle and make code dif
 **Example of Problem Code:**
 
 ```csharp
-// :x: PROBLEM: Dependency injection anti-patterns
+// PROBLEM: Dependency injection anti-patterns
 
 public class BadTransformNode : TransformNode<string, string>
 {
@@ -894,7 +894,7 @@ public class BadSinkNode : SinkNode<string>
 **Solution - Use Constructor Injection:**
 
 ```csharp
-// :heavy_check_mark: SOLUTION: Constructor injection
+// SOLUTION: Constructor injection
 
 public class GoodTransformNode : TransformNode<string, string>
 {
@@ -911,7 +911,7 @@ public class GoodTransformNode : TransformNode<string, string>
     }
 }
 
-// :heavy_check_mark: SOLUTION: Multiple dependencies via constructor
+// SOLUTION: Multiple dependencies via constructor
 
 public class GoodSinkNode : SinkNode<string>
 {
@@ -947,10 +947,10 @@ public class GoodSinkNode : SinkNode<string>
 2. **Flexibility**: Can swap implementations easily
 3. **Dependency Inversion**: Depends on abstractions rather than concretions
 4. **Explicit Dependencies**: All dependencies are visible in the constructor
-5. **Better Configuration**: Works well with DI containers
+5. **Better Configuration**: Works well with Dependency Injection (DI) containers
 
 **Read More:**
 
-- [Build-Time Resilience Analyzer Guide](../tooling/analyzers/resilience.md)
+- [Build-Time Resilience Analyzer Guide](../analyzers/resilience.md)
 - [Dependency Injection Best Practices](../architecture/dependency-injection.md)
 - [Testing Pipeline Components](../extensions/testing/index.md)

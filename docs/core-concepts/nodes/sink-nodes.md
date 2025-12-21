@@ -52,7 +52,7 @@ Use `await foreach` to asynchronously iterate through the data pipe. This patter
 
 ### Activity Tracking
 
-To access tracing and observability information, use the `PipelineContext` parameter. You can access the current activity through `context.Tracer.CurrentActivity`, which returns the active tracing span if one exists, or `null` if tracing is disabled.
+To access tracing and observability information, use the `PipelineContext` parameter. The current activity can be accessed through `context.Tracer.CurrentActivity`, which returns the active tracing span if one exists, or `null` if tracing is disabled.
 
 ```csharp
 public async Task ExecuteAsync(IDataPipe<T> input, PipelineContext context, CancellationToken cancellationToken)
@@ -69,6 +69,10 @@ public async Task ExecuteAsync(IDataPipe<T> input, PipelineContext context, Canc
 ### Graceful Shutdown
 
 Always respect the `cancellationToken` parameter to allow graceful shutdown of your pipeline. This is especially important for long-running sinks or those that interact with external systems.
+
+> **⚠️ Important**
+>
+> Always check the cancellation token in your sink's `ExecuteAsync` method. Failure to do so can cause hangs during pipeline shutdown or when users request cancellation.
 
 ## Common Sink Patterns
 

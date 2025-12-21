@@ -50,8 +50,8 @@ if (provider is IStorageProviderMetadataProvider metadataProvider)
 
 ### Capability Flags
 
-| Flag | Description |
-|------|-------------|
+| **Flag** | **Description** |
+|---|---|
 | `SupportsRead` | Provider supports `OpenReadAsync()` |
 | `SupportsWrite` | Provider supports `OpenWriteAsync()` |
 | `SupportsDelete` | Provider supports `DeleteAsync()` |

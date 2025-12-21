@@ -6,7 +6,7 @@ sidebar_position: 2
 
 NPipeline is designed for high performance, but building an efficient pipeline requires careful consideration of how you write your nodes and structure your data flow. "Performance hygiene" refers to the practice of writing code that is mindful of memory allocations, CPU usage, and data transfer overhead.
 
-> :information_source: For specific optimization patterns and techniques, see [Synchronous Fast Paths](synchronous-fast-paths.md).
+> For specific optimization patterns and techniques, see [Synchronous Fast Paths](synchronous-fast-paths.md).
 
 By following these best practices, you can ensure your pipelines run as fast and efficiently as possible.
 

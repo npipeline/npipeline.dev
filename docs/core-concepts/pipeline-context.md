@@ -152,7 +152,7 @@ public class SinkNode<TInput>
 
 ### Context-Aware Nodes
 
-To access the full `PipelineContext` object, your nodes can implement the `IContextAwareNode` interface.
+To access the full `PipelineContext` object, implement the `IContextAwareNode` interface.
 
 ```csharp
 public interface IContextAwareNode

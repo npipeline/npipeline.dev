@@ -58,7 +58,7 @@ await foreach (var item in wrappedPipe) // Processing happens HERE
 NPipeline treats all data as streams, not arrays:
 
 ```csharp
-// :x: Wrong - breaks streaming model
+// Wrong - breaks streaming model
 public async IAsyncEnumerable<Output> ProcessAsync(...)
 {
     var allItems = await _source.ToListAsync(); // Materializes!
@@ -68,7 +68,7 @@ public async IAsyncEnumerable<Output> ProcessAsync(...)
     }
 }
 
-// :heavy_check_mark: Right - maintains streaming model
+// Right - maintains streaming model
 public async IAsyncEnumerable<Output> ProcessAsync(...)
 {
     await foreach (var item in _source)
@@ -171,7 +171,7 @@ These principles guide decisions when trade-offs arise:
 
 ## Next Steps
 
-- Review **[Core Concepts](core-concepts.md)** to understand fundamentals
+- Review **[Architectural Foundations](architectural-foundations.md)** to understand fundamentals
 - Explore **[Extension Points](extension-points.md)** to build custom components
 - Start with **[Getting Started - Quick Start](../getting-started/quick-start.md)**
 

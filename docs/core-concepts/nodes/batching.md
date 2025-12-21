@@ -10,6 +10,18 @@ Batching nodes represent a deliberate operational shift in how NPipeline process
 
 Batching is used when downstream operations need collecting a specified number of input items or items over a certain time period before processing them as a group. This is not an optimization but often a **necessity** for certain workloads: **bulk database inserts, transactional boundaries, and API calls that accept multiple records** require this grouping approach.
 
+---
+
+## ⚠️ Critical Decision: Batching vs. Aggregation
+
+**Before implementing batching, ensure you've chosen the right grouping strategy.** Batching solves an **operational efficiency problem** (reduce load on external systems), but if your real concern is **data correctness with late-arriving events**, you need **Aggregation** instead.
+
+**→ [Read Grouping Strategies: Batching vs. Aggregation](../grouping-strategies.md) to make the right choice**
+
+Common mistake: Using batching when you actually need aggregation → silent data corruption instead of crashes.
+
+---
+
 > **Architectural Pattern Shared with Aggregation:** Like [aggregation nodes](aggregation.md), batching represents a shift from NPipeline's item-level streaming model to higher-level data grouping. Both require you to step outside of the default item-by-item pattern. The key difference: **batching groups by count/time** for operational efficiency, while **aggregation groups by key and event time** for data correctness. See [Aggregation Nodes](aggregation.md) for patterns that handle temporal ordering of events.
 
 NPipeline provides the [`BatchingNode<T>`](src/NPipeline/Nodes/BatchingNode.cs) transform node and related extensions to simplify batching operations.

@@ -6,12 +6,6 @@ sidebar_position: 2
 
 ## Grouping Strategies: Batching vs Aggregation
 
-## Prerequisites
-
-Before understanding grouping strategies, you should be familiar with:
-- [Core Concepts Overview](../index.md) - Basic NPipeline concepts and terminology
-- [Nodes Overview](./nodes/index.md) - Understanding the basic node types that use grouping
-
 When building data pipelines, you often need to group items together. NPipeline provides two fundamentally different approaches—**batching** and **aggregation**—each suited for solving different problems.
 
 **This decision is critical.** Choosing the wrong approach can lead to:
@@ -158,7 +152,7 @@ var aggregateNode = builder
 
 ## Consequences of Choosing Wrong
 
-### :x: Using Batching When You Need Aggregation
+### Using Batching When You Need Aggregation
 
 **Scenario:** You use batching to group events into hourly buckets.
 
@@ -176,7 +170,7 @@ var badNode = builder
 - Late events might join the *next* batch, corrupting its results
 - A developer's nightmare: pipeline runs fine, but analytics are wrong
 
-### :x: Using Aggregation When You Need Batching
+### Using Aggregation When You Need Batching
 
 **Scenario:** You use aggregation for bulk database inserts.
 
@@ -334,7 +328,7 @@ The intent-driven API:
 
 ### Composing Both Strategies
 
-You can use both strategies in the same pipeline:
+Both strategies can be used in the same pipeline:
 
 ```csharp
 // First: aggregate for temporal correctness

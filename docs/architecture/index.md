@@ -10,19 +10,6 @@ sidebar_position: 12
 
 > **Ready to build pipelines?** Start with [Core Concepts](../core-concepts/index.md) for practical HOW TO guides.
 
-## Prerequisites
-
-Before understanding NPipeline architecture, you should be familiar with:
-
-- [Core Concepts Overview](../core-concepts/index.md) - Basic NPipeline concepts and terminology
-- [Nodes Overview](../core-concepts/nodes/index.md) - Understanding the fundamental building blocks
-
-This section explains **how NPipeline works internally** - design decisions,
-performance optimizations, and engineering principles that make NPipeline fast
-and reliable.
-
-> **For implementation guides**, see [Core Concepts](../core-concepts/index.md).
-
 ## Understanding NPipeline Architecture
 
 NPipeline's architecture is designed around several core principles: graph-based data flow, lazy evaluation, streaming-first design, and composability. This section breaks down each major architectural component to help you understand how system works internally.
@@ -61,7 +48,7 @@ Understand how NPipeline achieves exceptional performance:
 
 These sections explain how NPipeline works internally:
 
-### [Core Concepts (Architecture)](core-concepts.md)
+### [Architectural Foundations](architectural-foundations.md)
 
 Learn the fundamental architectural building blocks:
 
@@ -232,7 +219,7 @@ graph TD
 
 ## Next Steps
 
-* Start with **[Core Concepts](core-concepts.md)** to understand fundamental building blocks
+* Start with **[Architectural Foundations](architectural-foundations.md)** to understand fundamental building blocks
 * Explore **[Component Architecture](component-architecture.md)** to see how components interact
 * Dive into **[Optimization Principles](optimization-principles.md)** to understand why NPipeline is fast
 * Review **[Common Patterns](../core-concepts/common-patterns.md)** for real-world examples

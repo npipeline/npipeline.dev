@@ -273,5 +273,5 @@ The pipeline architecture demonstrates sophisticated windowing techniques:
 ## Next Steps
 
 - Want to review intermediate patterns? → [Intermediate Samples (6-10)](./intermediate.md)
-- Looking for a specific topic? → [Samples by Topic](./by-topic.md)
+- Back to overview? → [All Samples](./index.md)
 - Ready to build your own? Check [Core Concepts](../core-concepts/index.md) and [Advanced Topics](../advanced-topics/index.md)

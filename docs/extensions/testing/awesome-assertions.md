@@ -17,6 +17,8 @@ dotnet add package AwesomeAssertions
 dotnet add package NPipeline.Extensions.Testing.AwesomeAssertions
 ```
 
+For the core NPipeline package and other available testing extensions, see the [Installation Guide](../../getting-started/installation.md).
+
 ## Pipeline Execution Result Assertions
 
 With `NPipeline.Extensions.Testing`, you can use `PipelineTestHarness<T>` to test your pipelines with fluent assertions on the execution results:

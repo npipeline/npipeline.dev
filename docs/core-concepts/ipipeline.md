@@ -7,11 +7,11 @@ slug: /core-concepts/ipipeline
 
 # Pipeline
 
-The `Pipeline` class represents the compiled, executable form of your data pipeline. It is the final object you interact with to trigger the execution of all the sources, transforms, and sinks you have defined using the [Pipeline Definition](pipeline-definition.md) approaches.
+The `Pipeline` class represents the compiled, executable form of your data pipeline. It is the final object you interact with to trigger the execution of all the sources, transforms, and sinks you have defined using the [Defining Pipelines](defining-pipelines.md) approaches.
 
 ## What is a Pipeline?
 
-Think of `Pipeline` as the "runnable" version of your pipeline definition. After you have used [`PipelineBuilder`](pipelinebuilder.md) to lay out the nodes and their connections, the `Build()` method compiles this definition into a `Pipeline` instance.
+Think of `Pipeline` as the "runnable" version of your pipeline definition. After you have used [`Defining Pipelines`](defining-pipelines.md) to lay out the nodes and their connections, the `Build()` method compiles this definition into a `Pipeline` instance.
 
 This instance encapsulates all the logic required to:
 
@@ -83,7 +83,7 @@ await runner.RunAsync<MyPipelineDefinition>(context);
 
 ### Cancellation
 
-You can pass a `CancellationToken` to control pipeline execution. This is useful for long-running pipelines or for handling application shutdown events.
+A `CancellationToken` can be passed to control pipeline execution. This is useful for long-running pipelines or for handling application shutdown events.
 
 ```csharp
 var cts = new CancellationTokenSource();
@@ -150,7 +150,7 @@ await runner.RunAsync<MyPipelineDefinition>(context);
 
 ## Related Topics
 
-* **[Pipeline Definition](pipeline-definition.md)**: Learn how to define the structure of your pipeline using IPipelineDefinition and PipelineBuilder.
+* **[Defining Pipelines](defining-pipelines.md)**: Learn how to define the structure of your pipeline using both fluent and class-based approaches.
 * **[Pipeline Context](pipeline-context.md)**: Understand how to pass state and configuration to your pipeline nodes.
 * **[Pipeline Execution](pipeline-execution/index.md)**: Explore more advanced execution scenarios.
 * **[INode](nodes/index.md)**: Understand the different types of nodes that make up a pipeline.

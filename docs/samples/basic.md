@@ -90,4 +90,4 @@ These samples cover the fundamental concepts and patterns you need to get starte
 
 - Ready for intermediate patterns? → [Intermediate Samples (6-10)](./intermediate.md)
 - Need advanced techniques? → [Advanced Samples (11-23)](./advanced.md)
-- Looking for a specific topic? → [Samples by Topic](./by-topic.md)
+- Back to overview? → [All Samples](./index.md)

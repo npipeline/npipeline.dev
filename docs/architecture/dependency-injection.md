@@ -16,7 +16,7 @@ When you add a node to a pipeline, NPipeline automatically:
 2. Resolves all constructor dependencies from the DI container
 3. Injects them into the node
 
-You can also pre-configure node instances for advanced scenarios:
+Pre-configure node instances for advanced scenarios:
 
 ```csharp
 // Pre-configure a specific node instance

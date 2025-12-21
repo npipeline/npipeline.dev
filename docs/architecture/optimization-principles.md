@@ -367,7 +367,7 @@ public readonly struct Event
     public int Value { get; }
 }
 
-// :x: LESS OPTIMAL: Reference types, scattered memory
+// LESS OPTIMAL: Reference types, scattered memory
 public class Event
 {
     public long Timestamp { get; set; }
@@ -518,7 +518,7 @@ These optimizations have minimal impact if:
 - [Component Architecture](./component-architecture.md) - Understand how these principles are implemented in codebase
 - [Execution Flow](./execution-flow.md) - How optimization principles affect data flow
 - [Performance Characteristics](./performance-characteristics.md) - Measurable performance implications
-- [Architecture: Core Concepts](./core-concepts.md) - Fundamental architectural building blocks
+- [Architecture: Architectural Foundations](./architectural-foundations.md) - Fundamental architectural building blocks
 
 ## Next Steps
 

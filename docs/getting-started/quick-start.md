@@ -8,10 +8,11 @@ sidebar_position: 2
 
 This quick start guide will walk you through creating a basic "Hello World" pipeline using NPipeline. This example demonstrates the core concepts of defining a source, a transform, and a sink.
 
-## Prerequisites
+**Prerequisites:** NPipeline installed and a .NET project set up. If you haven't installed NPipeline yet, see [Installation](installation.md).
 
-* NPipeline and its core dependencies installed (see [Installation](installation.md)).
-* A .NET project set up (e.g., a Console Application).
+> **Installation Tip**
+>
+> For detailed installation instructions and all available packages, refer to the [Installation Guide](installation.md). The commands below assume you have created a new console project.
 
 ## Step 1: Define Your Nodes
 
@@ -21,14 +22,7 @@ In NPipeline, a pipeline is composed of interconnected nodes. We'll define three
 * **Transform:** To modify the message (e.g., convert to uppercase).
 * **Sink:** To consume and display the final message.
 
-First, let's create a simple console application. If you haven't already, create a new console project:
-
-```bash
-dotnet new console -n NpipelineHelloWorld
-cd NpipelineHelloWorld
-dotnet add package NPipeline
-dotnet add package NPipeline.Extensions.DependencyInjection
-```
+First, let's create a simple console application and add the necessary packages. If you haven't already, follow the [Installation Guide](installation.md) to add NPipeline and its core extension.
 
 Now, replace the content of your `Program.cs` file with the following:
 
@@ -50,23 +44,17 @@ namespace NpipelineHelloWorld;
 // This node will produce a single "Hello World!" string.
 public sealed class HelloWorldSource : SourceNode<string>
 {
-    public override IDataPipe<string> ExecuteAsync(
+    public override IDataPipe<string> Initialize(
         PipelineContext context,
         CancellationToken cancellationToken = default)
     {
         Console.WriteLine("Source: Producing 'Hello World!'");
+        return new StreamingDataPipe<string>(ProduceMessages());
+    }
 
-        static IAsyncEnumerable<string> Stream()
-        {
-            return GenerateMessage();
-
-            async IAsyncEnumerable<string> GenerateMessage()
-            {
-                yield return "Hello World!";
-            }
-        }
-
-        return new StreamingDataPipe<string>(Stream());
+    private async IAsyncEnumerable<string> ProduceMessages()
+    {
+        yield return "Hello World!";
     }
 }
 

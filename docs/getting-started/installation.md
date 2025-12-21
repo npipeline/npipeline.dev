@@ -8,11 +8,6 @@ sidebar_position: 1
 
 Getting started with NPipeline is straightforward. This guide will walk you through adding the necessary NuGet packages to your .NET project and setting up dependency injection.
 
-## Prerequisites
-
-* .NET 8, 9, or 10 SDK installed.
-* A .NET project (e.g., Console Application, Class Library) where you intend to use NPipeline.
-
 ## Version Compatibility
 
 All NPipeline packages target .NET 8.0, 9.0, and 10.0, ensuring compatibility with the latest .NET releases.

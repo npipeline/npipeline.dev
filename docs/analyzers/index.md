@@ -45,7 +45,7 @@ Without these analyzers, developers could:
 ### Problematic Code: Silent Failures at Runtime
 
 ```csharp
-// :x: Looks correct but will fail silently at runtime
+// Looks correct but will fail silently at runtime
 public class MyErrorHandler : IPipelineErrorHandler
 {
     public async Task<PipelineErrorDecision> HandleNodeFailureAsync(
@@ -100,6 +100,8 @@ Or install it separately:
 ```bash
 dotnet add package NPipeline.Analyzers
 ```
+
+For all available NPipeline packages and installation options, see the [Installation Guide](../getting-started/installation.md).
 
 ## Quick Reference: All Analyzer Codes
 

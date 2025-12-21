@@ -215,4 +215,4 @@ The data items produced by the source flow through the first pipe, are transform
 ## Next Steps
 
 * **[Nodes](nodes/index.md)**: Learn about the different types of nodes (Source, Transform, Sink) that interact with data pipes.
-* **[Pipeline Definition](pipeline-definition.md)**: Understand how to connect nodes and define the overall structure of your data flow.
+* **[Defining Pipelines](defining-pipelines.md)**: Understand how to connect nodes and define the overall structure of your data flow.

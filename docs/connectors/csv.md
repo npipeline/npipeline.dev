@@ -18,6 +18,8 @@ To use the CSV connector, install the `NPipeline.Connectors.Csv` NuGet package:
 dotnet add package NPipeline.Connectors.Csv
 ```
 
+For the core NPipeline package and other available extensions, see the [Installation Guide](../getting-started/installation.md).
+
 ## Storage Abstraction Layer
 
 The CSV connector uses NPipeline's storage abstraction layer, which provides a unified way to work with different storage systems. This layer allows you to work with local files, cloud storage (like S3 or Azure Blob), and other storage systems using the same API.

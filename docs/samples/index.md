@@ -10,25 +10,52 @@ This guide provides practical examples of NPipeline implementations, organized b
 
 > **Location:** All samples are located in the `/samples/` directory of the repository. Each sample includes complete source code, configuration files, and a README with detailed explanations.
 
-## Quick Navigation
+## 👋 Recommended Learning Path
 
-Choose your learning path based on your experience level:
+**New to NPipeline?** Follow this path to master the framework:
 
-| Level | Samples | Focus | Time |
-|-------|---------|-------|------|
-| **Beginner** | [1-5](./basic.md) | Fundamentals, basic patterns | 1-2 hours |
-| **Intermediate** | [6-10](./intermediate.md) | Real-world patterns, enrichment, analytics | 2-3 hours |
-| **Advanced** | [11-23](./advanced.md) | Complex patterns, production scenarios | 3+ hours |
+1. **Start Here:** [Sample 01: Basic Pipeline](./basic.md#sample-01-basic-pipeline) (1-2 hours)
+   - Learn the fundamentals: sources, transforms, sinks, and how data flows
+   - This is your "Hello World" of NPipeline
 
-Alternatively, explore samples [by topic](./by-topic.md).
+2. **Build Your Foundation:** [Samples 2-5](./basic.md) (2-3 hours)
+   - File processing, error handling, data transformation, and parallelism
+   - Strengthen core concepts with hands-on examples
 
-## Sample Overview
+3. **Add Resilience:** [Sample 06: Advanced Error Handling](./intermediate.md#sample-06-advanced-error-handling) (1 hour)
+   - Learn production-ready error recovery patterns
+   - Understand retries and circuit breakers
+
+4. **Choose Your Focus** (ongoing)
+   - **Data Processing** → [Samples 7-9](./intermediate.md) - Enrichment, CSV, analytics
+   - **Performance** → [Samples 11-12](./advanced.md) - Custom nodes, optimization
+   - **Streaming** → [Samples 15-16](./advanced.md) - Windowing, time-based processing
+   - **Complex Joins** → [Samples 17-20](./advanced.md) - Keyed joins, temporal logic
+
+### Already know what you need?
+
+Jump directly to samples by topic:
+- [File Processing](./basic.md#sample-02-file-processing)
+- [CSV Processing](./intermediate.md#sample-08-csv-connector)
+- [Real-time Analytics](./intermediate.md#sample-09-aggregatenode)
+- [Custom Node Implementation](./advanced.md)
+
+## What Each Sample Includes
+
+Every sample comes with:
+
+- **Complete source code** with comments explaining key concepts
+- **Configuration files** showing best practices
+- **README** with detailed explanations and setup instructions
+- **Performance characteristics** and tuning guidance
+- **Real-world scenario context** and business logic
+
+## Sample Breakdown by Skill Level
 
 ### Basic Samples (1-5)
-
 Perfect for learning NPipeline fundamentals:
 
-- **Sample 01: Basic Pipeline** - HelloWorld of NPipeline
+- **Sample 01: Basic Pipeline** - Hello World of NPipeline
 - **Sample 02: File Processing** - Stream processing files efficiently
 - **Sample 03: Basic Error Handling** - Essential error handling patterns
 - **Sample 04: Simple Data Transformation** - Validation, filtering, enrichment
@@ -37,7 +64,6 @@ Perfect for learning NPipeline fundamentals:
 **→ [View all Basic Samples](./basic.md)**
 
 ### Intermediate Samples (6-10)
-
 Building real-world features:
 
 - **Sample 06: Advanced Error Handling** - Production resilience patterns
@@ -49,7 +75,6 @@ Building real-world features:
 **→ [View all Intermediate Samples](./intermediate.md)**
 
 ### Advanced Samples (11-23)
-
 Production-grade scenarios:
 
 - **11-12:** Foundational concepts (custom nodes, performance optimization)
@@ -60,42 +85,27 @@ Production-grade scenarios:
 
 **→ [View all Advanced Samples](./advanced.md)**
 
-## Getting Started
+## Learning Paths
 
-1. **New to NPipeline?** Start with [Basic Samples](./basic.md) (Samples 1-5)
-2. **Building real pipelines?** Learn from [Intermediate Samples](./intermediate.md) (Samples 6-10)
-3. **Need production patterns?** Explore [Advanced Samples](./advanced.md) (Samples 11-23)
-4. **Looking for a specific feature?** See [Samples by Topic](./by-topic.md)
-
-## Learning Recommendations
+Choose the path that matches your goals:
 
 ### Minimum Path (1-2 hours)
-
+Get started quickly with essentials:
 - Sample 01: Basic Pipeline
 - Sample 03: Basic Error Handling
 - Sample 04: Simple Data Transformation
 
 ### Foundation Path (4-5 hours)
-
+Build a solid understanding:
 - All Basic Samples (1-5)
 - Sample 06: Advanced Error Handling
 - Sample 09: AggregateNode
 
 ### Comprehensive Path (8+ hours)
-
+Master all patterns:
 - All Basic Samples (1-5)
 - All Intermediate Samples (6-10)
 - All Advanced Samples (11-23)
-
-## What Each Sample Includes
-
-Every sample comes with:
-
-- :heavy_check_mark: Complete source code with comments explaining key concepts
-- :heavy_check_mark: Configuration files showing best practices
-- :heavy_check_mark: README with detailed explanations and setup instructions
-- :heavy_check_mark: Performance characteristics and tuning guidance
-- :heavy_check_mark: Real-world scenario context and business logic
 
 ## Related Documentation
 

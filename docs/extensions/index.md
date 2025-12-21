@@ -63,6 +63,10 @@ dotnet add package NPipeline.Extensions.Testing.FluentAssertions
 dotnet add package FluentAssertions
 ```
 
+> **Complete Installation Guide**
+>
+> For the core NPipeline package and comprehensive installation instructions for all packages, see the [Installation Guide](../getting-started/installation.md).
+
 ### Basic Usage Pattern
 
 Most extensions follow a consistent pattern:

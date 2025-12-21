@@ -29,15 +29,15 @@ Nodes are the fundamental building blocks of NPipeline pipelines. Each node type
 
 Selecting the appropriate node type is crucial for building efficient and maintainable pipelines:
 
-| Use Case | Recommended Node Type | Rationale |
-|-----------|-------------------|----------|
-| **Simple data transformation** | `TransformNode<TIn, TOut>` | One-to-one mapping with minimal overhead |
-| **Stream-based operations** | `IStreamTransformNode<TIn, TOut>` | Batching, unbatching, windowing, or stream cardinality changes |
-| **Data enrichment** | `TransformNode<TIn, TOut>` | Per-item lookups with async service calls |
-| **High-throughput scenarios** | `ValueTaskTransform<TIn, TOut>` | Synchronous operations with zero allocation |
-| **Complex workflows** | Combination of node types | Each node serves its specific purpose |
+| **Use Case** | **Recommended Node Type** | **Key Benefit** |
+|---|---|---|
+| Simple data transformation | `TransformNode<TIn, TOut>` | One-to-one mapping with minimal overhead |
+| Stream-based operations | `IStreamTransformNode<TIn, TOut>` | Batching, unbatching, windowing, or stream cardinality changes |
+| Data enrichment | `TransformNode<TIn, TOut>` | Per-item lookups with async service calls |
+| High-throughput scenarios | `ValueTaskTransform<TIn, TOut>` | Synchronous operations with zero allocation |
+| Complex workflows | Combination of node types | Each node serves its specific purpose |
 
-*Table 1: Node type selection guide based on common use cases.*
+**Table 1: Node Type Selection Guide**
 
 ## Next Steps
 

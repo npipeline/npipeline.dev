@@ -102,4 +102,4 @@ These samples demonstrate real-world patterns and techniques for building practi
 
 - Ready for advanced patterns? → [Advanced Samples (11-23)](./advanced.md)
 - Want a quick refresher? → [Basic Samples (1-5)](./basic.md)
-- Looking for a specific topic? → [Samples by Topic](./by-topic.md)
+- Back to overview? → [All Samples](./index.md)

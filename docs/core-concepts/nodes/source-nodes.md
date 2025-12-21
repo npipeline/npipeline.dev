@@ -19,6 +19,10 @@ public interface ISourceNode<out TOut> : INode
 
 The `Initialize` method returns the data pipe synchronously. It does not return a `Task`, enabling efficient synchronous pipe creation.
 
+> **💡 Key Insight**
+>
+> Source nodes return data pipes synchronously, not Tasks. This enables lazy evaluation - the data is only read when a downstream node (transform or sink) actually consumes the pipe.
+
 ## Implementation Example
 
 A simple source that produces a sequence of numbers:

@@ -40,7 +40,7 @@ public Task RunAsync<TDefinition>(PipelineContext context, CancellationToken can
 
 ## Execution with Pipeline Context
 
-You can pass state and configuration to your pipeline using `PipelineContext`:
+State and configuration can be passed to your pipeline using `PipelineContext`:
 
 ```csharp
 var context = new PipelineContext(PipelineContextConfiguration.WithCancellation(cancellationToken));

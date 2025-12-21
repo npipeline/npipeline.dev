@@ -7,7 +7,13 @@ sidebar_position: 0
 
 # Welcome to NPipeline Documentation
 
-NPipeline is a powerful and flexible .NET library for building high-performance, graph-based streaming data pipelines.
+NPipeline is a powerful and flexible .NET library for building high-performance, graph-based streaming data pipelines. It empowers developers to construct complex data processing workflows with clear, intuitive graph-based architecture—perfect for low-latency, high-throughput applications that demand both reliability and performance.
+
+**Key Benefits:**
+- **Graph-Based Design** - Visually intuitive data flow that's easy to understand and debug
+- **High Performance** - Optimized for minimal memory allocations and maximum throughput
+- **Production-Ready** - Robust error handling, resilience patterns, and extensibility built-in
+- **Modern .NET** - Leverages async/await and latest C# features for clean, maintainable code
 
 ## Choose Your Learning Path
 
@@ -21,11 +27,11 @@ NPipeline is a powerful and flexible .NET library for building high-performance,
 
 ## Quick Start (15 minutes)
 
-New to NPipeline? Get started with our quick introduction:
+New to NPipeline? Get started in three simple steps:
 
-- [Getting Started](getting-started/index.md) - What is NPipeline and why use it?
-- [Your First Pipeline](getting-started/quick-start.md) - Build a simple data pipeline in 5 minutes
-- [Basic Concepts](core-concepts/pipelinebuilder.md) - Understand the core building blocks
+- [Installation](getting-started/installation.md) - Set up NPipeline (2 minutes)
+- [Your First Pipeline](getting-started/quick-start.md) - Build a simple data pipeline (5 minutes)
+- [Why NPipeline?](getting-started/why-npipeline.md) - Understand the benefits and philosophy (8 minutes)
 
 ---
 
@@ -38,7 +44,7 @@ New to NPipeline? Get started with our quick introduction:
 
 ### Module 1: Core Concepts (45 minutes)
 
-- [Pipeline Builder](core-concepts/pipelinebuilder.md) - Understanding the pipeline builder pattern
+- [Defining Pipelines](core-concepts/defining-pipelines.md) - Understanding the pipeline builder pattern and class-based definitions
 - [Source Nodes](core-concepts/nodes/source-nodes.md) - Getting data into your pipeline
 - [Transform Nodes](core-concepts/nodes/transform-nodes.md) - Processing and transforming data
 - [Sink Nodes](core-concepts/nodes/sink-nodes.md) - Outputting processed data
@@ -119,7 +125,7 @@ New to NPipeline? Get started with our quick introduction:
 
 ### Module 3: Advanced Integration (120 minutes)
 
-- [Dependency Injection](architecture/dependency-injection.md) - Advanced DI patterns
+- [Dependency Injection](architecture/dependency-injection.md) - Advanced Dependency Injection (DI) patterns
 - [Extension Points](architecture/extension-points.md) - Creating custom extensions
 - [Performance Characteristics](architecture/performance-characteristics.md) - Understanding performance
 
@@ -163,7 +169,7 @@ Dependency injection, parallelism, testing utilities, and more.
 
 Performance optimization, testing strategies, and expert patterns.
 
-### [Build-Time Analyzers](./tooling/analyzers/index.md)
+### [Build-Time Analyzers](./analyzers/index.md)
 
 Catch errors at compile-time with automated best practice enforcement.
 

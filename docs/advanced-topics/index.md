@@ -54,7 +54,7 @@ If you're new to these topics, follow this recommended order:
 
 1. **[Performance Hygiene](./performance-hygiene.md)** - Foundation for understanding performance considerations
 2. **[Synchronous Fast Paths](./synchronous-fast-paths.md)** - Deep dive into specific optimization techniques
-3. **[Advanced Retry Strategies](../core-concepts/resilience/retry-delay-advanced.md)** - Production resilience patterns
+3. **[Advanced Retry Strategies](../core-concepts/resilience/retry-delays.md)** - Production resilience patterns
 4. **[Advanced Testing](../extensions/testing/advanced-testing.md)** - Validating your optimized implementations
 
 ## Prerequisites

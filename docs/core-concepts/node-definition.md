@@ -18,6 +18,24 @@ The `NodeDefinition` record is composed of several nested configuration records,
 - **NodeMergeConfig**: Contains merge-related configuration (strategy, custom merge logic)
 - **NodeLineageConfig**: Contains lineage-related configuration (adapters, mappers, unwrappers)
 
+### Node Configuration Hierarchy
+
+```mermaid
+graph TD
+    A["NodeDefinition"] --> B["NodeIdentity<br/>(Id, Name)"]
+    A --> C["NodeTypeSystem<br/>(NodeType, Kind,<br/>InputType, OutputType)"]
+    A --> D["NodeExecutionConfig<br/>(ExecutionStrategy,<br/>ErrorHandlerType,<br/>Cardinality)"]
+    A --> E["NodeMergeConfig<br/>(MergeStrategy,<br/>CustomMerge,<br/>IsJoin)"]
+    A --> F["NodeLineageConfig<br/>(LineageAdapter,<br/>LineageMapper,<br/>SinkLineageUnwrap)"]
+    
+    style A fill:#e1f5ff
+    style B fill:#f3e5f5
+    style C fill:#e8f5e9
+    style D fill:#fff3e0
+    style E fill:#fce4ec
+    style F fill:#f1f8e9
+```
+
 ## Nested Configuration Records
 
 ### NodeIdentity
@@ -206,7 +224,6 @@ CustomMergeDelegate? myCustomMerge = (node, dataPipes, cancellationToken) => {
 
 ## See Also
 
-- [Pipeline Definition](pipeline-definition.md) - Learn how to define pipelines
-- [PipelineBuilder](pipelinebuilder.md) - How to use the builder API
+- [Defining Pipelines](defining-pipelines.md) - Learn how to define pipelines with both fluent and class-based approaches
 - [Node Types](nodes/index.md) - Overview of different node types
 - [Execution Strategies](pipeline-execution/execution-strategies.md) - Configure node execution

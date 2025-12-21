@@ -14,7 +14,7 @@ Before implementing ValueTask optimization, you should be familiar with:
 - [Transform Nodes](../core-concepts/nodes/transform-nodes.md) - Node implementation details
 - [Optimization Principles](../architecture/optimization-principles.md) - Understanding why ValueTask improves performance
 
-> :information_source: For general performance best practices, see [Performance Hygiene](performance-hygiene.md).
+> For general performance best practices, see [Performance Hygiene](performance-hygiene.md).
 
 This is **definitive guide** for understanding and implementing `ValueTask<T>` pattern in transformer nodes. For a quick introduction, see [Performance Hygiene: Use ValueTask\<T\> for Fast Path Scenarios](performance-hygiene.md#use-valuetaskt-for-fast-path-scenarios).
 
@@ -182,14 +182,14 @@ In a realistic high-volume ETL pipeline:
 
 ### When to Use `ValueTask` for Transforms
 
-:heavy_check_mark: **Use `ValueTask` when:**
+**Use `ValueTask` when:**
 
 - The transform can complete synchronously in common case
 - You have a cache, in-memory lookup, or fast path
 - The synchronous case is likely to happen frequently
 - You're optimizing for throughput in high-volume scenarios
 
-:x: **Use `Task` when:**
+**Use `Task` when:**
 
 - The transform is almost always asynchronous (database queries, network calls every time)
 - You want simpler code and performance benefit is marginal

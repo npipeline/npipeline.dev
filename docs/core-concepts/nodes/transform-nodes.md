@@ -47,15 +47,15 @@ public interface IStreamTransformNode<TIn, TOut> : INode
 
 ## Choosing Between Transform Types
 
-| Aspect | ITransformNode | IStreamTransformNode |
-|--------|----------------|-------------------|
-| **Processing Model** | One item at a time | Entire stream at once |
-| **Return Type** | `Task<TOut>` | `IAsyncEnumerable<TOut>` |
-| **Use Cases** | Simple transformations, enrichment, validation | Batching, unbatching, windowing, filtering |
-| **Memory Pattern** | Low memory footprint | Higher memory for stream processing |
-| **Performance** | Low per-item overhead | Optimized for stream operations |
+| **Aspect** | **ITransformNode** | **IStreamTransformNode** |
+|---|---|---|
+| Processing Model | One item at a time | Entire stream at once |
+| Return Type | `Task<TOut>` | `IAsyncEnumerable<TOut>` |
+| Use Cases | Simple transformations, enrichment, validation | Batching, unbatching, windowing, filtering |
+| Memory Pattern | Low memory footprint | Higher memory for stream processing |
+| Performance | Low per-item overhead | Optimized for stream operations |
 
-*Table 1: Comparison of transform node types and their appropriate use cases.*
+**Table 1: Comparison of Transform Node Types**
 
 ## Implementation Example
 

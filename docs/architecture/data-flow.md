@@ -44,22 +44,22 @@ The key to NPipeline's efficiency is **lazy evaluation**: data is only processed
 
 ### How Lazy Evaluation Works
 
-```text
-Step 1: Source creates pipe
-        ↓
-        Pipe exists, but no data is read yet
-        
-Step 2: Transform wraps pipe
-        ↓
-        Transform is ready, but no processing happens yet
-        
-Step 3: Sink iterates through pipe
-        ↓
-        NOW data flows:
-        - Source reads item
-        - Transform processes item
-        - Sink consumes item
-        - REPEAT for next item
+```mermaid
+graph LR
+    A["Step 1:<br/>Source<br/>creates pipe"] -->|Pipe exists,<br/>no data yet| B["Step 2:<br/>Transform<br/>wraps pipe"]
+    B -->|Transform ready,<br/>no processing yet| C["Step 3:<br/>Sink iterates<br/>through pipe"]
+    C -->|NOW data flows:| D["Source reads<br/>item"]
+    D --> E["Transform<br/>processes item"]
+    E --> F["Sink<br/>consumes item"]
+    F --> G["REPEAT for<br/>next item"]
+    
+    style A fill:#c8e6c9
+    style B fill:#bbdefb
+    style C fill:#ffe0b2
+    style D fill:#f8bbd0
+    style E fill:#f8bbd0
+    style F fill:#f8bbd0
+    style G fill:#f8bbd0
 ```
 
 **Code Example:**
@@ -147,16 +147,24 @@ await foreach (var item in pipe.WithCancellation(ct))
 }
 ```
 
+> **✅ Best Practice**
+>
+> Always use streaming patterns with large datasets. Lazy evaluation ensures constant memory usage regardless of data size.
+
 **Bad: Materializing Entire Stream**
 
 ```csharp
 // Loads everything into memory!
-var allItems = await pipe.ToListAsync(ct); // :x: Bad for large datasets
+var allItems = await pipe.ToListAsync(ct); // Bad for large datasets
 foreach (var item in allItems)
 {
     // Process...
 }
 ```
+
+> **⚠️ Avoid**
+>
+> Materializing entire streams into memory defeats the purpose of lazy evaluation and will consume excessive memory for large datasets.
 
 ## Next Steps
 

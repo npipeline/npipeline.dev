@@ -415,4 +415,4 @@ var transformAsync = builder.AddTransformAsync(
 
 - [Node Definition](./node-definition.md) - Understanding node structure
 - [Custom Nodes](./nodes/custom-nodes.md) - Creating class-based nodes for complex scenarios
-- [Pipeline Builder](./pipelinebuilder.md) - Full pipeline builder API reference
+- [Defining Pipelines](./defining-pipelines.md) - Full pipeline builder API reference

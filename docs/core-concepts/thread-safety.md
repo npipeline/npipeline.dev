@@ -6,6 +6,13 @@ NPipeline is designed for high-performance streaming data processing. This docum
 
 **NPipeline is primarily designed for single-threaded pipeline execution.** However, it provides extensive support for parallel processing of individual data items. Understanding the distinction is critical.
 
+> **🔑 Critical Concept**
+>
+> NPipeline separates pipeline-level execution from item-level parallelism:
+> - **Pipeline-level**: Single-threaded (one pipeline instance, one context)
+> - **Item-level**: Can be parallel (different items processed by different threads)
+> - **Shared state**: Only the node instances are shared; items are always independent
+
 ## Single-Pipeline Execution (Default)
 
 In the most common scenario, a single pipeline processes a stream of data items sequentially:
@@ -18,10 +25,10 @@ await pipeline.ExecuteAsync(dataSource, context);
 
 In this case:
 
-- :heavy_check_mark: No synchronization needed
-- :heavy_check_mark: Direct access to `context.Items`, `context.Parameters`, and `context.Properties` is safe
-- :heavy_check_mark: All operations are single-threaded
-- :heavy_check_mark: Maximum performance with zero overhead
+- No synchronization needed
+- Direct access to `context.Items`, `context.Parameters`, and `context.Properties` is safe
+- All operations are single-threaded
+- Maximum performance with zero overhead
 
 ## Parallel Node Execution
 
@@ -44,6 +51,10 @@ Each worker thread processes **different data items**, not shared state. The `Pi
 ### Shared State During Parallel Execution
 
 If you need **shared mutable state** during parallel execution, **DO NOT** access `context.Items` or `context.Parameters` directly. Instead:
+
+> **⚠️ Warning**
+>
+> Do NOT modify `context.Items` or `context.Parameters` during parallel item processing. These are not thread-safe. Use `IPipelineStateManager` or node-level synchronization instead.
 
 #### Option 1: Use IPipelineStateManager (Recommended)
 
@@ -140,20 +151,20 @@ You might wonder: "Why not just use `ConcurrentDictionary` for thread safety?"
 
 ## Parallel Execution Best Practices
 
-### :heavy_check_mark: DO
+### DO
 
-- :heavy_check_mark: Use `IPipelineStateManager` for shared state in parallel scenarios
-- :heavy_check_mark: Process independent data items in parallel workers
-- :heavy_check_mark: Store immutable configuration in context properties
-- :heavy_check_mark: Use atomic operations for simple counters
-- :heavy_check_mark: Synchronize access to shared mutable state
+- Use `IPipelineStateManager` for shared state in parallel scenarios
+- Process independent data items in parallel workers
+- Store immutable configuration in context properties
+- Use atomic operations for simple counters
+- Synchronize access to shared mutable state
 
-### :x: DON'T
+### DON'T
 
-- :x: Directly modify `context.Items` from multiple threads without synchronization
-- :x: Assume context dictionaries are thread-safe
-- :x: Share mutable state between parallel workers without explicit synchronization
-- :x: Access `context.Parameters` after pipeline execution has started (in parallel scenarios)
+- Directly modify `context.Items` from multiple threads without synchronization
+- Assume context dictionaries are thread-safe
+- Share mutable state between parallel workers without explicit synchronization
+- Access `context.Parameters` after pipeline execution has started (in parallel scenarios)
 
 ## Example: Safe Parallel Processing
 

@@ -278,7 +278,7 @@ One of the most important aspects of parallel processing is understanding and ma
 **Independent Item Processing:** Each worker thread processes a different data item. The core processing is inherently thread-safe because workers operate on independent data.
 
 ```csharp
-// :heavy_check_mark: SAFE: Each thread processes different items independently
+// SAFE: Each thread processes different items independently
 public override async ValueTask<TOut> TransformAsync(
     TIn input,                    // Each thread gets a different item
     PipelineContext context,
@@ -292,10 +292,10 @@ public override async ValueTask<TOut> TransformAsync(
 **Shared State is NOT Thread-Safe:** The `PipelineContext` dictionaries (Items, Parameters, Properties) are NOT thread-safe. If multiple worker threads need to access or modify shared state, you must use explicit synchronization.
 
 ```csharp
-// :x: UNSAFE: Multiple threads accessing context.Items without synchronization
+// UNSAFE: Multiple threads accessing context.Items without synchronization
 context.Items["counter"] = (int)context.Items.GetValueOrDefault("counter", 0) + 1;
 
-// :heavy_check_mark: SAFE: Use IPipelineStateManager for thread-safe shared state
+// SAFE: Use IPipelineStateManager for thread-safe shared state
 var stateManager = context.StateManager;
 if (stateManager != null)
 {
@@ -374,21 +374,21 @@ public class CountingTransform : TransformNode<int, int>
 }
 ```
 
-### :heavy_check_mark: Thread Safety DO's
+### Thread Safety DO's
 
-- :heavy_check_mark: Process independent data items in parallel (inherently safe)
-- :heavy_check_mark: Use `IPipelineStateManager` for shared state
-- :heavy_check_mark: Use `lock` for simple critical sections
-- :heavy_check_mark: Use `Interlocked` for atomic counter operations
-- :heavy_check_mark: Keep synchronization scopes small and fast
+- Process independent data items in parallel (inherently safe)
+- Use `IPipelineStateManager` for shared state
+- Use `lock` for simple critical sections
+- Use `Interlocked` for atomic counter operations
+- Keep synchronization scopes small and fast
 
-### :x: Thread Safety DON'Ts
+### Thread Safety DON'Ts
 
-- :x: Directly access or modify `context.Items` from multiple threads
-- :x: Share mutable state between nodes without explicit synchronization
-- :x: Assume dictionaries in `PipelineContext` are thread-safe
-- :x: Hold locks across I/O operations (causes contention)
-- :x: Create complex multi-step interlocked sequences (use locks instead)
+- Directly access or modify `context.Items` from multiple threads
+- Share mutable state between nodes without explicit synchronization
+- Assume dictionaries in `PipelineContext` are thread-safe
+- Hold locks across I/O operations (causes contention)
+- Create complex multi-step interlocked sequences (use locks instead)
 
 **For comprehensive guidance, see [Thread Safety Guidelines](../core-concepts/thread-safety.md).**
 

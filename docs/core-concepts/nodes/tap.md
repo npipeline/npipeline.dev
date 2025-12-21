@@ -43,7 +43,7 @@ var tapNode = new TapNode<MyData>(loggingSink);
 
 ### Example: Logging Intermediate Data
 
-You can insert a `TapNode` at any point in your pipeline to log or inspect data without altering the data itself or its flow to subsequent processing steps.
+A `TapNode` can be inserted at any point in your pipeline to log or inspect data without altering the data itself or its flow to subsequent processing steps.
 
 ```csharp
 using NPipeline;

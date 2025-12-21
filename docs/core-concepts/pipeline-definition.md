@@ -204,7 +204,7 @@ Both approaches ultimately use the `PipelineRunner` with an `IPipelineDefinition
 ## When to Use IPipelineDefinition
 
 * **Complex Pipelines**: For pipelines with many nodes or complex branching and joining logic, encapsulating the definition in a class improves organization.
-* **Dependency Injection**: When your nodes have dependencies that need to be injected, `IPipelineDefinition` is the preferred approach as it integrates cleanly with DI containers.
+* **Dependency Injection**: When your nodes have dependencies that need to be injected, `IPipelineDefinition` is the preferred approach as it integrates cleanly with Dependency Injection (DI) containers.
 * **Reusability**: If you have common pipeline structures that you want to reuse, you can create base definition classes.
 
 ## Related Topics

@@ -10,6 +10,18 @@ Aggregation nodes enable powerful summary calculations over streams of data. The
 
 For pipelines where events may arrive late or out of sequence—especially with parallel streams—aggregation provides the tools to group data by time windows while ensuring temporal correctness. When you configure aggregation, you define explicit rules about how much lateness the system will tolerate and when it should commit to results.
 
+---
+
+## ⚠️ Critical Decision: Aggregation vs. Batching
+
+**Before implementing aggregation, ensure it's actually what you need.** Aggregation solves a **data correctness problem** (handling events that arrive out of order or late), but if your real concern is **operational efficiency** (reducing load on external systems), you likely need **Batching** instead.
+
+**→ [Read Grouping Strategies: Batching vs. Aggregation](../grouping-strategies.md) to make the right choice**
+
+Common mistake: Using aggregation when you actually need batching → unnecessary complexity and overhead without solving the right problem.
+
+---
+
 > **Related Pattern:** [Batching nodes](batching.md) also group items together, but for different reasons—they focus on operational efficiency (reducing external system load). Aggregation is specialized for ensuring data correctness when events arrive out of order. Choose batching for throughput needs, aggregation for temporal accuracy needs.
 
 ## Choosing an Aggregation Base Class

@@ -16,6 +16,8 @@ First, add the NuGet package to your project:
 dotnet add package NPipeline.Extensions.DependencyInjection
 ```
 
+For the core NPipeline package and other available extensions, see the [Installation Guide](../getting-started/installation.md).
+
 ## Registering NPipeline Services
 
 The `AddNPipeline` extension method on `IServiceCollection` registers all necessary NPipeline services, including `IPipelineRunner`, node factories, and optionally any `IPipelineDefinition` or `INode` implementations found in specified assemblies.
@@ -133,7 +135,7 @@ public class Program
 
 ### Mixed Approach (Manual + Assembly Scanning)
 
-You can combine both approaches by registering some components manually and scanning for others:
+Both approaches can be combined by registering some components manually and scanning for others:
 
 ```csharp
 services.AddNPipeline(builder => builder
@@ -216,7 +218,7 @@ In addition to scanning for your implementations, `AddNPipeline` registers these
 
 ### Overriding Default Registrations
 
-You can override or customize default registrations if needed. For example, if you want a singleton instance of a particular node:
+Default registrations can be overridden or customized if needed. For example, to configure a singleton instance of a particular node:
 
 ```csharp
 services.AddNPipeline(Assembly.GetExecutingAssembly());
@@ -252,7 +254,7 @@ await serviceProvider.RunPipelineAsync<MyPipelineDefinition>(parameters);
 
 The extension provides a set of `IServiceCollection` extension methods to register your pipeline components. The primary method is `AddNPipeline()`, which sets up the core services required to run pipelines.
 
-You can then register your pipeline definitions and the nodes they depend on.
+Then register your pipeline definitions and the nodes they depend on.
 
 Let's consider a pipeline where a transform node relies on an external service, `IEmailService`.
 

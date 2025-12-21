@@ -28,31 +28,37 @@ NPipeline follows a clear separation of concerns:
 - Sinks iterate through pipes with `await foreach`
 - Transforms process items as they arrive
 
-This design provides:
-
-- :heavy_check_mark: **Clear execution boundaries:** Source setup is fast; transforms and sinks handle async work
-- :heavy_check_mark: **Predictable performance:** No hidden delays during source initialization
-- :heavy_check_mark: **Type safety:** Synchronous source returns enable better variance and lazy evaluation
-- :heavy_check_mark: **Memory efficiency:** No unnecessary Task allocations for data production
+> **💡 Key Insight**
+> 
+> This design provides:
+> - **Clear execution boundaries:** Source setup is fast; transforms and sinks handle async work
+> - **Predictable performance:** No hidden delays during source initialization
+> - **Type safety:** Synchronous source returns enable better variance and lazy evaluation
+> - **Memory efficiency:** No unnecessary Task allocations for data production
 
 ## Sequential Execution (Default)
 
 **Data Flow Pattern:**
 
-```text
-Source produces item 1
-    ↓
-Transform 1 processes item 1
-    ↓
-Transform 2 processes item 1
-    ↓
-Sink consumes item 1
-    ↓
-Source produces item 2
-    ↓
-Transform 1 processes item 2
-    ↓
-... (repeat)
+```mermaid
+graph TD
+    A["Source: Produces item 1"] --> B["Transform 1: Processes item 1"]
+    B --> C["Transform 2: Processes item 1"]
+    C --> D["Sink: Consumes item 1"]
+    D --> E["Source: Produces item 2"]
+    E --> F["Transform 1: Processes item 2"]
+    F --> G["Transform 2: Processes item 2"]
+    G --> H["Sink: Consumes item 2"]
+    H --> I["... repeat for remaining items"]
+    
+    style A fill:#c8e6c9
+    style B fill:#bbdefb
+    style C fill:#bbdefb
+    style D fill:#ffe0b2
+    style E fill:#c8e6c9
+    style F fill:#bbdefb
+    style G fill:#bbdefb
+    style H fill:#ffe0b2
 ```
 
 **Characteristics:**
@@ -66,6 +72,10 @@ Transform 1 processes item 2
 **Optimizations:**
 
 The sequential strategy automatically detects and uses `ExecuteValueTaskAsync` when available on transform nodes. This avoids Task allocation overhead for synchronous operations, improving throughput for pipelines dominated by fast, synchronous transforms. See [Synchronous Fast Paths](../advanced-topics/synchronous-fast-paths.md) for details.
+
+> **🚀 Performance Tip**
+>
+> Use `ExecuteValueTaskAsync` in your transform nodes for CPU-bound operations to eliminate Task allocation overhead in sequential pipelines.
 
 **When to Use:**
 
@@ -100,15 +110,32 @@ public class SequentialPipeline : IPipelineDefinition
 
 **Data Flow Pattern:**
 
-```text
-Source produces items 1, 2, 3, 4
-    ↓
-[Parallel Processing - Multiple items in flight]
-Transform 1 processes items in parallel
-    ↓
-Transform 2 processes items in parallel
-    ↓
-Sink consumes items (possibly out of order)
+```mermaid
+graph TD
+    A["Source: Produces<br/>items 1, 2, 3, 4"]
+    A --> B1["Transform 1: Item 1<br/>(concurrent)"]
+    A --> B2["Transform 1: Item 2<br/>(concurrent)"]
+    A --> B3["Transform 1: Item 3<br/>(concurrent)"]
+    A --> B4["Transform 1: Item 4<br/>(concurrent)"]
+    B1 --> C1["Transform 2: Item 1<br/>(concurrent)"]
+    B2 --> C2["Transform 2: Item 2<br/>(concurrent)"]
+    B3 --> C3["Transform 2: Item 3<br/>(concurrent)"]
+    B4 --> C4["Transform 2: Item 4<br/>(concurrent)"]
+    C1 --> D["Sink: Consumes items<br/>(possibly out of order)"]
+    C2 --> D
+    C3 --> D
+    C4 --> D
+    
+    style A fill:#c8e6c9
+    style B1 fill:#bbdefb
+    style B2 fill:#bbdefb
+    style B3 fill:#bbdefb
+    style B4 fill:#bbdefb
+    style C1 fill:#bbdefb
+    style C2 fill:#bbdefb
+    style C3 fill:#bbdefb
+    style C4 fill:#bbdefb
+    style D fill:#ffe0b2
 ```
 
 **Characteristics:**
@@ -189,15 +216,17 @@ This approach:
 
 ## Performance Considerations
 
-| Execution Model | Throughput | Memory | Complexity | Best For |
+| **Execution Model** | **Throughput** | **Memory** | **Complexity** | **Best For** |
 |---|---|---|---|---|
-| **Sequential** | Low-Medium | Low | Low | Default, debugging, order-critical |
-| **Parallel** | High | Medium-High | Medium | CPU-bound, high throughput |
-| **Hybrid** | Medium-High | Medium | Medium | Mixed workloads |
+| Sequential | Low-Medium | ✅ Low | ✅ Low | Default, debugging, order-critical |
+| Parallel | ⭐ High | Medium-High | Medium | CPU-bound, high throughput |
+| Hybrid | Medium-High | Medium | Medium | Mixed workloads |
+
+**Table: Execution Model Comparison**
 
 ## Context Immutability During Execution
 
-**Important for Performance-Critical Applications:**
+> **⚠️ Important for Performance-Critical Applications**
 
 When using `CachedNodeExecutionContext` (which all execution strategies do automatically), the framework assumes that certain context state remains immutable during node execution.
 
@@ -220,7 +249,7 @@ The framework caches these values at the start of node execution to avoid dictio
 
 ### When You Can Safely Modify Context
 
-You can modify context state **between node executions**, such as:
+Context state can be modified **between node executions**, such as:
 
 ```csharp
 // ✅ Safe: Modify context before node execution starts
