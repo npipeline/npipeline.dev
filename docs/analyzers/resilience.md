@@ -54,5 +54,5 @@ Missing even one of these prerequisites will **silently disable restart**, causi
 
 - **[Getting Started with Resilience](../../core-concepts/resilience/getting-started)** - Complete step-by-step configuration guide
 - [Resilience Configuration Guide](../../core-concepts/resilience/error-handling)
-- [Error Handling Architecture](../../architecture/error-handling-architecture.md)
-- [Cancellation Model](../../architecture/cancellation-model.md)
+- [Error Handling Architecture](../../architecture/error-handling-architecture)
+- [Cancellation Model](../../architecture/cancellation-model)
