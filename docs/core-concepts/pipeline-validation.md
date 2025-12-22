@@ -281,7 +281,7 @@ builder.Validate(); // OK: All prerequisites configured
 - [ ] Set `MaxNodeRestartAttempts > 0` (typically 2-3)
 - [ ] Set `MaxMaterializedItems` to a positive value based on item size (typically 100-10000)
 
-**See Also:** [Getting Started with Resilience](./resilience/getting-started.md), [Resilience Architecture](../../architecture/error-handling-architecture.md)
+**See Also:** [Getting Started with Resilience](./resilience/getting-started), [Resilience Architecture](../../architecture/error-handling-architecture)
 
 ### Parallel Configuration Rule Details
 
