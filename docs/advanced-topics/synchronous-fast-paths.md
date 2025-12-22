@@ -301,11 +301,23 @@ public interface INetworkFormatterService
 }
 ```
 
-## Critical Constraints: When NOT to Use ValueTask
+## ⚠️ MANDATORY: ValueTask Safety Checklist
 
-While ValueTask is powerful, it comes with strict constraints. Understanding these is essential for correctness.
+Before using `ValueTask<T>` in any transform, you MUST acknowledge and follow these constraints. Violating these rules leads to undefined behavior, random exceptions, and production crashes that are extremely difficult to debug.
 
-### Never Await More Than Once
+**Mandatory Requirements (ALL must be true):**
+
+- [ ] **Single Await Only**: You will `await` the result exactly once. Never store and await multiple times.
+- [ ] **No ConfigureAwait**: Your code does not use `.ConfigureAwait(false)` or any ConfigureAwait variant.
+- [ ] **Fast Path Exists**: The synchronous case actually occurs frequently (>50%) in your workload. If always async, use `Task<T>`.
+- [ ] **Internal or Documented**: This is internal implementation detail OR explicitly documented as requiring single-await semantics.
+- [ ] **Benchmarked**: You measured actual performance improvement from ValueTask. Don't optimize without data.
+
+If ANY of these are false, **use `Task<T>` instead.** The framework defaults to `Task<T>` on public APIs for good reason—it's safer.
+
+### The Risks: What Happens When You Break These Rules
+
+#### Risk #1: Multiple Awaits = Undefined Behavior
 
 **The Rule:** You can only `await` a `ValueTask<T>` exactly once. Multiple awaits on same `ValueTask<T>` are undefined behavior and will cause exceptions or incorrect results.
 
@@ -318,6 +330,15 @@ var result2 = await valueTask;  // Second await - UNDEFINED BEHAVIOR (exception 
 
 **Why?** The struct-based nature of `ValueTask<T>` means its state is mutable. After first await completes, internal state is consumed. A second await has nowhere to go.
 
+**Real-world scenario:** You implement ValueTask optimization, it works fine. Six months later, someone adds logging:
+
+```csharp
+var vt = GetValueAsync(key);
+logger.Log($"Starting operation");
+var result = await vt;  // Second implicit await through logging
+logger.Log($"Completed"); // ERROR: You just caused undefined behavior
+```
+
 **Correct usage:**
 
 ```csharp
@@ -326,7 +347,24 @@ var result1 = await GetValueAsync("key");
 var result2 = await GetValueAsync("key"); // Call method again
 ```
 
-### Avoid When Always Asynchronous
+### Never Await More Than Once
+
+#### Risk #2: No ConfigureAwait Support
+
+`ValueTask<T>` does not support `ConfigureAwait()`. If your code requires `ConfigureAwait(false)` for library code or UI synchronization context handling, you cannot use `ValueTask<T>`.
+
+```csharp
+// WRONG - ConfigureAwait not supported on ValueTask
+var result = await GetValueAsync().ConfigureAwait(false);
+
+// CORRECT if you need ConfigureAwait
+public Task<string> GetValueAsync()
+{
+    return FetchAsync().ConfigureAwait(false);
+}
+```
+
+#### Risk #3: Always-Async Methods Waste Effort
 
 If your method **always** performs async work—never returns synchronously—there's no benefit to `ValueTask<T>`. The wrapper adds complexity without any allocation savings.
 
@@ -344,41 +382,62 @@ public Task<int> ComputeExpensiveAsync()
 }
 ```
 
-In this case, synchronous fast path never exists, so you're just adding complexity.
+#### Risk #4: Public APIs Need Safe Defaults
 
-### Consider Public APIs Carefully
-
-If this is a public API that external callers will use, consider using `Task<T>` instead. Your callers need to understand constraints of `ValueTask<T>` (single await, no ConfigureAwait) to use it correctly. If those constraints aren't explicitly documented and understood, you may create subtle bugs in calling code.
+Public APIs that external callers will use should default to `Task<T>`. External callers might not understand ValueTask constraints, and can easily violate the single-await rule, creating subtle bugs in their code.
 
 ```csharp
-// If this is internal or well-documented, ValueTask is fine
+// If this is internal or well-documented, ValueTask is acceptable
 internal ValueTask<int> GetItemAsync(string key)
 {
-    // ...
+    // Internal implementation - documented constraints are fine
 }
 
-// If this is public, consider whether ValueTask constraints are worth performance gain
-// or whether Task is safer choice for API stability
+// If this is public, prefer Task<T> for API stability
 public Task<int> GetItemAsync(string key)
 {
-    // Simpler contract, no surprise constraints
+    // Simpler contract, no surprise constraints for external callers
 }
 ```
 
-### ConfigureAwait Not Supported
+### Recommended: Implement ExecuteValueTaskAsync for Optimization
 
-`ValueTask<T>` does not support `ConfigureAwait()`. If your code requires `ConfigureAwait(false)` for library code or UI synchronization context handling, you cannot use `ValueTask<T>`.
+NPipeline provides a two-method pattern that gets you all the ValueTask performance benefits WITHOUT exposing ValueTask constraints to callers:
+
+**The Pattern:**
 
 ```csharp
-// WRONG - ConfigureAwait not supported on ValueTask
-var result = await GetValueAsync().ConfigureAwait(false);
-
-// CORRECT if you need ConfigureAwait
-public Task<string> GetValueAsync()
+public sealed class OptimizedTransform : TransformNode<Order, Order>
 {
-    return FetchAsync().ConfigureAwait(false);
+    // Keep public method returning Task<T> for API stability
+    public override Task<Order> ExecuteAsync(Order item, PipelineContext context, CancellationToken cancellationToken)
+    {
+        return FromValueTask(ExecuteValueTaskAsync(item, context, cancellationToken));
+    }
+
+    // Override ExecuteValueTaskAsync for optimized implementation
+    protected internal override ValueTask<Order> ExecuteValueTaskAsync(Order item, PipelineContext context, CancellationToken cancellationToken)
+    {
+        // Safe to use ValueTask here - it's internal-facing
+        // No single-await constraint risk for external callers
+        // Execution strategies automatically use this when available
+        
+        if (item.Total < 0)
+            throw new ArgumentException("Total must be non-negative");
+
+        return ValueTask.FromResult(item);
+    }
 }
 ```
+
+**Benefits of this approach:**
+
+- **You get 90% of the performance win** - Execution strategies automatically detect and use `ExecuteValueTaskAsync`
+- **No ValueTask constraints exposed** - `ExecuteAsync` returns `Task<T>`, so external callers don't see ValueTask limitations
+- **API stability** - Public contract stays the same; optimization is an implementation detail
+- **Automatic detection** - Framework handles routing to the ValueTask path transparently
+
+See [Principle 6b: Optimize Synchronous Transforms with ValueTask](../core-concepts/best-practices.md) for a complete example.
 
 ## See Also
 

@@ -23,11 +23,11 @@ Without using this analyzer, developers can easily miss one of the three mandato
 #### With the Analyzer
 
 ```text
-CSC : warning NP9001: Error handler can return PipelineErrorDecision.RestartNode
+CSC : error NP9001: Error handler can return PipelineErrorDecision.RestartNode
 but the node may not have all three mandatory prerequisites configured...
 ```
 
-This gets flagged immediately at build time, during development.
+This gets flagged immediately at build time, during development, preventing the build from succeeding.
 
 #### Solution: Complete Configuration
 

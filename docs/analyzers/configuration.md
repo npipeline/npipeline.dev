@@ -14,7 +14,7 @@ Configuration analyzers detect issues with pipeline configuration that can lead 
 **Severity:** Error  
 **Category:** Configuration  
 
-This analyzer detects when `PipelineRetryOptions.MaxMaterializedItems` is null or missing, which causes unbounded memory growth in `ResilientExecutionStrategy` and silently disables restart functionality. This is a critical configuration error that can lead to `OutOfMemoryException` in production.
+This analyzer detects when `PipelineRetryOptions.MaxMaterializedItems` is null or missing, which causes unbounded memory growth in `ResilientExecutionStrategy` and silently disables restart functionality. This is a critical configuration error that must be treated as a build-time error to prevent production failures.
 
 #### Why This Matters
 
@@ -45,6 +45,10 @@ var retryOptions = new PipelineRetryOptions(
 | Large items (> 10KB) | 10-100 | Prevent memory pressure |
 | Memory-constrained environments | 10-50 | Conservative approach |
 | High-throughput scenarios | 100-1000 | Depends on item size |
+
+#### Enforcement Requirement
+
+This analyzer is configured as an **Error** by default because unbounded materialization is fundamentally incompatible with resilient pipeline operation. It should not be downgraded to a warning, as doing so would allow silently broken resilience configurations to pass build time.
 
 ### NP9502: Inappropriate Parallelism Configuration
 

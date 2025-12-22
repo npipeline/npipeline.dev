@@ -8,6 +8,22 @@ sidebar_position: 2
 
 This guide provides quick-start checklists and patterns for the two most common resilience scenarios: node restarts and retry delay strategies.
 
+## ⚠️ RESILIENCE READINESS CHECKLIST
+
+**Before deploying any pipeline with resilience features, you MUST satisfy all three of these requirements:**
+
+- [ ] **ResilientExecutionStrategy Configured**: Node is wrapped with `ResilientExecutionStrategy()`
+- [ ] **MaxNodeRestartAttempts > 0**: Set to a positive number (typically 2-3) in `PipelineRetryOptions`
+- [ ] **MaxMaterializedItems is Set**: Configured to a positive bounded value (recommended: 100-1,000) - **NEVER null**
+
+If ANY of these is missing or incorrect, your resilience configuration is silently incomplete and your pipeline will fail in production instead of recovering gracefully.
+
+Use the NPipeline analyzers to catch these issues at build time:
+- **NP9001**: Detects incomplete restart configuration (error severity recommended)
+- **NP9501**: Detects unbounded materialization (error severity required)
+
+Enable these in your `.editorconfig` to make them blocking errors in your build pipeline.
+
 ## Node Restart - Quick Start Checklist
 
 > ⚠️ **CRITICAL: READ THIS BEFORE USING `PipelineErrorDecision.RestartNode`**

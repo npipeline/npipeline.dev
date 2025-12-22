@@ -273,6 +273,80 @@ When to adjust the default queue length:
 
 One of the most important aspects of parallel processing is understanding and managing thread safety correctly. NPipeline's parallel execution model is designed to be safe by default, but requires careful attention when accessing shared state.
 
+> 🚨 **CRITICAL THREAD SAFETY TRAP**
+>
+> **DO NOT access `context.Items` or `context.Parameters` during parallel item processing.**
+>
+> These dictionaries are NOT thread-safe. If multiple worker threads try to access them simultaneously, you will get data races that cause:
+> - Silent data corruption
+> - Non-deterministic crashes
+> - Impossible-to-reproduce bugs that only show up under production load
+>
+> The cost of learning this the hard way in production is enormous.
+
+### The Unsafe Pattern (DO NOT USE)
+
+```csharp
+// ❌ WRONG - This is a data race
+public class UnsafeMetricsTransform : TransformNode<int, int>
+{
+    public override async ValueTask<int> TransformAsync(
+        int input,
+        PipelineContext context,
+        CancellationToken ct)
+    {
+        // PROBLEM: Multiple threads access this without synchronization
+        var count = context.Items.GetValueOrDefault("processed", 0);
+        context.Items["processed"] = count + 1;  // ← DATA RACE!
+        
+        // PROBLEM: Multiple threads read/write shared state
+        if (context.Items.ContainsKey("sum"))
+            context.Items["sum"] = (int)context.Items["sum"] + input;
+        
+        return input;
+    }
+}
+```
+
+**Why this breaks:**
+- Thread A reads count = 5
+- Thread B reads count = 5 (before A writes)
+- Thread A writes count = 6
+- Thread B writes count = 6 (overwrites A's write!)
+- Expected: count = 7; Actual: count = 6 (lost update)
+- This happens randomly under load - impossible to debug in development
+
+### The Safe Pattern (RECOMMENDED)
+
+```csharp
+// ✅ CORRECT - Use IPipelineStateManager for shared state
+public class SafeMetricsTransform : TransformNode<int, int>
+{
+    public override async ValueTask<int> TransformAsync(
+        int input,
+        PipelineContext context,
+        CancellationToken ct)
+    {
+        // SAFE: IPipelineStateManager handles all synchronization
+        var stateManager = context.StateManager;
+        if (stateManager != null)
+        {
+            // These operations are internally synchronized
+            await stateManager.IncrementCounterAsync("processed", ct);
+            await stateManager.IncrementCounterAsync("sum", input, ct);
+        }
+        
+        return input;
+    }
+}
+```
+
+**Why this is safe:**
+- State manager uses internal locking for all operations
+- All updates are atomic and isolated
+- No data races - thread-safe by design
+- Performance is optimized with fine-grained locking
+
 ### Key Principles
 
 **Independent Item Processing:** Each worker thread processes a different data item. The core processing is inherently thread-safe because workers operate on independent data.
