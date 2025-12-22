@@ -281,7 +281,7 @@ builder.Validate(); // OK: All prerequisites configured
 - [ ] Set `MaxNodeRestartAttempts > 0` (typically 2-3)
 - [ ] Set `MaxMaterializedItems` to a positive value based on item size (typically 100-10000)
 
-**See Also:** [Getting Started with Resilience](./resilience/getting-started.md), [Resilience Architecture](../../architecture/error-handling-architecture.md)
+**See Also:** [Getting Started with Resilience](./resilience/getting-started), [Resilience Architecture](../../architecture/error-handling-architecture)
 
 ### Parallel Configuration Rule Details
 
@@ -385,7 +385,7 @@ builder.SetNodeExecutionOption(transform.Id, parallelOptions);
 - [ ] If using drop policies, ensure `MaxQueueLength` is set to a positive value
 - [ ] Monitor actual utilization to ensure parallelism matches your workload
 
-**See Also:** [Parallel Execution Guide](./extensions/parallelism.md), [Performance Optimization](../../architecture/optimization-principles.md)
+**See Also:** [Parallel Execution Guide](../../extensions/parallelism), [Performance Optimization](../../architecture/optimization-principles)
 
 ## Validation Workflow & Patterns
 
