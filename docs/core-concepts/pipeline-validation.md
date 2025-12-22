@@ -385,7 +385,7 @@ builder.SetNodeExecutionOption(transform.Id, parallelOptions);
 - [ ] If using drop policies, ensure `MaxQueueLength` is set to a positive value
 - [ ] Monitor actual utilization to ensure parallelism matches your workload
 
-**See Also:** [Parallel Execution Guide](./extensions/parallelism.md), [Performance Optimization](../../architecture/optimization-principles.md)
+**See Also:** [Parallel Execution Guide](../../extensions/parallelism), [Performance Optimization](../../architecture/optimization-principles)
 
 ## Validation Workflow & Patterns
 
