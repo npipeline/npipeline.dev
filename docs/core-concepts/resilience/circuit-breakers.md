@@ -409,7 +409,7 @@ var rateBasedOptions = new PipelineCircuitBreakerOptions(
 
 ## Circuit Breaker Memory Management
 
-The [`CircuitBreakerMemoryManagementOptions`](../../../src/NPipeline/Configuration/CircuitBreakerMemoryManagementOptions.cs:12) class provides configuration for managing circuit breaker memory usage and automatic cleanup:
+The `CircuitBreakerMemoryManagementOptions` class provides configuration for managing circuit breaker memory usage and automatic cleanup:
 
 Circuit breaker instances are cached per node ID to maintain state across calls. In long-running applications or pipelines with many dynamic nodes, inactive breakers should be cleaned up to prevent memory leaks.
 

@@ -113,7 +113,6 @@ When building production-grade pipelines with NPipeline, it's important to consi
 
 ## Key Concepts
 
-- **[Defining Pipelines](defining-pipelines.md)** - Both fluent and class-based approaches to define your pipeline structure
 - **[Defining Pipelines](defining-pipelines.md)** - Fluent API and class-based approaches for constructing pipelines
 - **[Pipeline Context](pipeline-context.md)** - Shared state and configuration across nodes
 - **[Node Definition Structure](node-definition.md)** - Understanding the nested configuration structure of NodeDefinition

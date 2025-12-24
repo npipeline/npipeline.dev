@@ -32,7 +32,7 @@ if (result.Warnings.Count > 0)
 {
     Console.WriteLine("Configuration warnings:");
     foreach (var warning in result.Warnings)
-        Console.WriteLine($"  ⚠️  {warning}");
+        Console.WriteLine($"  WARNING: {warning}");
 }
 
 var pipeline = builder.Build();

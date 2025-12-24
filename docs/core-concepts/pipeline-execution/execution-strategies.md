@@ -213,29 +213,6 @@ public static class Program
         await runner.RunAsync<ParallelPipelineDefinition>(context);
     }
 }
-
-public sealed class ParallelPipelineDefinition : IPipelineDefinition
-{
-    public void Define(PipelineBuilder builder, PipelineContext context)
-    {
-        var sourceHandle = builder.AddSource<InMemorySourceNode<int>, int>("source");
-        var transformHandle = builder
-            .AddTransform<AsyncTransform, int, string>("asyncProcessor")
-            .WithExecutionStrategy(builder, new ParallelExecutionStrategy());
-        var sinkHandle = builder.AddSink<ConsoleSink<string>, string>("sink");
-
-        builder.Connect(sourceHandle, transformHandle);
-        builder.Connect(transformHandle, sinkHandle);
-
-        builder.SetNodeExecutionOption(transformHandle.Id, new ParallelOptions
-        {
-            MaxDegreeOfParallelism = 4,      // Process up to 4 items concurrently
-            MaxQueueLength = 2,              // Allow up to 2 items in the input buffer
-            QueuePolicy = BoundedQueuePolicy.Block, // Block if the queue is full
-            PreserveOrdering = true          // Ensure output order matches input order
-        });
-    }
-}
 ```
 
 #### Example: Non-Ordered Parallel Execution for Maximum Throughput

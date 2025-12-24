@@ -140,32 +140,6 @@ public void Define(PipelineBuilder builder, PipelineContext context)
 }
 ```
 
-## Decision Flow
-
-```mermaid
-flowchart TD
-    A[What type of operation?] --> B{External Service/API?}
-    B -->|Yes| C[Use Exponential Backoff]
-    B -->|No| D{Database Operation?}
-    D -->|Yes| E[Use Linear Backoff]
-    D -->|No| F{File System?}
-    F -->|Yes| G[Use Fixed Delay]
-    F -->|No| H[Use Exponential Backoff<br>Default choice]
-    
-    C --> I[See: Exponential Backoff]
-    E --> J[See: Linear Backoff]
-    G --> K[See: Fixed Delay]
-    H --> I
-    
-    style A fill:#e1f5fe
-    style C fill:#e8f5e9
-    style E fill:#e8f5e9
-    style G fill:#e8f5e9
-    style I fill:#fff3e0
-    style J fill:#f3e5f5
-    style K fill:#f3e5f5
-```
-
 ## Available Strategies
 
 ### Basic Strategies
