@@ -157,6 +157,29 @@ graph TD
 
 *Figure: Full outer join produces all items from both streams, matching when possible.*
 
+#### Configuring Capacity Limits
+
+To prevent unbounded memory growth when streams are unbalanced, you can configure the `MaxCapacity` property on keyed join nodes:
+
+```csharp
+[KeySelector(typeof(Order), nameof(Order.CustomerId))]
+[KeySelector(typeof(Customer), nameof(Customer.CustomerId))]
+public sealed class CustomerOrderJoinNode : KeyedJoinNode<int, Order, Customer, EnrichedOrder>
+{
+    public CustomerOrderJoinNode()
+    {
+        // Set maximum capacity for unmatched items to prevent memory exhaustion
+        // When capacity is exceeded, new unmatched items will be discarded
+        MaxCapacity = 10000;
+    }
+
+    protected override EnrichedOrder CreateOutput(Order leftItem, Customer rightItem) { /*...*/ }
+}
+```
+
+* **Default behavior** (`MaxCapacity = null`): No limit on the number of unmatched items stored. Use this when streams are well-balanced.
+* **Limited capacity** (e.g., `MaxCapacity = 10000`): When either waiting list reaches this capacity, new unmatched items will be discarded. This prevents unbounded memory growth but may result in unmatched items not producing output.
+
 ### Example: Joining Orders with Customer Data
 
 Let's imagine we have a stream of `Order` items and a separate stream of `Customer` items. We want to enrich the `Order` with `Customer` details.
@@ -745,7 +768,7 @@ CorrelatedEvents { CorrelationId = "CORR-001", Timestamp = 2024-01-01T10:00:00Z,
 
 #### Performance Considerations
 
-* **Memory Usage**: Like all keyed joins, self-joins maintain waiting lists for unmatched items. For unbalanced streams, consider using time-windowed joins or implementing capacity limits to prevent unbounded memory growth.
+* **Memory Usage**: Like all keyed joins, self-joins maintain waiting lists for unmatched items. For unbalanced streams, you can prevent unbounded memory growth by setting the `MaxCapacity` property on `KeyedJoinNode<TKey, TIn1, TIn2, TOut>` (or `SelfJoinNode<TKey, TIn>` for self-joins). When capacity is exceeded, new unmatched items will be discarded. Alternatively, consider using time-windowed joins to automatically discard old unmatched items.
 * **Key Selector Complexity**: Keep key selectors simple and efficient, as they are called for every item. Avoid complex computations or I/O operations in key selectors.
 * **Multiple Matches**: If multiple items in both streams share the same key, the join produces all possible combinations (Cartesian product for that key). Be aware of this behavior when designing your data model.
 
