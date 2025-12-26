@@ -429,6 +429,333 @@ public sealed class EventCorrelationJoinNode : TimeWindowedJoinNode<EventA, Even
 //     .Build();
 ```
 
+## Self-Join
+
+Self-join enables joining two streams containing items of the same type from different sources. This is particularly useful when you need to correlate items of identical types but from distinct data sources, such as comparing orders from different regions, events from different time periods, or matching records from multiple databases.
+
+### Why Self-Join is Needed
+
+The standard [`KeyedJoinNode<TKey, TIn1, TIn2, TOut>`](src/NPipeline/Nodes/Join/KeyedJoinNode.cs) uses runtime type checking (`item is TIn1`, `item is TIn2`) to distinguish between items from the left and right input streams. When `TIn1` and `TIn2` are the same type, this type checking fails because items from both streams are indistinguishable at runtime. This is known as the "BaseJoinNode Secondary Input Type Erasure" issue.
+
+The [`AddSelfJoin`](src/NPipeline/SelfJoinExtensions.cs) extension method solves this by internally wrapping items from each stream with distinct wrapper types ([`LeftWrapper<T>`](src/NPipeline/Nodes/Internal/SelfJoinTransform.cs) and [`RightWrapper<T>`](src/NPipeline/Nodes/Internal/SelfJoinTransform.cs)), allowing the join node to differentiate between items from the left and right streams even though they have the same underlying type. The join node unwraps items before applying your output factory, so you work with the original unwrapped items.
+
+### When to Use Self-Join
+
+Common use cases for self-joins include:
+
+* **Time-based comparisons**: Comparing data from different time periods (e.g., year-over-year sales analysis)
+* **Multi-source aggregation**: Combining data from different regions, systems, or databases
+* **Change detection**: Identifying differences between current and historical data
+* **Cross-reference validation**: Validating data integrity across multiple sources
+* **Pattern matching**: Finding correlations in similar data streams
+
+### `AddSelfJoin` Extension Method
+
+The [`AddSelfJoin`](src/NPipeline/SelfJoinExtensions.cs) extension method provides a convenient way to add self-join nodes to your pipeline without manually creating wrapper types.
+
+#### Method Signature
+
+```csharp
+public static IOutputNodeHandle<TOut> AddSelfJoin<TItem, TKey, TOut>(
+    this PipelineBuilder builder,
+    IOutputNodeHandle<TItem> leftSource,
+    IOutputNodeHandle<TItem> rightSource,
+    string nodeName,
+    Func<TItem, TItem, TOut> outputFactory,
+    Func<TItem, TKey> leftKeySelector,
+    Func<TItem, TKey>? rightKeySelector = null,
+    JoinType joinType = JoinType.Inner,
+    Func<TItem, TOut>? leftFallback = null,
+    Func<TItem, TOut>? rightFallback = null)
+    where TKey : notnull
+```
+
+#### Parameters
+
+* **`builder`**: The pipeline builder instance.
+* **`leftSource`**: Handle to the left source node.
+* **`rightSource`**: Handle to the right source node.
+* **`nodeName`**: Name for the join node.
+* **`outputFactory`**: Function that creates an output item from matched left and right items. Receives the original unwrapped items.
+* **`leftKeySelector`**: Function to extract the join key from left stream items.
+* **`rightKeySelector`**: Optional function to extract the join key from right stream items. If null, uses the same selector as the left stream.
+* **`joinType`**: Type of join to perform. Defaults to `JoinType.Inner`. Supports all join types: `Inner`, `LeftOuter`, `RightOuter`, `FullOuter`.
+* **`leftFallback`**: Optional function to create output from unmatched left items. Used for left outer and full outer joins.
+* **`rightFallback`**: Optional function to create output from unmatched right items. Used for right outer and full outer joins.
+
+#### Return Type
+
+Returns an [`IOutputNodeHandle<TOut>`](src/NPipeline/Graph/IOutputNodeHandle.cs) to the newly added join node, which can be connected to downstream nodes.
+
+#### How Self-Join Works
+
+```mermaid
+graph TD
+    subgraph "Input Streams"
+        L[Left Source<br/>Type: TItem]
+        R[Right Source<br/>Type: TItem]
+    end
+    
+    subgraph "Wrapper Layer"
+        LW[Left Wrapper Transform<br/>Type: LeftWrapper&lt;TItem&gt;]
+        RW[Right Wrapper Transform<br/>Type: RightWrapper&lt;TItem&gt;]
+    end
+    
+    subgraph "Join Node"
+        JN[SelfJoinNode<br/>Distinguishes wrapped types]
+    end
+    
+    subgraph "Output"
+        O[Output Stream<br/>Type: TOut]
+    end
+    
+    L -->|wraps| LW
+    R -->|wraps| RW
+    LW -->|LeftWrapper&lt;TItem&gt;| JN
+    RW -->|RightWrapper&lt;TItem&gt;| JN
+    JN -->|unwraps & combines| O
+    
+    style L fill:#e1f5fe
+    style R fill:#e8f5e9
+    style LW fill:#fff3e0
+    style RW fill:#f3e5f5
+    style JN fill:#e0f2f1
+    style O fill:#fce4ec
+```
+
+*Figure: Self-join uses wrapper types to distinguish items from the left and right streams before joining.*
+
+### Example 1: Simple Inner Join with Same Key Selector
+
+Join orders from two different years by customer ID to analyze year-over-year growth:
+
+```csharp
+using NPipeline;
+using NPipeline.Nodes;
+
+// Define the order type
+public sealed record Order(int OrderId, int CustomerId, decimal Amount, int Year);
+
+// Define the output type for year-over-year comparison
+public sealed record OrderComparison(int CustomerId, decimal Amount2024, decimal Amount2023, decimal Growth);
+
+public sealed class YearOverYearComparisonPipeline : IPipelineDefinition
+{
+    public void Define(PipelineBuilder builder, PipelineContext context)
+    {
+        // Orders from 2024
+        var orders2024 = builder.AddInMemorySource(
+            new[]
+            {
+                new Order(1, 101, 1000.00m, 2024),
+                new Order(2, 102, 1500.00m, 2024),
+                new Order(3, 103, 2000.00m, 2024)
+            },
+            "orders_2024"
+        );
+
+        // Orders from 2023
+        var orders2023 = builder.AddInMemorySource(
+            new[]
+            {
+                new Order(4, 101, 800.00m, 2023),
+                new Order(5, 102, 1200.00m, 2023),
+                new Order(6, 104, 900.00m, 2023) // Customer 104 not in 2024
+            },
+            "orders_2023"
+        );
+
+        // Join orders from both years by customer ID
+        var comparison = builder.AddSelfJoin(
+            leftSource: orders2024,
+            rightSource: orders2023,
+            nodeName: "yoy_comparison",
+            outputFactory: (order2024, order2023) => new OrderComparison(
+                order2024.CustomerId,
+                order2024.Amount,
+                order2023.Amount,
+                order2024.Amount - order2023.Amount
+            ),
+            leftKeySelector: order => order.CustomerId,
+            rightKeySelector: order => order.CustomerId,
+            joinType: JoinType.Inner
+        );
+
+        var sink = builder.AddSink<ConsoleSink<OrderComparison>, OrderComparison>("output");
+        builder.Connect(comparison, sink);
+    }
+}
+```
+
+**Expected Output:**
+```text
+OrderComparison { CustomerId = 101, Amount2024 = 1000.00, Amount2023 = 800.00, Growth = 200.00 }
+OrderComparison { CustomerId = 102, Amount2024 = 1500.00, Amount2023 = 1200.00, Growth = 300.00 }
+```
+
+### Example 2: Left Outer Join with Fallback
+
+Compare product prices between two catalogs, including products that only exist in the primary catalog:
+
+```csharp
+using NPipeline;
+using NPipeline.Nodes;
+
+// Define the product type
+public sealed record Product(string ProductCode, string Name, decimal Price);
+
+// Define the output type for price comparison
+public sealed record PriceComparison(string ProductCode, string Name, decimal PrimaryPrice, decimal? SecondaryPrice, decimal? Difference);
+
+public sealed class PriceComparisonPipeline : IPipelineDefinition
+{
+    public void Define(PipelineBuilder builder, PipelineContext context)
+    {
+        // Primary catalog products
+        var primaryCatalog = builder.AddInMemorySource(
+            new[]
+            {
+                new Product("P001", "Widget A", 10.00m),
+                new Product("P002", "Widget B", 20.00m),
+                new Product("P003", "Widget C", 30.00m)
+            },
+            "primary_catalog"
+        );
+
+        // Secondary catalog products
+        var secondaryCatalog = builder.AddInMemorySource(
+            new[]
+            {
+                new Product("P001", "Widget A", 12.00m),
+                new Product("P002", "Widget B", 18.00m),
+                new Product("P004", "Widget D", 25.00m) // Not in primary catalog
+            },
+            "secondary_catalog"
+        );
+
+        // Compare prices with left outer join to include all primary products
+        var priceComparison = builder.AddSelfJoin(
+            leftSource: primaryCatalog,
+            rightSource: secondaryCatalog,
+            nodeName: "price_comparison",
+            outputFactory: (primary, secondary) => new PriceComparison(
+                primary.ProductCode,
+                primary.Name,
+                primary.Price,
+                secondary.Price,
+                secondary.Price - primary.Price
+            ),
+            leftKeySelector: product => product.ProductCode,
+            rightKeySelector: product => product.ProductCode,
+            joinType: JoinType.LeftOuter,
+            leftFallback: primary => new PriceComparison(
+                primary.ProductCode,
+                primary.Name,
+                primary.Price,
+                null,
+                null
+            )
+        );
+
+        var sink = builder.AddSink<ConsoleSink<PriceComparison>, PriceComparison>("output");
+        builder.Connect(priceComparison, sink);
+    }
+}
+```
+
+**Expected Output:**
+```text
+PriceComparison { ProductCode = "P001", Name = "Widget A", PrimaryPrice = 10.00, SecondaryPrice = 12.00, Difference = 2.00 }
+PriceComparison { ProductCode = "P002", Name = "Widget B", PrimaryPrice = 20.00, SecondaryPrice = 18.00, Difference = -2.00 }
+PriceComparison { ProductCode = "P003", Name = "Widget C", PrimaryPrice = 30.00, SecondaryPrice = null, Difference = null }
+```
+
+### Example 3: Different Key Selectors
+
+Match events from different systems using different key properties:
+
+```csharp
+using NPipeline;
+using NPipeline.Nodes;
+
+// Define the event type
+public sealed record SystemEvent(string EventId, string CorrelationId, DateTime Timestamp, string System, string Data);
+
+// Define the output type for event correlation
+public sealed record CorrelatedEvents(string CorrelationId, DateTime Timestamp, string SystemAData, string SystemBData, TimeSpan TimeDifference);
+
+public sealed class EventCorrelationPipeline : IPipelineDefinition
+{
+    public void Define(PipelineBuilder builder, PipelineContext context)
+    {
+        // Events from System A (using EventId as key)
+        var systemAEvents = builder.AddInMemorySource(
+            new[]
+            {
+                new SystemEvent("E001", "CORR-001", DateTime.Parse("2024-01-01T10:00:00Z"), "SystemA", "Data from A"),
+                new SystemEvent("E002", "CORR-002", DateTime.Parse("2024-01-01T10:05:00Z"), "SystemA", "More data from A")
+            },
+            "system_a_events"
+        );
+
+        // Events from System B (using CorrelationId as key)
+        var systemBEvents = builder.AddInMemorySource(
+            new[]
+            {
+                new SystemEvent("E101", "CORR-001", DateTime.Parse("2024-01-01T10:00:05Z"), "SystemB", "Data from B"),
+                new SystemEvent("E102", "CORR-003", DateTime.Parse("2024-01-01T10:10:00Z"), "SystemB", "Unmatched data")
+            },
+            "system_b_events"
+        );
+
+        // Correlate events using different key selectors
+        var correlatedEvents = builder.AddSelfJoin(
+            leftSource: systemAEvents,
+            rightSource: systemBEvents,
+            nodeName: "event_correlation",
+            outputFactory: (eventA, eventB) => new CorrelatedEvents(
+                eventA.CorrelationId,
+                eventA.Timestamp,
+                eventA.Data,
+                eventB.Data,
+                eventB.Timestamp - eventA.Timestamp
+            ),
+            leftKeySelector: evt => evt.EventId,
+            rightKeySelector: evt => evt.CorrelationId,
+            joinType: JoinType.Inner
+        );
+
+        var sink = builder.AddSink<ConsoleSink<CorrelatedEvents>, CorrelatedEvents>("output");
+        builder.Connect(correlatedEvents, sink);
+    }
+}
+```
+
+**Expected Output:**
+```text
+CorrelatedEvents { CorrelationId = "CORR-001", Timestamp = 2024-01-01T10:00:00Z, SystemAData = "Data from A", SystemBData = "Data from B", TimeDifference = 00:00:05 }
+```
+
+### Best Practices
+
+#### When to Use Self-Join vs Regular Join
+
+* **Use Self-Join** when both input streams contain items of the same type but from different sources. This is the only way to correctly join same-type items due to the type erasure issue.
+* **Use Regular Join** ([`KeyedJoinNode`](src/NPipeline/Nodes/Join/KeyedJoinNode.cs)) when joining items of different types, such as joining `Order` with `Customer` or `Product` with `Category`.
+
+#### Performance Considerations
+
+* **Memory Usage**: Like all keyed joins, self-joins maintain waiting lists for unmatched items. For unbalanced streams, consider using time-windowed joins or implementing capacity limits to prevent unbounded memory growth.
+* **Key Selector Complexity**: Keep key selectors simple and efficient, as they are called for every item. Avoid complex computations or I/O operations in key selectors.
+* **Multiple Matches**: If multiple items in both streams share the same key, the join produces all possible combinations (Cartesian product for that key). Be aware of this behavior when designing your data model.
+
+#### Common Pitfalls
+
+* **Forgetting Fallback Functions**: When using outer joins (`LeftOuter`, `RightOuter`, `FullOuter`), always provide appropriate fallback functions to handle unmatched items. Without fallbacks, the join may throw exceptions or produce unexpected results.
+* **Key Selector Mismatch**: Ensure that key selectors return compatible types. If using different key selectors, verify that the keys can be correctly compared and matched.
+* **Null Key Handling**: The key type `TKey` is constrained to be non-null (`where TKey : notnull`). Ensure your key selectors never return null values, as this will cause runtime exceptions.
+* **Stream Ordering**: Self-joins process items as they arrive. If ordering matters for your use case, ensure streams are properly ordered before the join or implement additional logic to handle ordering requirements.
+
 ## Key Configuration with [`KeySelectorAttribute`](src/NPipeline/Attributes/Nodes/KeySelectorAttribute.cs)
 
 Some join nodes may utilize the `KeySelectorAttribute` to automatically infer key extraction logic based on property names or custom functions. This provides a declarative way to specify join keys.
