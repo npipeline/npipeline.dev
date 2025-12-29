@@ -34,6 +34,17 @@ const config: Config = {
     locales: ['en'],
   },
 
+  headTags: [
+    {
+      tagName: 'script',
+      attributes: {
+        type: 'text/javascript',
+        src: '//script.crazyegg.com/pages/scripts/0131/6841.js',
+        async: 'async',
+      },
+    },
+  ],
+
   presets: [
     [
       'classic',
