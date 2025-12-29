@@ -9,9 +9,6 @@ const config: Config = {
   tagline: 'High-performance, streaming data pipelines for .NET',
   favicon: 'img/favicon.ico',
 
-  // Temp - to hide site from search engines while in development
-  noIndex: true,
-
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
