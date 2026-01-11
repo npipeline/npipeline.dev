@@ -13,17 +13,19 @@ This section details the officially supported extensions and how to leverage the
 
 ## Available Extensions
 
-* **[Nodes](nodes/index.md)**: Pre-built, production-ready nodes for common data processing operations. Includes cleansing, validation, filtering, and type conversion nodes for string, numeric, datetime, and collection data.
+* **[Composition](composition/index.md)**: Create hierarchical, modular pipelines by treating entire pipelines as reusable transform nodes. Enables breaking complex workflows into smaller, well-tested building blocks with full type safety and context control.
+
+* **[Connectors](../connectors/index.md)**: Pre-built source and sink nodes for common data sources and destinations (e.g., CSV files).
 
 * **[Dependency Injection](dependency-injection.md)**: Seamlessly integrate NPipeline with your favorite Dependency Injection container. Learn how to use constructor injection in your nodes and run pipelines with the `RunPipelineAsync<TDefinition>()` extension method.
+
+* **[Nodes](nodes/index.md)**: Pre-built, production-ready nodes for common data processing operations. Includes cleansing, validation, filtering, and type conversion nodes for string, numeric, datetime, and collection data.
+
+* **[Observability](observability/index.md)**: Comprehensive metrics collection and monitoring capabilities for NPipeline pipelines. Track node and pipeline performance, throughput, memory usage, retries, and errors with built-in logging sinks and custom metrics sink support.
 
 * **[Parallelism](parallelism.md)**: Execute pipeline nodes in parallel for improved performance. Discover how to use `ParallelExecutionStrategy` with `WithParallelOptions()` to configure parallel processing, queue policies, and ordering behavior.
 
 * **[Testing](testing/index.md)**: Utilities and helpers for writing comprehensive and efficient tests for your pipelines. Includes in-memory source/sink nodes, pipeline builder extensions, and assertion libraries.
-
-* **[Composition](composition/index.md)**: Create hierarchical, modular pipelines by treating entire pipelines as reusable transform nodes. Enables breaking complex workflows into smaller, well-tested building blocks with full type safety and context control.
-
-* **[Connectors](../connectors/index.md)**: Pre-built source and sink nodes for common data sources and destinations (e.g., CSV files).
 
 ## Extension Packages
 
@@ -31,9 +33,10 @@ This section details the officially supported extensions and how to leverage the
 
 | Package | Description | Key Features |
 |----------|-------------|---------------|
-| [`NPipeline.Extensions.Nodes`](../../src/NPipeline.Extensions.Nodes/NPipeline.Extensions.Nodes.csproj) | Pre-built data processing nodes | String/numeric/datetime cleansing, validation, filtering, type conversion |
-| [`NPipeline.Extensions.DependencyInjection`](../../../src/NPipeline.Extensions.DependencyInjection/NPipeline.Extensions.DependencyInjection.csproj) | DI container integration | Constructor injection, service lifetime management, `RunPipelineAsync()` extension |
 | [`NPipeline.Extensions.Composition`](../../../src/NPipeline.Extensions.Composition/NPipeline.Extensions.Composition.csproj) | Hierarchical pipeline composition | Sub-pipelines as nodes, modular design, context control, unlimited nesting |
+| [`NPipeline.Extensions.DependencyInjection`](../../../src/NPipeline.Extensions.DependencyInjection/NPipeline.Extensions.DependencyInjection.csproj) | DI container integration | Constructor injection, service lifetime management, `RunPipelineAsync()` extension |
+| [`NPipeline.Extensions.Nodes`](../../src/NPipeline.Extensions.Nodes/NPipeline.Extensions.Nodes.csproj) | Pre-built data processing nodes | String/numeric/datetime cleansing, validation, filtering, type conversion |
+| [`NPipeline.Extensions.Observability`](../../../src/NPipeline.Extensions.Observability/NPipeline.Extensions.Observability.csproj) | Metrics collection and monitoring | Node/pipeline metrics, throughput tracking, memory/CPU monitoring, custom sinks |
 | [`NPipeline.Extensions.Parallelism`](../../../src/NPipeline.Extensions.Parallelism/NPipeline.Extensions.Parallelism.csproj) | Parallel processing capabilities | `ParallelExecutionStrategy`, `WithParallelOptions()`, queue policies |
 | [`NPipeline.Extensions.Testing`](../../../src/NPipeline.Extensions.Testing/NPipeline.Extensions.Testing.csproj) | Testing utilities | In-memory nodes, pipeline builder extensions, test context helpers |
 
@@ -51,14 +54,17 @@ This section details the officially supported extensions and how to leverage the
 Each extension is available as a separate NuGet package. Install only what you need:
 
 ```bash
-# Nodes (data processing)
-dotnet add package NPipeline.Extensions.Nodes
+# Composition
+dotnet add package NPipeline.Extensions.Composition
 
 # Dependency Injection
 dotnet add package NPipeline.Extensions.DependencyInjection
 
-# Composition
-dotnet add package NPipeline.Extensions.Composition
+# Nodes
+dotnet add package NPipeline.Extensions.Nodes
+
+# Observability
+dotnet add package NPipeline.Extensions.Observability
 
 # Parallelism
 dotnet add package NPipeline.Extensions.Parallelism
@@ -79,59 +85,10 @@ dotnet add package FluentAssertions
 >
 > For the core NPipeline package and comprehensive installation instructions for all packages, see the [Installation Guide](../getting-started/installation.md).
 
-### Basic Usage Pattern
-
-Most extensions follow a consistent pattern:
-
-1. **Install the NuGet package**
-2. **Add using statements** for the extension namespace
-3. **Use extension methods** on `PipelineBuilder`, `IServiceCollection`, or test classes
-4. **Configure options** as needed for the extension
-
-```csharp
-using NPipeline;
-using NPipeline.Extensions.Nodes;
-using NPipeline.Extensions.DependencyInjection;
-using NPipeline.Extensions.Parallelism;
-
-// Nodes setup
-var builder = new PipelineBuilder();
-builder.AddStringCleansing<User>(x => x.Email)
-    .Trim()
-    .ToLower();
-
-builder.AddStringValidation<User>(x => x.Email)
-    .IsEmail();
-
-// DI setup
-var services = new ServiceCollection();
-services.AddNPipeline(Assembly.GetExecutingAssembly());
-
-// Parallel pipeline definition
-public class MyParallelPipeline : IPipelineDefinition
-{
-    public void Define(PipelineBuilder builder, PipelineContext context)
-    {
-        var source = builder.AddInMemorySource<int>();
-        var transform = builder.AddTransform<MyTransform, int, int>();
-        var sink = builder.AddInMemorySink<int>();
-
-        builder.Connect(source, transform);
-        builder.Connect(transform, sink);
-
-        // Configure parallel execution
-        builder.WithParallelOptions(transform,
-            new ParallelOptions { MaxDegreeOfParallelism = 4 });
-
-        transform.ExecutionStrategy = new ParallelExecutionStrategy();
-    }
-}
-```
-
 ## Best Practices
 
 * **Install only what you need**: Each extension is a separate package to keep your dependencies minimal
-* **Use the right tool for the job**: Leverage testing extensions for unit tests, parallelism for performance, DI for enterprise applications
+* **Use the right tool for the job**: Leverage testing extensions for unit tests, parallelism for performance, DI for enterprise applications, observability for production monitoring
 * **Combine extensions**: Extensions are designed to work together seamlessly
 * **Check compatibility**: Ensure extension versions are compatible with your NPipeline core version
 
@@ -140,4 +97,5 @@ public class MyParallelPipeline : IPipelineDefinition
 * **[Dependency Injection](dependency-injection.md)**: Learn about constructor injection and service lifetime management
 * **[Parallelism](parallelism.md)**: Explore parallel processing capabilities and configuration options
 * **[Testing](testing/index.md)**: Discover comprehensive testing utilities and assertion libraries
+* **[Observability](observability/index.md)**: Learn about metrics collection and monitoring for production pipelines
 * **[Connectors](../connectors/index.md)**: Explore pre-built connectors for external systems
