@@ -147,7 +147,7 @@ const config: Config = {
         //   ],
         // },
         {
-          title: 'More',
+          title: 'Links',
           items: [
             // {
             //   label: 'Blog',

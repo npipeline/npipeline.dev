@@ -236,7 +236,7 @@ const PerformanceSection: React.FC = () => {
         <p className={clsx("text--center", "margin-bottom--lg")}>
           NPipeline uses <code>ValueTask&lt;T&gt;</code> to eliminate heap
           allocations for synchronous operations. Cache hits, validation checks,
-          simple calculations—they all run without touching the heap.
+          simple calculations - they all run without touching the heap.
         </p>
 
         <div className="row margin-bottom--md">
@@ -259,8 +259,8 @@ const PerformanceSection: React.FC = () => {
               </Heading>
               <p>
                 NPipeline compiles your pipeline structure once. During
-                execution, there's no reflection, no per-item routing
-                decisions—just direct method dispatch.
+                execution, there's no reflection, no per-item routing decisions
+                - just direct method dispatch.
               </p>
             </div>
           </div>
@@ -557,29 +557,19 @@ const EcosystemSection: React.FC = () => {
           <div className="col col--6">
             <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
-                NPipeline.DependencyInjection
+                Composition
               </Heading>
               <p>
-                Full integration with Microsoft.Extensions.DependencyInjection.
-                Constructor injection in nodes. Proper service lifetimes.
+                Create hierarchical, modular pipelines by treating entire
+                pipelines as reusable transform nodes. Break complex workflows
+                into smaller, well-tested building blocks.
               </p>
             </div>
           </div>
           <div className="col col--6">
             <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
-                NPipeline.Parallelism
-              </Heading>
-              <p>
-                Parallel execution strategies for CPU-bound transforms.
-                Configurable concurrency limits. Linear throughput scaling.
-              </p>
-            </div>
-          </div>
-          <div className="col col--6">
-            <div className="card padding--lg">
-              <Heading as="h3" className="margin-bottom--md">
-                NPipeline.Connectors
+                Connectors
               </Heading>
               <p>
                 Pre-built sources and sinks for common targets. CSV files,
@@ -590,12 +580,72 @@ const EcosystemSection: React.FC = () => {
           <div className="col col--6">
             <div className="card padding--lg">
               <Heading as="h3" className="margin-bottom--md">
-                NPipeline.Testing
+                Dependency Injection
               </Heading>
               <p>
-                In-memory test nodes. Assertion helpers for FluentAssertions and
-                AwesomeAssertions. Test your pipelines without external
-                dependencies.
+                Seamlessly integrate with your favorite DI container.
+                Constructor injection in nodes. Proper service lifetimes with
+                RunPipelineAsync extension method.
+              </p>
+            </div>
+          </div>
+          <div className="col col--6">
+            <div className="card padding--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Lineage
+              </Heading>
+              <p>
+                Comprehensive data lineage tracking and provenance capabilities.
+                Track the complete journey of each data item from source to
+                destination for governance and debugging.
+              </p>
+            </div>
+          </div>
+          <div className="col col--6">
+            <div className="card padding--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Nodes
+              </Heading>
+              <p>
+                Pre-built, production-ready nodes for common data processing
+                operations. String, numeric, and datetime cleansing, validation,
+                filtering, and type conversion.
+              </p>
+            </div>
+          </div>
+          <div className="col col--6">
+            <div className="card padding--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Observability
+              </Heading>
+              <p>
+                Comprehensive metrics collection and monitoring capabilities.
+                Track node and pipeline performance, throughput, memory usage,
+                retries, and errors.
+              </p>
+            </div>
+          </div>
+          <div className="col col--6">
+            <div className="card padding--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Parallelism
+              </Heading>
+              <p>
+                Execute pipeline nodes in parallel for improved performance.
+                Configurable concurrency limits, queue policies, and ordering
+                behavior for CPU-bound transforms.
+              </p>
+            </div>
+          </div>
+          <div className="col col--6">
+            <div className="card padding--lg">
+              <Heading as="h3" className="margin-bottom--md">
+                Testing
+              </Heading>
+              <p>
+                Comprehensive utilities and helpers for writing efficient tests.
+                In-memory source and sink nodes, pipeline builder extensions,
+                and assertion helpers.
               </p>
             </div>
           </div>
@@ -660,10 +710,10 @@ const Home: React.FC = () => {
         <StreamingSection />
         <PerformanceSection />
         <ResilienceSection />
-        <CodeExampleSection />
-        <TestabilitySection />
         <UseCasesSection />
         <EcosystemSection />
+        <CodeExampleSection />
+        <TestabilitySection />
         <GetStartedSection />
       </main>
     </Layout>
