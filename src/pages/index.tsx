@@ -675,13 +675,13 @@ const GetStartedSection: React.FC = () => {
               </pre>
               <div className="margin-top--lg">
                 <Link
-                  className="button button--primary button--lg"
+                  className="button button--primary button--lg hero-style-button"
                   to="/docs/getting-started/quick-start"
                 >
                   Quick Start Guide
                 </Link>
                 <Link
-                  className="button button--secondary button--lg"
+                  className="button button--secondary button--lg hero-style-button"
                   to="/docs/core-concepts"
                 >
                   Explore Core Concepts

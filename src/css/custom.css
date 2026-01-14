@@ -692,6 +692,32 @@ section:last-child {
   box-shadow: 0 2px 8px rgba(10, 147, 150, 0.1) !important;
 }
 
+/* Make Get Started section buttons match hero buttons visually */
+.hero-style-button {
+  padding-left: calc(var(--ifm-button-padding-horizontal) * 1);
+  padding-right: calc(var(--ifm-button-padding-horizontal) * 1);
+  box-shadow: 0 2px 8px rgba(10, 147, 150, 0.15) !important;
+  transition: var(--transition-all);
+}
+
+.hero-style-button:hover:not(:disabled) {
+  transform: translateY(-1px) !important;
+}
+
+/* Ensure primary/secondary specific hover colors still apply, and match hero
+   hero primary in dark mode for contrast */
+[data-theme="dark"] .hero-style-button.button--primary {
+  background-color: #005f73 !important;
+  border-color: #005f73 !important;
+  box-shadow: 0 2px 8px rgba(0, 95, 115, 0.12) !important;
+}
+
+[data-theme="dark"] .hero-style-button.button--primary:hover:not(:disabled) {
+  background-color: #0a9396 !important;
+  border-color: #0a9396 !important;
+  box-shadow: 0 4px 12px rgba(10, 147, 150, 0.18) !important;
+}
+
 /* Dark mode button adjustments */
 [data-theme="dark"] .button--primary {
   box-shadow: 0 2px 8px rgba(10, 147, 150, 0.1) !important;
