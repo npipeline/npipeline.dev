@@ -29,17 +29,14 @@ const HeroSection: React.FC = () => {
           are easy to test, debug, and maintain.
         </p>
         <div className="hero__cta margin-top--lg">
-          <Link
-            className="button button--primary button--lg"
-            to="/docs/getting-started/quick-start"
-          >
-            Get Started
+          <Link className="button button--primary button--lg" to="/docs">
+            Why NPipeline?
           </Link>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/getting-started/why-npipeline"
+            to="/docs/getting-started/quick-start"
           >
-            Why NPipeline?
+            Quick Start
           </Link>
         </div>
       </div>
@@ -676,9 +673,9 @@ const GetStartedSection: React.FC = () => {
               <div className="margin-top--lg">
                 <Link
                   className="button button--primary button--lg hero-style-button"
-                  to="/docs/getting-started/quick-start"
+                  to="/docs/getting-started"
                 >
-                  Quick Start Guide
+                  Getting Started
                 </Link>
                 <Link
                   className="button button--secondary button--lg hero-style-button"

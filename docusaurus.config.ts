@@ -112,40 +112,52 @@ const config: Config = {
           title: 'Documentation',
           items: [
             {
-              label: 'Why NPipeline?',
-              to: '/docs/getting-started/why-npipeline',
+              label: 'Welcome to NPipeline',
+              to: '/docs',
             },
             {
-              label: 'Installation',
-              to: '/docs/getting-started/installation',
-            },
-            {
-              label: 'Quick Start',
-              to: '/docs/getting-started/quick-start',
+              label: 'Getting Started',
+              to: '/docs/getting-started',
             },
             {
               label: 'Core Concepts',
               to: '/docs/core-concepts',
             },
+            {
+              label: 'Architecture',
+              to: '/docs/architecture',
+            },
+            {
+              label: 'Advanced Topics',
+              to: '/docs/advanced-topics',
+            },
           ],
         },
-        // {
-        //   title: 'Community',
-        //   items: [
-        //     {
-        //       label: 'Stack Overflow',
-        //       href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-        //     },
-        //     {
-        //       label: 'Discord',
-        //       href: 'https://discordapp.com/invite/docusaurus',
-        //     },
-        //     {
-        //       label: 'X',
-        //       href: 'https://x.com/docusaurus',
-        //     },
-        //   ],
-        // },
+        {
+          title: ' ',
+          items: [
+            {
+              label: 'Analyzers',
+              to: '/docs/analyzers',
+            },
+            {
+              label: 'Connectors',
+              to: '/docs/connectors',
+            },
+            {
+              label: 'Extensions',
+              to: '/docs/extensions',
+            },
+            {
+              label: 'Reference',
+              to: '/docs/reference',
+            },
+            {
+              label: 'Samples',
+              to: '/docs/samples',
+            },
+          ],
+        },
         {
           title: 'Links',
           items: [
