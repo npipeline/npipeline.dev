@@ -1,3 +1,9 @@
+---
+title: Thread Safety
+description: Guidelines for managing shared state and concurrency in NPipeline pipelines.
+sidebar_position: 8
+---
+
 # Thread Safety Guidelines
 
 NPipeline is designed for high-performance streaming data processing. This document clarifies thread safety requirements and best practices.
@@ -9,6 +15,7 @@ NPipeline is designed for high-performance streaming data processing. This docum
 > **🔑 Critical Concept**
 >
 > NPipeline separates pipeline-level execution from item-level parallelism:
+>
 > - **Pipeline-level**: Single-threaded (one pipeline instance, one context)
 > - **Item-level**: Can be parallel (different items processed by different threads)
 > - **Shared state**: Only the node instances are shared; items are always independent
@@ -200,6 +207,6 @@ public class SafeParallelTransform : TransformNode<DataItem, ProcessedItem>
 
 ## See Also
 
-- [Parallel Execution](../extensions/parallelism.md)
+- [Parallel Execution](../extensions/parallelism/index.md)
 - [Performance Hygiene](../advanced-topics/performance-hygiene.md)
 - [Best Practices](./best-practices.md)

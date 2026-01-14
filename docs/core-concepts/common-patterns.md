@@ -1,7 +1,7 @@
 ---
 title: Common Patterns
-description: Explore practical patterns and recipes for building effective NPipeline pipelines.
-sidebar_position: 8
+description: Practical patterns and recipes for building effective NPipeline pipelines.
+sidebar_position: 12
 ---
 
 # Common Patterns
@@ -331,5 +331,5 @@ public sealed class MultiSourcePipeline : IPipelineDefinition
 ## Next Steps
 
 - **[Dependency Injection](../extensions/dependency-injection.md)**: Manage complex dependencies pipeline components
-- **[Parallelism](../extensions/parallelism.md)**: Speed up item processing
+- **[Parallelism](../extensions/parallelism/index.md)**: Speed up item processing
 - **[Testing Pipelines](../extensions/testing/index.md)**: Test pipeline components
