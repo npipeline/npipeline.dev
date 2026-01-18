@@ -8,20 +8,20 @@ sidebar_position: 6
 
 Configuration analyzers detect issues with pipeline configuration that can lead to performance problems, resource leaks, or silent failures. These analyzers focus on ensuring that your pipeline configuration is optimal for your workload and doesn't introduce hidden problems.
 
-### NP9501: Unbounded Materialization Configuration
+### NP9002: Unbounded Materialization Configuration
 
-**ID:** `NP9501`  
+**ID:** `NP9002`  
 **Severity:** Error  
 **Category:** Configuration  
 
-This analyzer detects when `PipelineRetryOptions.MaxMaterializedItems` is null or missing, which causes unbounded memory growth in `ResilientExecutionStrategy` and silently disables restart functionality. This is a critical configuration error that must be treated as a build-time error to prevent production failures.
+This analyzer detects when `PipelineRetryOptions.MaxMaterializedItems` is null or missing. The system validates this at runtime and throws `InvalidOperationException` when `RestartNode` is attempted with unbounded materialization. This analyzer provides early build-time detection of this critical configuration error.
 
 #### Why This Matters
 
 Unbounded materialization configuration causes:
 
 1. **Memory Leaks**: Unlimited memory growth as items are materialized for retry scenarios
-2. **Silent Failures**: Restart functionality is disabled without any indication
+2. **Runtime Exceptions**: Restart functionality throws `InvalidOperationException` when attempted
 3. **Production Crashes**: OutOfMemoryException in high-throughput scenarios
 4. **Resource Exhaustion**: System becomes unstable under load
 
@@ -36,7 +36,7 @@ var retryOptions = new PipelineRetryOptions(
     maxMaterializedItems: 1000); // Bounded memory usage
 ```
 
-#### Choosing the Right MaxMaterializedItems Value
+#### Choosing to Right MaxMaterializedItems Value
 
 | Scenario | Recommended Value | Reason |
 |----------|-------------------|--------|
@@ -48,11 +48,11 @@ var retryOptions = new PipelineRetryOptions(
 
 #### Enforcement Requirement
 
-This analyzer is configured as an **Error** by default because unbounded materialization is fundamentally incompatible with resilient pipeline operation. It should not be downgraded to a warning, as doing so would allow silently broken resilience configurations to pass build time.
+This analyzer is configured as an **Error** by default because unbounded materialization is fundamentally incompatible with resilient pipeline operation. The runtime validation throws `InvalidOperationException` when `RestartNode` is attempted with unbounded materialization, providing clear feedback about the configuration issue. This analyzer helps catch the issue earlier during development.
 
-### NP9502: Inappropriate Parallelism Configuration
+### NP9003: Inappropriate Parallelism Configuration
 
-**ID:** `NP9502`  
+**ID:** `NP9003`
 **Severity:** Warning  
 **Category:** Performance  
 
@@ -76,9 +76,9 @@ Inappropriate parallelism configuration causes:
 | Mixed | Processor count × 1.5 | Only if required |
 | Memory-intensive | Processor count ÷ 2 | Only if required |
 
-### NP9503: Batching Configuration Mismatch
+### NP9004: Batching Configuration Mismatch
 
-**ID:** `NP9503`  
+**ID:** `NP9004`
 **Severity:** Warning  
 **Category:** Performance  
 
@@ -93,9 +93,9 @@ This analyzer detects batching configurations where batch sizes and timeouts are
 | 100-1000 | 1-10s | High-throughput scenarios |
 | 1000+ | 5-30s | Batch processing systems |
 
-### NP9504: Timeout Configuration Issues
+### NP9005: Timeout Configuration Issues
 
-**ID:** `NP9504`  
+**ID:** `NP9005`
 **Severity:** Warning  
 **Category:** Configuration  
 
@@ -124,16 +124,16 @@ Adjust analyzer severity in `.editorconfig`:
 
 ```ini
 # Treat unbounded materialization as errors
-dotnet_diagnostic.NP9501.severity = error
+dotnet_diagnostic.NP9002.severity = error
 
 # Treat inappropriate parallelism as warnings
-dotnet_diagnostic.NP9502.severity = warning
+dotnet_diagnostic.NP9003.severity = warning
 
 # Treat batching mismatches as warnings
-dotnet_diagnostic.NP9503.severity = warning
+dotnet_diagnostic.NP9004.severity = warning
 
 # Treat timeout issues as warnings
-dotnet_diagnostic.NP9504.severity = warning
+dotnet_diagnostic.NP9005.severity = warning
 ```
 
 ## See Also

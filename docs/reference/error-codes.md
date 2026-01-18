@@ -324,11 +324,11 @@ builder.WithRetryOptions(options =>
 
 ---
 
-### NP9302: SinkNode Input Not Consumed
+### NP9301: SinkNode Input Not Consumed
 
-**Message:** `[NP9302] SinkNode '{0}' overrides ExecuteAsync but doesn't consume input parameter. Sink nodes should process all items from input data pipe.`
+**Message:** `[NP9301] SinkNode '{0}' overrides ExecuteAsync but doesn't consume input parameter. Sink nodes should process all items from input data pipe.`
 
-**Category:** Node Execution Error
+**Category:** Data Integrity - Input Consumption
 
 **Severity:** Error
 
@@ -395,11 +395,11 @@ public class MySinkNode : SinkNode<string>
 
 ---
 
-## NP9303: Unsafe PipelineContext Access
+## NP9302: Unsafe PipelineContext Access
 
-**Message:** `[NP9303] Unsafe access pattern '{0}' detected on PipelineContext. This can lead to NullReferenceException at runtime. Use null-conditional operators (?.) or check for null before accessing these properties.`**
+**Message:** `[NP9302] Unsafe access pattern '{0}' detected on PipelineContext. This can lead to NullReferenceException at runtime. Use null-conditional operators (?.) or check for null before accessing these properties.`**
 
-**Category:** Node Execution Error
+**Category:** Reliability - Safe Context Access
 
 **Severity:** Warning
 
@@ -422,13 +422,13 @@ These unsafe patterns can cause:
 // PROBLEM: Unsafe access patterns
 public async Task ProcessContext(PipelineContext context)
 {
-    // NP9303: Direct access to nullable property
+    // NP9302: Direct access to nullable property
     var handler = context.PipelineErrorHandler;
     
-    // NP9303: Dictionary access without null check
+    // NP9302: Dictionary access without null check
     var configValue = context.Parameters["retryCount"];
     
-    // NP9303: Method call on nullable property
+    // NP9302: Method call on nullable property
     var stateManager = context.StateManager;
     stateManager.SaveState("key", data);
 }
@@ -472,7 +472,7 @@ public async Task ProcessContext(PipelineContext context)
 
 ### NP9001: Incomplete Resilient Configuration
 
-**Message:** `[NP9001] Error handler can return PipelineErrorDecision.RestartNode but may not have all three mandatory prerequisites configured. Missing prerequisites will silently disable restart, causing the entire pipeline to fail instead of recovering the failed node.`
+**Message:** `[NP9001] Error handler can return PipelineErrorDecision.RestartNode but may not have all three mandatory prerequisites configured. The system validates configuration at runtime and throws InvalidOperationException if prerequisites are missing.`
 
 **Category:** Configuration Error
 
@@ -484,7 +484,7 @@ public async Task ProcessContext(PipelineContext context)
 2. **MaxNodeRestartAttempts** must be > 0 in PipelineRetryOptions
 3. **MaxMaterializedItems** must be non-null (not unbounded)
 
-Missing even one of these prerequisites will **silently disable restart**, causing the entire pipeline to fail instead of recovering gracefully.
+**Runtime Validation:** The system validates these requirements at runtime. If any prerequisite is missing when `RestartNode` is returned, the system throws a clear `InvalidOperationException` with a detailed message explaining which requirement is missing. This prevents silent failures and provides immediate feedback about configuration issues.
 
 **Example of Problem Code:**
 
@@ -498,8 +498,9 @@ var pipeline = builder
     // Missing: .WithExecutionStrategy(builder, new ResilientExecutionStrategy(...))
     .Build();
 
-// If MyErrorHandler.HandleNodeFailureAsync() can return RestartNode,
-// but the node doesn't have ResilientExecutionStrategy, restart will fail silently!
+// If MyErrorHandler.HandleNodeFailureAsync() returns RestartNode,
+// the system will throw InvalidOperationException at runtime indicating
+// which prerequisite is missing.
 ```
 
 **Solution - Complete Configuration Checklist:**
@@ -532,7 +533,7 @@ var pipeline = builder.Build();
 await pipeline.ExecuteAsync(source, context);
 ```
 
-**Critical Warning:** Never set `MaxMaterializedItems` to `null` (unbounded). This silently disables restart functionality and can cause OutOfMemoryException. See the [Getting Started with Resilience](../core-concepts/resilience/getting-started.md) guide for detailed explanation of why unbounded buffers break resilience guarantees.
+**Configuration Guidance:** Always set `MaxMaterializedItems` to a positive bounded value. Setting it to `null` (unbounded) will cause `InvalidOperationException` when `RestartNode` is attempted, as the system cannot safely buffer items for replay without defined limits. See the [Getting Started with Resilience](../core-concepts/resilience/getting-started.md) guide for detailed explanation of why bounded buffers are required for resilience guarantees.
 
 **Read More:**
 
@@ -545,9 +546,9 @@ await pipeline.ExecuteAsync(source, context);
 
 ## NP90xx-NP94xx - Analyzer Diagnostics
 
-### NP9205: Non-Streaming Patterns in SourceNode
+### NP9107: Non-Streaming Patterns in SourceNode
 
-**Message:** `[NP9205] Non-streaming patterns detected in SourceNode implementation. Consider using IAsyncEnumerable with yield return for better performance and memory efficiency.`
+**Message:** `[NP9107] Non-streaming patterns detected in SourceNode implementation. Consider using IAsyncEnumerable with yield return for better performance and memory efficiency.`
 
 **Category:** Performance
 
@@ -576,23 +577,23 @@ public class BadSourceNode : SourceNode<string>
 {
     public override IDataPipe<string> Initialize(PipelineContext context, CancellationToken cancellationToken)
     {
-        // NP9205: Allocating List<T> and populating it
+        // NP9107: Allocating List<T> and populating it
         var items = new List<string>();
-        
+
         // Read all lines from file into memory
-        var lines = File.ReadAllLines("large-file.txt"); // NP9205: Synchronous I/O
-        
+        var lines = File.ReadAllLines("large-file.txt"); // NP9107: Synchronous I/O
+
         foreach (var line in lines)
         {
             items.Add(line);
         }
-        
-        // NP9205: Materializing collection with ToList()
+
+        // NP9107: Materializing collection with ToList()
         foreach (var item in items.ToList())
         {
             // This pattern is no longer valid with Initialize method
         }
-        
+
         return new StreamingDataPipe<string>(items.ToAsyncEnumerable());
     }
 }
@@ -609,13 +610,13 @@ public class GoodSourceNode : SourceNode<string>
         // Stream data line by line without materializing in memory
         return new StreamingDataPipe<string>(ReadLinesAsync("large-file.txt", cancellationToken));
     }
-    
+
     // Helper method that yields lines one at a time
     private async IAsyncEnumerable<string> ReadLinesAsync(string filePath, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         using var reader = new StreamReader(
             new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, useAsync: true));
-        
+
         string? line;
         while ((line = await reader.ReadLineAsync(cancellationToken)) != null)
         {
@@ -650,198 +651,96 @@ public class GoodSourceNode : SourceNode<string>
 
 ---
 
-### NP9210: StreamTransformNodeSuggestionAnalyzer
+### NP9401: StreamTransformNodeSuggestionAnalyzer
 
-**Message:** `[NP9210] Class '{0}' implements ITransformNode but ExecuteAsync returns IAsyncEnumerable&lt;{1}&gt;. Consider implementing IStreamTransformNode&lt;{2}, {1}&gt; instead for better interface segregation.`
+**Message:** `[NP9401] Class '{0}' implements ITransformNode but ExecuteAsync returns IAsyncEnumerable<{1}>&gt;. Consider implementing IStreamTransformNode<{2}, {1}>&gt; instead for better interface segregation.`
 
-**Category:** Design
-
-**Severity:** Info
-
-**Cause:** Your class implements ITransformNode but its generic output argument (`TOut`) is `IAsyncEnumerable<T>`, meaning `ExecuteAsync` effectively returns `Task<IAsyncEnumerable<T>>`. This indicates that the node is performing stream-based transformations, which is better represented by the IStreamTransformNode interface.
-
-This pattern can lead to:
-
-- Unclear intent about whether the node processes items individually or as streams
-- Missed opportunities for stream-specific optimizations
-- Interface segregation principle violation
-
-**Example of Problem Code:**
-
-```csharp
-// PROBLEM: Using ITransformNode with streaming return type
-public class DataProcessor : ITransformNode<string, IAsyncEnumerable<int>>
-{
-    public Task<IAsyncEnumerable<int>> ExecuteAsync(
-        string item,
-        PipelineContext context, 
-        CancellationToken cancellationToken)
-    {
-        // Each call processes a single item but returns an async stream,
-        // which violates the one-in/one-out ITransformNode contract
-        return Task.FromResult(ProcessAsStream(item));
-    }
-    
-    private IAsyncEnumerable<int> ProcessAsStream(string input)
-    {
-        // Process input and yield multiple results
-        foreach (var number in input.Split(','))
-        {
-            yield return int.Parse(number);
-        }
-    }
-}
-```
-
-**Solution - Use IStreamTransformNode:**
-
-```csharp
-// SOLUTION: Using IStreamTransformNode for stream processing
-public class DataProcessor : IStreamTransformNode<string, int>
-{
-    public IAsyncEnumerable<int> ExecuteAsync(
-        IAsyncEnumerable<string> items, 
-        PipelineContext context, 
-        CancellationToken cancellationToken)
-    {
-        // This method signature clearly indicates stream processing
-        return ProcessItemsAsync(items, cancellationToken);
-    }
-    
-    private async IAsyncEnumerable<int> ProcessItemsAsync(
-        IAsyncEnumerable<string> inputs, 
-        [EnumeratorCancellation] CancellationToken cancellationToken)
-    {
-        await foreach (var input in inputs.WithCancellation(cancellationToken))
-        {
-            foreach (var number in input.Split(','))
-            {
-                yield return int.Parse(number);
-            }
-        }
-    }
-}
-```
-
-**Benefits of IStreamTransformNode:**
-
-1. **Clear Intent**: The interface explicitly indicates stream-based transformation
-2. **Better Performance**: Enables stream-specific optimizations in execution strategies
-3. **Type Safety**: Prevents confusion between item-based and stream-based processing
-4. **Interface Segregation**: Follows the interface segregation principle by providing a specialized interface
-
-**Code Fix:**
-
-A code fix is available that will automatically convert your ITransformNode implementation to IStreamTransformNode:
-
-- Updates the base interface from `ITransformNode<TIn, TOut>` to `IStreamTransformNode<TIn, TOut>`
-- Changes the ExecuteAsync signature to accept `IAsyncEnumerable<TIn>` instead of TIn
-- Updates the return type to `IAsyncEnumerable<TOut>` (no Task wrapper)
-- Adds the necessary using statement for System.Collections.Generic if not present
-
----
-
-### NP9211: StreamTransformNodeExecutionStrategyAnalyzer
-
-**Message:** `[NP9211] IStreamTransformNode '{0}' uses an execution strategy that doesn't implement IStreamExecutionStrategy. Consider using a strategy that implements both IExecutionStrategy and IStreamExecutionStrategy for optimal performance.`
-
-**Category:** Design
+**Category:** Best Practice
 
 **Severity:** Warning
 
-**Cause:** Your IStreamTransformNode implementation is using an execution strategy that doesn't implement IStreamExecutionStrategy. This can result in suboptimal performance as the strategy cannot take advantage of stream-specific optimizations.
+**Cause:** Your transform node implementation returns `IAsyncEnumerable<T>` from `ExecuteAsync`, which is a common pattern for streaming transformations. However, this can lead to confusion and potential misuse. The analyzer suggests implementing `IStreamTransformNode<TInput, TOutput>` instead.
 
-This mismatch can lead to:
+**Solution:** Implement `IStreamTransformNode<TInput, TOutput>` for your transform node. This provides a clear interface for streaming transformations and improves code clarity.
 
-- Reduced performance due to lack of stream-specific optimizations
-- Unnecessary materialization of streams
-- Missed opportunities for batch processing
-
-**Example of Problem Code:**
+**Example:**
 
 ```csharp
-// PROBLEM: Using non-stream execution strategy with IStreamTransformNode
-public class StreamProcessor : IStreamTransformNode<string, int>
+// PROBLEM: Node returns IAsyncEnumerable<T> from ExecuteAsync
+public class BadTransformNode : TransformNode<string, string>
 {
-    public IAsyncEnumerable<int> ExecuteAsync(
-        IAsyncEnumerable<string> items, 
-        PipelineContext context, 
-        CancellationToken cancellationToken)
+    public override async Task<IAsyncEnumerable<string>> ExecuteAsync(string item, PipelineContext context, CancellationToken cancellationToken)
     {
-        return ProcessItemsAsync(items, cancellationToken);
+        // This is a bad pattern
+        var result = new List<string>();
+        // ...
+        return result.ToAsyncEnumerable();
     }
-    
-    // This property uses a non-stream execution strategy
-    public IExecutionStrategy ExecutionStrategy { get; } = new SequentialExecutionStrategy();
-    
-    private async IAsyncEnumerable<int> ProcessItemsAsync(
-        IAsyncEnumerable<string> inputs, 
-        [EnumeratorCancellation] CancellationToken cancellationToken)
+}
+
+// SOLUTION: Implement IStreamTransformNode<TInput, TOutput>
+public class GoodTransformNode : TransformNode<string, string>, IStreamTransformNode<string, string>
+{
+    public override async Task<IAsyncEnumerable<string>> ExecuteAsync(string item, PipelineContext context, CancellationToken cancellationToken)
     {
-        await foreach (var input in inputs.WithCancellation(cancellationToken))
-        {
-            yield return int.Parse(input);
-        }
+        // This is a better pattern
+        var result = new List<string>();
+        // ...
+        return result.ToAsyncEnumerable();
     }
 }
 ```
 
-**Solution - Use Stream-Optimized Execution Strategy:**
+**Read More:**
 
-```csharp
-// SOLUTION: Using stream execution strategy with IStreamTransformNode
-public class StreamProcessor : IStreamTransformNode<string, int>
-{
-    public IAsyncEnumerable<int> ExecuteAsync(
-        IAsyncEnumerable<string> items, 
-        PipelineContext context, 
-        CancellationToken cancellationToken)
-    {
-        return ProcessItemsAsync(items, cancellationToken);
-    }
-    
-    // This property uses a stream-optimized execution strategy
-    public IExecutionStrategy ExecutionStrategy { get; } = new BatchingExecutionStrategy(100, TimeSpan.FromSeconds(1));
-    
-    private async IAsyncEnumerable<int> ProcessItemsAsync(
-        IAsyncEnumerable<string> inputs, 
-        [EnumeratorCancellation] CancellationToken cancellationToken)
-    {
-        await foreach (var input in inputs.WithCancellation(cancellationToken))
-        {
-            yield return int.Parse(input);
-        }
-    }
-}
-```
-
-**Available Stream-Optimized Execution Strategies:**
-
-| Strategy | Description | When to Use |
-|---------|-------------|-------------|
-| `BatchingExecutionStrategy` | Batches items for processing | When you want to process items in batches for better throughput |
-| `UnbatchingExecutionStrategy` | Unbatches items for individual processing | When downstream nodes need individual items but you receive batches |
-
-**Code Fixes:**
-
-Two code fixes are available:
-
-1. **Replace with BatchingExecutionStrategy**: Creates a new BatchingExecutionStrategy with default parameters (batch size: 100, time window: 1 second)
-
-2. **Replace with UnbatchingExecutionStrategy**: Creates a new UnbatchingExecutionStrategy with no parameters
-
-**Benefits of Stream-Optimized Execution Strategies:**
-
-1. **Better Performance**: Strategies can take advantage of stream-specific optimizations
-2. **Reduced Memory Usage**: Avoids unnecessary materialization of streams
-3. **Improved Throughput**: Can process items in batches when appropriate
-4. **Consistent Design**: Aligns the node type with the appropriate execution strategy type
+- [Build-Time Resilience Analyzer Guide](../analyzers/resilience.md)
+- [Transform Node Best Practices](../core-concepts/nodes/transform-nodes.md)
 
 ---
 
-### NP9401: Missing Dependency Injection
+### NP9402: StreamTransformNodeExecutionStrategyAnalyzer
 
-**Message:** `[NP9401] Avoid dependency injection anti-patterns in node implementations. Use constructor injection instead.`
+**Message:** `[NP9402] IStreamTransformNode '{0}' uses an execution strategy that doesn't implement IStreamExecutionStrategy. Consider using a strategy that implements both IExecutionStrategy and IStreamExecutionStrategy for optimal performance.`
+
+**Category:** Best Practice
+
+**Severity:** Warning
+
+**Cause:** Your transform node implementation uses an execution strategy that doesn't implement `IStreamExecutionStrategy`. This can lead to suboptimal performance and potential bugs. The analyzer suggests using a strategy that implements both `IExecutionStrategy` and `IStreamExecutionStrategy`.
+
+**Solution:** Implement an execution strategy that implements both `IExecutionStrategy` and `IStreamExecutionStrategy` for your transform node.
+
+**Example:**
+
+```csharp
+// PROBLEM: Execution strategy doesn't implement IStreamExecutionStrategy
+var nodeHandle = builder
+    .AddTransform<MyTransform, Input, Output>("myNode")
+    .WithExecutionStrategy(
+        builder,
+        new ResilientExecutionStrategy(new SequentialExecutionStrategy())
+    );
+
+// SOLUTION: Use a strategy that implements both IExecutionStrategy and IStreamExecutionStrategy
+var nodeHandle = builder
+    .AddTransform<MyTransform, Input, Output>("myNode")
+    .WithExecutionStrategy(
+        builder,
+        new ResilientExecutionStrategy(new SequentialExecutionStrategy()),
+        new MyStreamExecutionStrategy()
+    );
+```
+
+**Read More:**
+
+- [Build-Time Resilience Analyzer Guide](../analyzers/resilience.md)
+- [Execution Strategy Best Practices](../core-concepts/resilience/execution-strategies.md)
+
+---
+
+### NP9404: Missing Dependency Injection
+
+**Message:** `[NP9404] Avoid dependency injection anti-patterns in node implementations. Use constructor injection instead.`
 
 **Category:** Best Practice
 
@@ -862,36 +761,17 @@ These anti-patterns violate the Dependency Inversion Principle and make code dif
 
 public class BadTransformNode : TransformNode<string, string>
 {
-    private readonly BadService _badService = new BadService(); // NP9401: Direct instantiation
+    private readonly BadService _badService = new BadService(); // NP9404: Direct instantiation
 
-    public override Task<string> ExecuteAsync(string item, PipelineContext context, CancellationToken cancellationToken)
+    public Task ExecuteAsync<TInput>(IAsyncEnumerable<TInput> input, PipelineContext context, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(_badService.Process(item));
-    }
-}
-
-public class BadSourceNode : SourceNode<int>
-{
-    private static BadService _service;
-
-    public BadSourceNode()
-    {
-        _service = new BadService(); // NP9401: Static singleton assignment
-    }
-}
-
-public class BadSinkNode : SinkNode<string>
-{
-    private readonly IServiceProvider _serviceProvider;
-
-    public BadSinkNode(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
+        _service = new BadService(); // NP9404: Static singleton assignment
+        return Task.CompletedTask;
     }
 
-    public override Task ExecuteAsync(IDataPipe<string> input, PipelineContext context, CancellationToken cancellationToken)
+    public Task ExecuteAsync<TInput>(IAsyncEnumerable<TInput> input, PipelineContext context, CancellationToken cancellationToken = default)
     {
-        var badService = _serviceProvider.GetService(typeof(BadService)) as BadService; // NP9401: Service locator
+        var badService = _serviceProvider.GetService(typeof(BadService)) as BadService; // NP9404: Service locator
         return Task.CompletedTask;
     }
 }
