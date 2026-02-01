@@ -75,6 +75,115 @@ Using dependency injection provides several benefits:
 - **Testability**: Easy to mock or replace dependencies in unit tests
 - **Lifetime Management**: Services are properly disposed when the application shuts down
 
+## Common Attributes
+
+The PostgreSQL connector supports common attributes from `NPipeline.Connectors.Attributes` that work across all connectors, as well as PostgreSQL-specific attributes that extend the common attributes with database-specific features.
+
+### `[Column]` Attribute
+
+The `[Column]` attribute (from `NPipeline.Connectors.Attributes`) is a common attribute that allows you to specify column names and control property mapping across all connectors. It provides:
+
+- **`Name`**: The column name in the database
+- **`Ignore`**: When `true`, skips mapping this property
+
+This attribute is recommended for simple scenarios where you only need basic column mapping.
+
+```csharp
+using NPipeline.Connectors.Attributes;
+
+public class Customer
+{
+    [Column("customer_id")]
+    public int CustomerId { get; set; }
+
+    [Column("first_name")]
+    public string FirstName { get; set; } = string.Empty;
+
+    [Column("last_name")]
+    public string LastName { get; set; } = string.Empty;
+
+    [IgnoreColumn]
+    public string FullName => $"{FirstName} {LastName}";
+}
+```
+
+### `[IgnoreColumn]` Attribute
+
+The `[IgnoreColumn]` attribute (from `NPipeline.Connectors.Attributes`) is a marker attribute that excludes a property from mapping entirely. This is useful for computed properties or fields that should not be persisted.
+
+```csharp
+using NPipeline.Connectors.Attributes;
+
+public class Order
+{
+    public int OrderId { get; set; }
+    public decimal Subtotal { get; set; }
+    public decimal TaxAmount { get; set; }
+    public decimal ShippingAmount { get; set; }
+
+    [IgnoreColumn]
+    public decimal TotalAmount => Subtotal + TaxAmount + ShippingAmount;
+
+    [IgnoreColumn]
+    public bool IsTaxable => TaxAmount > 0;
+}
+```
+
+### PostgreSQL-Specific Attributes
+
+The PostgreSQL connector provides `[PostgresColumn]` attribute that extends the common attributes with database-specific functionality:
+
+- **`[PostgresColumn]`**: Extends `[Column]` with additional properties:
+  - **`DbType`**: Specifies the PostgreSQL data type for the column
+  - **`Size`**: Sets the size/length for character and numeric types
+  - **`PrimaryKey`**: Indicates whether the column is a primary key (used for checkpointing)
+
+The `[IgnoreColumn]` attribute from `NPipeline.Connectors.Attributes` covers all ignore requirements and works identically to a PostgreSQL-specific ignore attribute.
+
+These attributes are useful when you need database-specific features like type specification or primary key marking.
+
+```csharp
+using NPipeline.Connectors.PostgreSQL.Mapping;
+using NPipeline.Connectors.Attributes;
+using NpgsqlTypes;
+
+public class Customer
+{
+    [PostgresColumn("customer_id", PrimaryKey = true)]
+    public int CustomerId { get; set; }
+
+    [PostgresColumn("first_name", DbType = NpgsqlDbType.Varchar, Size = 100)]
+    public string FirstName { get; set; } = string.Empty;
+
+    [PostgresColumn("last_name", DbType = NpgsqlDbType.Varchar, Size = 100)]
+    public string LastName { get; set; } = string.Empty;
+
+    [PostgresColumn("email", DbType = NpgsqlDbType.Varchar, Size = 255)]
+    public string Email { get; set; } = string.Empty;
+
+    [IgnoreColumn]
+    public string FullName => $"{FirstName} {LastName}";
+}
+```
+
+### Choosing Between Common and PostgreSQL-Specific Attributes
+
+**Use common attributes (`[Column]`, `[IgnoreColumn]`) when:**
+
+- You want code that works across multiple connectors
+- You only need basic column mapping functionality
+- You prefer using standard attributes provided by the core library
+- Your database schema follows standard conventions
+
+**Use PostgreSQL-specific attributes (`[PostgresColumn]`) when:**
+
+- You need to specify database types explicitly (e.g., `VARCHAR(255)`, `NUMERIC(10,2)`)
+- You need to mark primary key columns for checkpointing
+- You want to leverage PostgreSQL-specific features
+- You're maintaining existing code that already uses these attributes
+
+Both attribute types are fully supported and will continue to work in future versions. The common attributes are recommended for new code when you don't need database-specific features, while PostgreSQL-specific attributes provide additional control when needed.
+
 ## `PostgresSourceNode<T>`
 
 The `PostgresSourceNode<T>` reads data from a PostgreSQL database and emits each row as an item of type `T`.
@@ -354,7 +463,7 @@ public sealed class PostgresWriterPipeline : IPipelineDefinition
             writeStrategy: PostgresWriteStrategy.Batch,
             configuration: new PostgresConfiguration
             {
-                BatchSize = 500,
+                BatchSize = 1_000,
                 MaxBatchSize = 5_000,
                 UseTransaction = true
             });
@@ -450,8 +559,8 @@ The `PostgresConfiguration` class provides comprehensive options for configuring
 | `ValidateIdentifiers` | `bool` | `true` | Validates SQL identifiers (schema, table, column names) to prevent SQL injection. |
 | `ContinueOnError` | `bool` | `false` | Continues processing when per-property mapping errors occur. Properties with errors are set to default values. |
 | `CheckpointStrategy` | `CheckpointStrategy` | `CheckpointStrategy.None` | Strategy for checkpointing to recover from transient failures. |
-| `BatchSize` | `int` | `100` | Target batch size for batch write operations. |
-| `MaxBatchSize` | `int` | `10_000` | Maximum batch size to prevent runaway buffers. `BatchSize` is clamped to this value. |
+| `BatchSize` | `int` | `1,000` | Target batch size for batch write operations. |
+| `MaxBatchSize` | `int` | `5,000` | Maximum batch size to prevent runaway buffers. `BatchSize` is clamped to this value. |
 | `UseTransaction` | `bool` | `true` | Wraps write operations in a transaction for atomicity. |
 | `CommandTimeout` | `int?` | `null` | Command timeout in seconds. When `null`, uses the default Npgsql timeout. |
 
@@ -638,7 +747,7 @@ public sealed class PostgresTransformPipeline : IPipelineDefinition
                 "Host=localhost;Database=npipeline;Username=postgres;Password=postgres",
                 "order_summary",
                 PostgresWriteStrategy.Batch,
-                configuration: new PostgresConfiguration { BatchSize = 500, UseTransaction = true }),
+                configuration: new PostgresConfiguration { BatchSize = 1_000, UseTransaction = true }),
             "postgres_sink");
 
         builder.Connect(source, transform);
@@ -804,7 +913,7 @@ var batchSink = new PostgresSinkNode<Order>(
     pool,
     "orders",
     PostgresWriteStrategy.Batch,
-    configuration: new PostgresConfiguration { BatchSize = 1_000 });
+    configuration: new PostgresConfiguration { BatchSize = 1_000, UseTransaction = true });
 
 // Per-row: Low latency
 var perRowSink = new PostgresSinkNode<Order>(
@@ -899,6 +1008,39 @@ services.AddPostgresConnector(options =>
 - **No automatic failover**: Requires additional configuration for high availability
 - **No read replica support**: All operations go to the primary database
 
+## Prepared Statements
+
+The connector uses prepared statements by default (`UsePreparedStatements = true`). Prepared statements:
+
+- Reduce query parsing overhead on the database server
+- Improve performance for repeated query patterns (same query, different parameters)
+- Provide automatic SQL injection protection
+
+### When to Disable Prepared Statements
+
+Consider disabling `UsePreparedStatements` only for:
+
+- Ad-hoc queries that are dynamically generated and never repeated
+- Very complex queries that may not benefit from preparation
+- Testing scenarios where you need to debug query generation
+
+### Performance Impact
+
+| Scenario | Prepared Statements | Performance Impact |
+|----------|-------------------|-------------------|
+| Repeated inserts (same query pattern) | Enabled | 10-30% faster |
+| Ad-hoc queries (different each time) | Enabled | 5-10% overhead |
+| One-time bulk operations | Disabled | No impact |
+
+### Configuration
+
+```csharp
+var config = new PostgresConfiguration
+{
+    UsePreparedStatements = true  // Default, keep enabled for production
+};
+```
+
 ## Best Practices
 
 ### Configuration
@@ -909,6 +1051,7 @@ services.AddPostgresConnector(options =>
 4. **Use batch writes for bulk operations**: `PostgresWriteStrategy.Batch` provides much better throughput
 5. **Validate identifiers**: Keep `ValidateIdentifiers = true` to prevent SQL injection
 6. **Cache mapping metadata**: Enable `CacheMappingMetadata` for better performance
+7. **Use prepared statements**: Keep `UsePreparedStatements = true` for repeated query patterns
 
 ### Data Modeling
 
@@ -1016,7 +1159,7 @@ public sealed class RoundTripPipeline : IPipelineDefinition
                 "processed_orders",
                 PostgresWriteStrategy.Batch,
                 connectionName: "warehouse",
-                configuration: new PostgresConfiguration { BatchSize = 500, UseTransaction = true }),
+                configuration: new PostgresConfiguration { BatchSize = 1_000, UseTransaction = true }),
             "processed_sink");
 
         builder.Connect(source, transform);
