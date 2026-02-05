@@ -10,6 +10,8 @@ sidebar_position: 2
 
 The `IStorageProvider` interface is a foundational abstraction that enables NPipeline connectors to work with multiple storage backends—from local filesystems to cloud services and databases. This document explains the core concepts, capabilities, and patterns for working with storage providers.
 
+> **Note:** Storage provider abstractions are now located in the `NPipeline.StorageProviders` namespace/assembly. Connectors depend on this project for storage operations.
+
 ## Core Interface
 
 `IStorageProvider` defines the following operations:
@@ -123,6 +125,8 @@ The default provider for local file access with full feature support.
 **Example:**
 
 ```csharp
+using NPipeline.StorageProviders;
+
 var provider = new FileSystemStorageProvider();
 var uri = StorageUri.FromFilePath("C:\\data\\input.csv");
 
@@ -186,6 +190,8 @@ var sink = new CsvSinkNode<MyResult>(uri);
 Use `ExistsAsync` to check if a resource exists:
 
 ```csharp
+using NPipeline.StorageProviders;
+
 var uri = StorageUri.FromFilePath("config.json");
 var provider = new FileSystemStorageProvider();
 
@@ -200,6 +206,8 @@ if (await provider.ExistsAsync(uri))
 List resources in a directory using `ListAsync`:
 
 ```csharp
+using NPipeline.StorageProviders;
+
 var uri = StorageUri.FromFilePath("C:\\data\\csv_files");
 var provider = new FileSystemStorageProvider();
 
@@ -225,6 +233,8 @@ await foreach (var item in provider.ListAsync(uri, recursive: true))
 Retrieve detailed metadata about a resource:
 
 ```csharp
+using NPipeline.StorageProviders;
+
 var uri = StorageUri.FromFilePath("data.csv");
 var provider = new FileSystemStorageProvider();
 
@@ -243,10 +253,14 @@ if (metadata != null)
 Delete files and directories:
 
 ```csharp
+using NPipeline.StorageProviders;
+using NPipeline.StorageProviders.Abstractions;
+
 var uri = StorageUri.FromFilePath("C:\\temp\\old_data.csv");
 var provider = new FileSystemStorageProvider();
 
-if (metadata.SupportsDelete)
+if (provider is IStorageProviderMetadataProvider metadataProvider
+    && metadataProvider.GetMetadata().SupportsDelete)
 {
     await provider.DeleteAsync(uri);
     Console.WriteLine("File deleted");
@@ -384,58 +398,62 @@ public sealed class MyCustomStorageProvider : IStorageProvider, IStorageProvider
 
 2. **Document Recursion Semantics**: Clearly explain how `recursive` works in your implementation:
 
-    ```csharp
-   /// <remarks>
-   /// With recursive=false, returns objects matching the prefix with "/" delimiter applied.
-   /// With recursive=true, returns all objects with the prefix (flat list).
-   /// </remarks>
-   ```
+   ```csharp
+
+  /// <remarks>
+  /// With recursive=false, returns objects matching the prefix with "/" delimiter applied.
+  /// With recursive=true, returns all objects with the prefix (flat list).
+  /// </remarks>
+
+  ```
 
 3. **Implement Capabilities Accurately**: Set capability flags to match actual implementation:
 
-    ```csharp
-   public StorageProviderMetadata GetMetadata()
-   {
-       return new StorageProviderMetadata
-       {
-           SupportsRead = true,
-           SupportsWrite = false,    // This provider is read-only
-           SupportsDelete = false,
-           SupportsListing = true,
-           SupportsHierarchy = false // No directory concept
-       };
-   }
-   ```
+   ```csharp
+  public StorageProviderMetadata GetMetadata()
+  {
+      return new StorageProviderMetadata
+      {
+          SupportsRead = true,
+          SupportsWrite = false,    // This provider is read-only
+          SupportsDelete = false,
+          SupportsListing = true,
+          SupportsHierarchy = false // No directory concept
+      };
+  }
+  ```
 
-4. **Respect Cancellation**: Always check the `CancellationToken` during enumeration:
+1. **Respect Cancellation**: Always check the `CancellationToken` during enumeration:
 
-    ```csharp
-   public async IAsyncEnumerable<StorageItem> ListAsync(
-       StorageUri prefix,
-       bool recursive = false,
-       [EnumeratorCancellation] CancellationToken cancellationToken = default)
-   {
-       foreach (var item in GetItems(prefix))
-       {
-           cancellationToken.ThrowIfCancellationRequested();
-           yield return item;
-       }
-   }
-   ```
+   ```csharp
+
+  public async IAsyncEnumerable<StorageItem> ListAsync(
+      StorageUri prefix,
+      bool recursive = false,
+      [EnumeratorCancellation] CancellationToken cancellationToken = default)
+  {
+      foreach (var item in GetItems(prefix))
+      {
+          cancellationToken.ThrowIfCancellationRequested();
+          yield return item;
+      }
+  }
+
+  ```
 
 5. **Populate Metadata Fields**: Provide all available metadata:
 
-    ```csharp
-   return new StorageMetadata
-   {
-       Size = contentLength,
-       LastModified = dateModified,
-       ContentType = "application/json",        // If available
-       CustomMetadata = objectTags,             // If available
-       ETag = response.ETag,                    // If available
-       IsDirectory = false
-   };
-   ```
+   ```csharp
+  return new StorageMetadata
+  {
+      Size = contentLength,
+      LastModified = dateModified,
+      ContentType = "application/json",        // If available
+      CustomMetadata = objectTags,             // If available
+      ETag = response.ETag,                    // If available
+      IsDirectory = false
+  };
+  ```
 
 ## Using Custom Providers
 
@@ -603,4 +621,5 @@ For filesystem, these are automatically handled by the built-in provider.
 
 ## Related Documentation
 
-- **[CSV Connector](./csv.md)** - Example using the filesystem storage provider
+- **[CSV Connector](../connectors/csv.md)** - Example using the filesystem storage provider
+- **[AWS S3 Storage Provider](./aws-s3.md)** - Learn about the S3 storage provider implementation
