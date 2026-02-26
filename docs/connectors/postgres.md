@@ -6,16 +6,16 @@ sidebar_position: 3
 
 ## PostgreSQL Connector
 
-The `NPipeline.Connectors.PostgreSQL` package provides specialized source and sink nodes for working with PostgreSQL databases. This allows you to easily integrate PostgreSQL data into your pipelines as an input source or an output destination.
+The `NPipeline.Connectors.Postgres` package provides specialized source and sink nodes for working with PostgreSQL databases. This allows you to easily integrate PostgreSQL data into your pipelines as an input source or an output destination.
 
 This connector uses the [Npgsql](https://www.npgsql.org/) library under the hood, providing reliable streaming reads, multiple write strategies (per-row, batch, and COPY protocol), upsert support, delivery semantics, checkpointing strategies, and connection pooling.
 
 ## Installation
 
-To use the PostgreSQL connector, install the `NPipeline.Connectors.PostgreSQL` NuGet package:
+To use the PostgreSQL connector, install the `NPipeline.Connectors.Postgres` NuGet package:
 
 ```bash
-dotnet add package NPipeline.Connectors.PostgreSQL
+dotnet add package NPipeline.Connectors.Postgres
 ```
 
 For the core NPipeline package and other available extensions, see the [Installation Guide](../getting-started/installation.md).
@@ -30,7 +30,7 @@ Use `AddPostgresConnector` to register a shared connection pool and factories fo
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using NPipeline.Connectors.PostgreSQL.DependencyInjection;
+using NPipeline.Connectors.Postgres.DependencyInjection;
 
 var services = new ServiceCollection()
     .AddPostgresConnector(options =>
@@ -143,7 +143,7 @@ The `[IgnoreColumn]` attribute from `NPipeline.Connectors.Attributes` covers all
 These attributes are useful when you need database-specific features like type specification or primary key marking.
 
 ```csharp
-using NPipeline.Connectors.PostgreSQL.Mapping;
+using NPipeline.Connectors.Postgres.Mapping;
 using NPipeline.Connectors.Attributes;
 using NpgsqlTypes;
 
@@ -244,7 +244,7 @@ You can read this data into your pipeline as follows:
 
 ```csharp
 using NPipeline;
-using NPipeline.Connectors.PostgreSQL;
+using NPipeline.Connectors.Postgres;
 using NPipeline.DataFlow.DataPipes;
 using NPipeline.DataFlow;
 using NPipeline.Execution;
@@ -477,7 +477,7 @@ var sink = new PostgresSinkNode<Order>(
 Let's take processed order data and write it to an `order_summary` table:
 
 ```csharp
-using NPipeline.Connectors.PostgreSQL;
+using NPipeline.Connectors.Postgres;
 using NPipeline.Execution;
 using NPipeline.Extensions.Testing;
 using NPipeline.Nodes;
@@ -1105,7 +1105,7 @@ The source node tracks the last successfully processed row ID. If a transient fa
 This pipeline reads order data, transforms it, and writes the result to a summary table:
 
 ```csharp
-using NPipeline.Connectors.PostgreSQL;
+using NPipeline.Connectors.Postgres;
 using NPipeline.Execution;
 using NPipeline.Nodes;
 using NPipeline.Pipeline;
@@ -1230,7 +1230,7 @@ Mapping metadata is cached per type when `CacheMappingMetadata` is enabled (defa
 ### Example: Complete Mapping Configuration
 
 ```csharp
-using NPipeline.Connectors.PostgreSQL.Mapping;
+using NPipeline.Connectors.Postgres.Mapping;
 
 public record Order(
     [PostgresColumn("order_id", PrimaryKey = true)] int Id,
