@@ -20,15 +20,16 @@ public interface INodeMetrics
     Guid PipelineId { get; }
     DateTimeOffset? StartTime { get; }
     DateTimeOffset? EndTime { get; }
-    long? DurationMs { get; }
+    double? DurationMs { get; }
     bool Success { get; }
     long ItemsProcessed { get; }
     long ItemsEmitted { get; }
     Exception? Exception { get; }
     int RetryCount { get; }
-    long? PeakMemoryUsageMb { get; }
-    long? ProcessorTimeMs { get; }
+    double? PeakMemoryUsageMb { get; }
+    double? ProcessorTimeMs { get; }
     double? ThroughputItemsPerSec { get; }
+    double? AverageItemProcessingMs { get; }
     int? ThreadId { get; }
     string? PipelineName { get; }
 }
@@ -78,16 +79,16 @@ public interface INodeMetrics
 
 #### DurationMs
 
-- **Type**: `long?`
+- **Type**: `double?`
 - **Description**: Total execution time in milliseconds
 - **Source**: Calculated from `StartTime` and `EndTime`
 - **Thread-Safe**: Yes (immutable)
-- **Precision**: Millisecond
+- **Precision**: Sub-millisecond (double-precision floating point)
 
 **Calculation**:
 
 ```csharp
-DurationMs = (long)(EndTime - StartTime).TotalMilliseconds
+DurationMs = (EndTime - StartTime).TotalMilliseconds
 ```
 
 **Usage**: Primary metric for identifying performance bottlenecks. Compare duration across nodes to find slow components.
@@ -165,7 +166,7 @@ DurationMs = (long)(EndTime - StartTime).TotalMilliseconds
 
 #### PeakMemoryUsageMb
 
-- **Type**: `long?`
+- **Type**: `double?`
 - **Description**: Per-node managed memory allocation delta in megabytes during node execution
 - **Source**: Calculated as delta between final and initial memory using `GC.GetTotalMemory(false)`
 - **Thread-Safe**: Yes (immutable)
@@ -200,17 +201,17 @@ var memoryDeltaMb = deltaBytes / (1024 * 1024);
 
 #### ProcessorTimeMs
 
-- **Type**: `long?`
-- **Description**: Total processor time used in milliseconds
-- **Source**: Not available per-node in current implementation
+- **Type**: `double?`
+- **Description**: Best-effort processor time used in milliseconds during the node execution window
+- **Source**: Calculated as process-level CPU time delta (`Process.TotalProcessorTime`) between node start and end
 - **Thread-Safe**: Yes (immutable)
-- **Granularity**: Process-level (not node-specific)
+- **Granularity**: Process-level approximation (not strictly node-specific)
 
 **Important Notes**:
 
-- This metric is **not available per-node** in the current implementation
-- The field is included for future compatibility but will always be `null` for node metrics
-- If you need CPU metrics, consider using system-level monitoring tools
+- This metric is derived from process CPU time and can include concurrent work from other nodes/threads
+- The value is useful for UI diagnostics and trend analysis, but should be treated as an approximation
+- In highly parallel workloads, per-node attribution is less precise
 - May be null if metrics collection fails or is disabled
 
 #### AverageItemProcessingMs
@@ -282,7 +283,7 @@ public interface IPipelineMetrics
     Guid RunId { get; }
     DateTimeOffset StartTime { get; }
     DateTimeOffset? EndTime { get; }
-    long? DurationMs { get; }
+    double? DurationMs { get; }
     bool Success { get; }
     long TotalItemsProcessed { get; }
     IReadOnlyList<INodeMetrics> NodeMetrics { get; }
@@ -336,16 +337,16 @@ public interface IPipelineMetrics
 
 #### DurationMs
 
-- **Type**: `long?`
+- **Type**: `double?`
 - **Description**: Total pipeline execution time in milliseconds
 - **Source**: Calculated from `StartTime` and `EndTime`
 - **Thread-Safe**: Yes (immutable)
-- **Precision**: Millisecond
+- **Precision**: Sub-millisecond (double-precision floating point)
 
 **Calculation**:
 
 ```csharp
-DurationMs = (long)(EndTime - StartTime).TotalMilliseconds
+DurationMs = (EndTime - StartTime).TotalMilliseconds
 ```
 
 **Usage**: Primary metric for overall pipeline performance. Track duration trends over time to identify degradation or improvements.
